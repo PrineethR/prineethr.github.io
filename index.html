@@ -9,24 +9,45 @@
     <meta name="description" content="a portfolio showcasing work across different media">
 </head>
 <body>
+     <!-- Hero Marquee Section -->
+     <section id="hero-marquee" class="hero-section">
+        <div class="marquee-container">
+            <div class="marquee-gradient-top"></div>
+            <div class="marquee-content">
+                <div class="marquee-item" data-item="questions">questions</div>
+                <div class="marquee-item" data-item="design">design education</div>
+                <div class="marquee-item" data-item="tech">emerging tech</div>
+                <div class="marquee-item" data-item="behaviors">human behaviors</div>
+                <div class="marquee-item" data-item="senses">all five senses</div>
+                <div class="marquee-item" data-item="experiences">user experiences</div>
+                <div class="marquee-item" data-item="marquee">this marquee</div>
+                <!-- Duplicate items for smooth looping -->
+                <div class="marquee-item" data-item="questions">questions</div>
+                <div class="marquee-item" data-item="design">design education</div>
+                <div class="marquee-item" data-item="tech">emerging tech</div>
+                <div class="marquee-item" data-item="behaviors">human behaviors</div>
+                <div class="marquee-item" data-item="senses">all five senses</div>
+                <div class="marquee-item" data-item="experiences">user experiences</div>
+                <div class="marquee-item" data-item="marquee">this marquee</div>
+            </div>
+            <div class="marquee-gradient-bottom"></div>
+        </div>
+        <div class="hero-text-layout">
+            <div class="static-left-text">
+                <p>prineeth is a designer who works with</p>
+            </div>
+            <div class="dynamic-right-text">
+                <p>because every design is a mind game</p>
+            </div>
+        </div>
+    </section>
+
     <header>
         <div class="logo" aria-label="Portfolio logo">PR</div>
         <button class="menu-toggle" aria-label="Toggle navigation menu">
             <span></span><span></span><span></span>
         </button>
     </header>
-    
-    <nav class="sidebar" aria-label="Main navigation">
-        <ul class="sidebar-menu">
-            <li><a href="#intro" class="active" aria-current="page">Intro</a></li>
-            <li><a href="#work">Work</a></li>
-            <li><a href="#values">Values</a></li>
-            <li><a href="#background">Background</a></li>
-            <li><a href="#references">References</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
     
     <main class="main-content">
         <section id="intro" class="content-section">
@@ -39,11 +60,6 @@
             <h1 class="headline" id="dynamic-headline">
                 I'm a systems thinker with a high bar for quality. From process to pixels, I'll collaborate with you, learn from you, and help make something we're proud of.
             </h1>
-            
-            <div class="scroll-indicator" aria-hidden="true">
-                <span>Scroll to explore</span>
-                <div class="scroll-arrow"></div>
-            </div>
         </section>
 
         <section id="work" class="content-section">
@@ -51,7 +67,7 @@
             
             <div class="work-filters">
                 <button class="work-filter active" data-filter="all">All</button>
-                <button class="work-filter" data-filter="ux">UX</button>
+                <button class="work-filter" data-filter="ux">UX/UI</button>
                 <button class="work-filter" data-filter="systems">Systems</button>
                 <button class="work-filter" data-filter="product">Product</button>
             </div>
@@ -61,31 +77,31 @@
                     <div class="work-image">
                         <div class="work-placeholder"></div>
                         <div class="work-overlay">
-                            <span>View project</span>
+                            <a href="project-alpha.html"><span>View project</span></a>
                         </div>
                     </div>
                     <h3>Project Alpha</h3>
-                    <p>UX Design • 2024</p>
+                    <p>UX/UI Design • 2024</p>
                 </article>
                 <article class="work-item" data-category="systems">
                     <div class="work-image">
                         <div class="work-placeholder"></div>
                         <div class="work-overlay">
-                            <span>View project</span>
+                            <a href="project-alpha.html"><span>View project</span></a>
                         </div>
                     </div>
                     <h3>Project Beta</h3>
                     <p>Systems Design • 2023</p>
                 </article>
-                <article class="work-item" data-category="product ux">
+                <article class="work-item" data-category="product">
                     <div class="work-image">
                         <div class="work-placeholder"></div>
                         <div class="work-overlay">
-                            <span>View project</span>
+                            <a href="project-alpha.html"><span>View project</span></a>
                         </div>
                     </div>
                     <h3>Project Gamma</h3>
-                    <p>Product + UX Design • 2023</p>
+                    <p>Product Design • 2023</p>
                 </article>
             </div>
         </section>
@@ -178,8 +194,6 @@
                 </div>
             </div>
         </section>
-
-
     </main>
     
     <div class="theme-toggles">

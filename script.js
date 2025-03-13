@@ -1,24 +1,96 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Hero marquee functionality
+    const marqueeItems = document.querySelectorAll('.marquee-item');
+    const centerPosition = window.innerHeight / 2;
+    let activeItem = null;
+    
+    // Define right side text for each marquee item
+    const rightTextMap = {
+        'questions': 'to uncover insights and opportunities',
+        'design': 'that crosses disciplines and boundaries',
+        'tech': 'to create meaningful experiences',
+        'behaviors': 'because every design is a mind game',
+        'senses': 'to create immersive experiences',
+        'experiences': 'that delight and inspire',
+        'marquee': 'as an experiment in motion'
+    };
+    
+    // Update right side text based on item type
+    function updateRightText(itemType) {
+        const rightText = document.querySelector('.dynamic-right-text p');
+        
+        if (rightTextMap[itemType]) {
+            rightText.textContent = rightTextMap[itemType];
+        }
+    }
+    
+    // Function to determine which item is closest to center
+    function findCenterItem() {
+        let closestItem = null;
+        let closestDistance = Infinity;
+        
+        // Only check the first 7 items (not the duplicates)
+        const uniqueItems = Array.from(marqueeItems).slice(0, 7);
+        
+        uniqueItems.forEach(item => {
+            const rect = item.getBoundingClientRect();
+            const itemCenter = rect.top + rect.height / 2;
+            const distance = Math.abs(itemCenter - centerPosition);
+            
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestItem = item;
+            }
+        });
+        
+        return closestItem;
+    }
+    
+    // Set active item
+    function setActiveItem(item) {
+        if (!item) return;
+        
+        // Remove active class from previous item
+        if (activeItem) {
+            // Remove active from all items with this data-item
+            const prevDataItem = activeItem.getAttribute('data-item');
+            document.querySelectorAll(`.marquee-item[data-item="${prevDataItem}"]`).forEach(item => {
+                item.classList.remove('active');
+            });
+        }
+        
+        // Add active class to new item and its duplicate
+        const dataItem = item.getAttribute('data-item');
+        document.querySelectorAll(`.marquee-item[data-item="${dataItem}"]`).forEach(item => {
+            item.classList.add('active');
+        });
+        
+        updateRightText(dataItem);
+        activeItem = item;
+    }
+    
+    // Continuously check which item is in the center and update active state
+    function updateCenterItem() {
+        const centerItem = findCenterItem();
+        if (centerItem && centerItem !== activeItem) {
+            setActiveItem(centerItem);
+        }
+    }
+    
+    // Check center item periodically (more frequently than animation changes)
+    setInterval(updateCenterItem, 100);
+    
+    // Set initial state
+    setTimeout(updateCenterItem, 500);
+    
     // Mobile menu toggle
     const menuToggle = document.querySelector('.menu-toggle');
-    const sidebar = document.querySelector('.sidebar');
     
     if (menuToggle) {
         menuToggle.addEventListener('click', function() {
             this.classList.toggle('open');
-            sidebar.classList.toggle('open');
         });
     }
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', function(event) {
-        if (sidebar.classList.contains('open') && 
-            !sidebar.contains(event.target) && 
-            !menuToggle.contains(event.target)) {
-            menuToggle.classList.remove('open');
-            sidebar.classList.remove('open');
-        }
-    });
 
     // Dynamic headline functionality
     const navItems = document.querySelectorAll('.top-nav-item');
@@ -62,89 +134,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
    // Project filtering
-const workFilters = document.querySelectorAll('.work-filter');
-const workItems = document.querySelectorAll('.work-item');
+    const workFilters = document.querySelectorAll('.work-filter');
+    const workItems = document.querySelectorAll('.work-item');
 
-workFilters.forEach(filter => {
-    filter.addEventListener('click', function() {
-        // Remove active class from all filters
-        workFilters.forEach(btn => btn.classList.remove('active'));
-        
-        // Add active class to clicked filter
-        this.classList.add('active');
-        
-        const filterValue = this.getAttribute('data-filter');
-        
-        // Filter work items
-        workItems.forEach(item => {
-            if (filterValue === 'all' || item.getAttribute('data-category').split(' ').includes(filterValue)) {
-                item.classList.remove('hidden');
-            } else {
-                item.classList.add('hidden');
-            }
-        });
-    });
-});
-    
-    // Timeline animation with Intersection Observer
-    const timelineItems = document.querySelectorAll('.timeline-item');
-    
-    const timelineObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.2 });
-    
-    timelineItems.forEach(item => {
-        timelineObserver.observe(item);
-    });
-    
-    // Sidebar navigation active state with Intersection Observer
-    const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
-    const sections = document.querySelectorAll('.content-section');
-    
-    const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const id = entry.target.getAttribute('id');
-                
-                // Update sidebar navigation
-                sidebarLinks.forEach(link => {
-                    link.classList.remove('active');
-                    link.removeAttribute('aria-current');
-                    
-                    if (link.getAttribute('href').slice(1) === id) {
-                        link.classList.add('active');
-                        link.setAttribute('aria-current', 'page');
-                    }
-                });
-            }
-        });
-    }, { threshold: 0.3 });
-    
-    sections.forEach(section => {
-        sectionObserver.observe(section);
-    });
-    
-    // Smooth scroll for sidebar navigation
-    sidebarLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
+    workFilters.forEach(filter => {
+        filter.addEventListener('click', function() {
+            // Remove active class from all filters
+            workFilters.forEach(btn => btn.classList.remove('active'));
             
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
+            // Add active class to clicked filter
+            this.classList.add('active');
             
-            // Close mobile menu if open
-            if (sidebar.classList.contains('open')) {
-                menuToggle.classList.remove('open');
-                sidebar.classList.remove('open');
-            }
+            const filterValue = this.getAttribute('data-filter');
             
-            document.querySelector('.main-content').scrollTo({
-                top: targetSection.offsetTop,
-                behavior: 'smooth'
+            // Filter work items
+            workItems.forEach(item => {
+                if (filterValue === 'all' || item.getAttribute('data-category').split(' ').includes(filterValue)) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
             });
         });
     });
@@ -164,71 +173,6 @@ workFilters.forEach(filter => {
         lightToggle.classList.remove('active');
         darkToggle.classList.add('active');
     });
-    
-    // Handle form submission (prevent default for demo)
-    const contactForm = document.querySelector('.contact-form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Show success message (in a real implementation, you'd send data to server)
-            const formGroups = this.querySelectorAll('.form-group');
-            const submitBtn = this.querySelector('.submit-btn');
-            
-            submitBtn.textContent = 'Message Sent!';
-            submitBtn.disabled = true;
-            
-            formGroups.forEach(group => {
-                const input = group.querySelector('input, textarea');
-                input.disabled = true;
-            });
-            
-            // Reset form after 3 seconds
-            setTimeout(() => {
-                this.reset();
-                submitBtn.textContent = 'Send Message';
-                submitBtn.disabled = false;
-                
-                formGroups.forEach(group => {
-                    const input = group.querySelector('input, textarea');
-                    input.disabled = false;
-                });
-            }, 3000);
-        });
-    }
-    
-    // Section entrance animations
-    const animateSections = () => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        
-        sections.forEach(section => {
-            observer.observe(section);
-        });
-    };
-    
-    animateSections();
-    
-    // Hide scroll indicator when scrolling down
-    const scrollIndicator = document.querySelector('.scroll-indicator');
-    
-    if (scrollIndicator) {
-        const mainContent = document.querySelector('.main-content');
-        
-        mainContent.addEventListener('scroll', () => {
-            if (mainContent.scrollTop > 100) {
-                scrollIndicator.style.opacity = '0';
-            } else {
-                scrollIndicator.style.opacity = '0.6';
-            }
-        });
-    }
     
     // Add keyboard accessibility for work items
     const workItemLinks = document.querySelectorAll('.work-item');
