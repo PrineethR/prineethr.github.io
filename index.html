@@ -18,8 +18,7 @@
     <nav class="sidebar" aria-label="Main navigation">
         <ul class="sidebar-menu">
             <li><a href="#intro" class="active" aria-current="page">Intro</a></li>
-            <li><a href="#featured">Featured Work</a></li>
-            <li><a href="#archive">Archive</a></li>
+            <li><a href="#work">Work</a></li>
             <li><a href="#values">Values</a></li>
             <li><a href="#background">Background</a></li>
             <li><a href="#references">References</a></li>
@@ -46,303 +45,47 @@
             </div>
         </section>
 
-        <section id="featured" class="content-section">
-            <h2>Featured Work</h2>
+        <section id="work" class="content-section">
+            <h2>Selected Work</h2>
             
-            <div class="featured-grid">
-                <!-- Project 1 -->
-                <article class="featured-item">
-                    <div class="featured-image">
-                        <div class="featured-placeholder"></div>
-                        <a href="project-material-redesign.html" class="featured-overlay">
-                            <span>View case study</span>
-                        </a>
+            <div class="work-filters">
+                <button class="work-filter active" data-filter="all">All</button>
+                <button class="work-filter" data-filter="ux">UX/UI</button>
+                <button class="work-filter" data-filter="systems">Systems</button>
+                <button class="work-filter" data-filter="product">Product</button>
+            </div>
+            
+            <div class="work-grid">
+                <article class="work-item" data-category="ux">
+                    <div class="work-image">
+                        <div class="work-placeholder"></div>
+                        <div class="work-overlay">
+                            <span>View project</span>
+                        </div>
                     </div>
-                    <h3>Material Design System Overhaul</h3>
-                    <p>Systems Design • 2024</p>
-                    <div class="featured-tags">
-                        <span>Design Systems</span>
-                        <span>UX Research</span>
-                        <span>Accessibility</span>
-                    </div>
-                    <p class="featured-description">
-                        A comprehensive redesign of a component library used by 300+ engineers, improving consistency and reducing implementation time by 47%.
-                    </p>
-                    <a href="project-material-redesign.html" class="view-project-btn">View Project</a>
+                    <h3>Project Alpha</h3>
+                    <p>UX/UI Design • 2024</p>
                 </article>
-                
-                <!-- Project 2 -->
-                <article class="featured-item">
-                    <div class="featured-image">
-                        <div class="featured-placeholder"></div>
-                        <a href="project-finance-app.html" class="featured-overlay">
-                            <span>View case study</span>
-                        </a>
+                <article class="work-item" data-category="systems">
+                    <div class="work-image">
+                        <div class="work-placeholder"></div>
+                        <div class="work-overlay">
+                            <span>View project</span>
+                        </div>
                     </div>
-                    <h3>FinTech Mobile App</h3>
-                    <p>UX/UI Design • 2023</p>
-                    <div class="featured-tags">
-                        <span>Mobile</span>
-                        <span>Financial</span>
-                        <span>User Testing</span>
-                    </div>
-                    <p class="featured-description">
-                        End-to-end design of a personal finance application focused on financial literacy and accessible money management.
-                    </p>
-                    <a href="project-finance-app.html" class="view-project-btn">View Project</a>
-                </article>
-                
-                <!-- Project 3 -->
-                <article class="featured-item">
-                    <div class="featured-image">
-                        <div class="featured-placeholder"></div>
-                        <a href="project-healthcare-platform.html" class="featured-overlay">
-                            <span>View case study</span>
-                        </a>
-                    </div>
-                    <h3>Healthcare Provider Platform</h3>
-                    <p>Product Design • 2023</p>
-                    <div class="featured-tags">
-                        <span>Healthcare</span>
-                        <span>Enterprise</span>
-                        <span>Workflow</span>
-                    </div>
-                    <p class="featured-description">
-                        Redesigned clinical workflow application that reduced training time by 70% and increased user satisfaction scores by 42%.
-                    </p>
-                    <a href="project-healthcare-platform.html" class="view-project-btn">View Project</a>
-                </article>
-                
-                <!-- Project 4 -->
-                <article class="featured-item">
-                    <div class="featured-image">
-                        <div class="featured-placeholder"></div>
-                        <a href="project-ai-toolkit.html" class="featured-overlay">
-                            <span>View case study</span>
-                        </a>
-                    </div>
-                    <h3>AI Prototyping Toolkit</h3>
+                    <h3>Project Beta</h3>
                     <p>Systems Design • 2023</p>
-                    <div class="featured-tags">
-                        <span>AI/ML</span>
-                        <span>Tooling</span>
-                        <span>Prototyping</span>
-                    </div>
-                    <p class="featured-description">
-                        Open-source toolkit that enables designers to prototype AI-powered experiences without coding knowledge.
-                    </p>
-                    <a href="project-ai-toolkit.html" class="view-project-btn">View Project</a>
                 </article>
-                
-                <!-- Project 5 -->
-                <article class="featured-item">
-                    <div class="featured-image">
-                        <div class="featured-placeholder"></div>
-                        <a href="project-e-commerce.html" class="featured-overlay">
-                            <span>View case study</span>
-                        </a>
-                    </div>
-                    <h3>E-Commerce Redesign</h3>
-                    <p>UX/UI Design • 2022</p>
-                    <div class="featured-tags">
-                        <span>E-Commerce</span>
-                        <span>Conversion</span>
-                        <span>Mobile-First</span>
-                    </div>
-                    <p class="featured-description">
-                        Mobile-first redesign for a major retailer resulting in 28% increase in mobile conversion rate and 18% decrease in cart abandonment.
-                    </p>
-                    <a href="project-e-commerce.html" class="view-project-btn">View Project</a>
-                </article>
-            </div>
-        </section>
-
-        <section id="archive" class="content-section">
-            <h2>Project Archive</h2>
-            
-            <div class="archive-filters">
-                <div class="search-container">
-                    <input type="text" id="archive-search" placeholder="Search projects...">
-                </div>
-                <div class="filter-container">
-                    <button class="archive-filter active" data-filter="all">All</button>
-                    <button class="archive-filter" data-filter="ux">UX/UI</button>
-                    <button class="archive-filter" data-filter="systems">Systems</button>
-                    <button class="archive-filter" data-filter="product">Product</button>
-                    <button class="archive-filter" data-filter="research">Research</button>
-                </div>
-                <div class="sort-container">
-                    <label for="sort-projects">Sort by:</label>
-                    <select id="sort-projects">
-                        <option value="newest">Newest First</option>
-                        <option value="oldest">Oldest First</option>
-                        <option value="a-z">A-Z</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="archive-grid">
-                <!-- Archive Project 1 -->
-                <article class="archive-item" data-category="ux">
-                    <div class="archive-image">
-                        <div class="archive-placeholder"></div>
-                    </div>
-                    <div class="archive-content">
-                        <h3>Accessibility Audit Tool</h3>
-                        <p class="archive-date">2022</p>
-                        <div class="archive-tags">
-                            <span>Accessibility</span>
-                            <span>Tooling</span>
+                <article class="work-item" data-category="product">
+                    <div class="work-image">
+                        <div class="work-placeholder"></div>
+                        <div class="work-overlay">
+                            <span>View project</span>
                         </div>
-                        <p class="archive-description">
-                            Automated accessibility audit tool that helps teams identify and fix accessibility issues in their products.
-                        </p>
-                        <a href="#" class="archive-link">View details</a>
                     </div>
+                    <h3>Project Gamma</h3>
+                    <p>Product Design • 2023</p>
                 </article>
-                
-                <!-- Archive Project 2 -->
-                <article class="archive-item" data-category="systems">
-                    <div class="archive-image">
-                        <div class="archive-placeholder"></div>
-                    </div>
-                    <div class="archive-content">
-                        <h3>Design Token System</h3>
-                        <p class="archive-date">2021</p>
-                        <div class="archive-tags">
-                            <span>Design Systems</span>
-                            <span>Documentation</span>
-                        </div>
-                        <p class="archive-description">
-                            Platform-agnostic design token system that centralized visual styling across 5 product lines.
-                        </p>
-                        <a href="#" class="archive-link">View details</a>
-                    </div>
-                </article>
-                
-                <!-- Archive Project 3 -->
-                <article class="archive-item" data-category="product">
-                    <div class="archive-image">
-                        <div class="archive-placeholder"></div>
-                    </div>
-                    <div class="archive-content">
-                        <h3>Smart Home Control Panel</h3>
-                        <p class="archive-date">2021</p>
-                        <div class="archive-tags">
-                            <span>IoT</span>
-                            <span>Physical+Digital</span>
-                        </div>
-                        <p class="archive-description">
-                            Unified control interface for multiple smart home systems, focusing on simplicity and accessibility.
-                        </p>
-                        <a href="#" class="archive-link">View details</a>
-                    </div>
-                </article>
-                
-                <!-- Archive Project 4 -->
-                <article class="archive-item" data-category="research">
-                    <div class="archive-image">
-                        <div class="archive-placeholder"></div>
-                    </div>
-                    <div class="archive-content">
-                        <h3>Remote Research Methodology</h3>
-                        <p class="archive-date">2020</p>
-                        <div class="archive-tags">
-                            <span>UX Research</span>
-                            <span>Methodology</span>
-                        </div>
-                        <p class="archive-description">
-                            Framework for conducting effective remote user research across global markets with varying technological access.
-                        </p>
-                        <a href="#" class="archive-link">View details</a>
-                    </div>
-                </article>
-                
-                <!-- Archive Project 5 -->
-                <article class="archive-item" data-category="ux">
-                    <div class="archive-image">
-                        <div class="archive-placeholder"></div>
-                    </div>
-                    <div class="archive-content">
-                        <h3>Streaming Service Redesign</h3>
-                        <p class="archive-date">2020</p>
-                        <div class="archive-tags">
-                            <span>Entertainment</span>
-                            <span>Cross-Platform</span>
-                        </div>
-                        <p class="archive-description">
-                            Cross-platform streaming service redesign to improve content discovery and user engagement.
-                        </p>
-                        <a href="#" class="archive-link">View details</a>
-                    </div>
-                </article>
-                
-                <!-- Archive Project 6 -->
-                <article class="archive-item" data-category="systems">
-                    <div class="archive-image">
-                        <div class="archive-placeholder"></div>
-                    </div>
-                    <div class="archive-content">
-                        <h3>Illustration System</h3>
-                        <p class="archive-date">2019</p>
-                        <div class="archive-tags">
-                            <span>Visual Design</span>
-                            <span>Illustration</span>
-                        </div>
-                        <p class="archive-description">
-                            Scalable illustration system that enabled non-designers to create on-brand visuals across marketing materials.
-                        </p>
-                        <a href="#" class="archive-link">View details</a>
-                    </div>
-                </article>
-                
-                <!-- Archive Project 7 -->
-                <article class="archive-item" data-category="product">
-                    <div class="archive-image">
-                        <div class="archive-placeholder"></div>
-                    </div>
-                    <div class="archive-content">
-                        <h3>AR Navigation Experience</h3>
-                        <p class="archive-date">2019</p>
-                        <div class="archive-tags">
-                            <span>Augmented Reality</span>
-                            <span>Wayfinding</span>
-                        </div>
-                        <p class="archive-description">
-                            AR-based indoor navigation system for large facilities such as hospitals and airports.
-                        </p>
-                        <a href="#" class="archive-link">View details</a>
-                    </div>
-                </article>
-                
-                <!-- Archive Project 8 -->
-                <article class="archive-item" data-category="research">
-                    <div class="archive-image">
-                        <div class="archive-placeholder"></div>
-                    </div>
-                    <div class="archive-content">
-                        <h3>Inclusive Design Framework</h3>
-                        <p class="archive-date">2018</p>
-                        <div class="archive-tags">
-                            <span>Inclusive Design</span>
-                            <span>Methodology</span>
-                        </div>
-                        <p class="archive-description">
-                            Comprehensive framework for incorporating inclusive design principles throughout the product development lifecycle.
-                        </p>
-                        <a href="#" class="archive-link">View details</a>
-                    </div>
-                </article>
-            </div>
-            
-            <div class="archive-pagination">
-                <button class="pagination-prev" disabled>Previous</button>
-                <div class="pagination-numbers">
-                    <button class="pagination-number active">1</button>
-                    <button class="pagination-number">2</button>
-                    <button class="pagination-number">3</button>
-                </div>
-                <button class="pagination-next">Next</button>
             </div>
         </section>
 
@@ -435,31 +178,7 @@
             </div>
         </section>
 
-        <section id="contact" class="content-section">
-            <h2>Contact</h2>
-            <div class="contact-container">
-                <div class="contact-info">
-                    <a href="mailto:hello@designportfolio.com" class="contact-link">hello@designportfolio.com</a>
-                    <a href="https://linkedin.com/in/yourprofile" class="contact-link">LinkedIn</a>
-                    <a href="https://twitter.com/yourhandle" class="contact-link">Twitter</a>
-                </div>
-                <form class="contact-form">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="4" required></textarea>
-                    </div>
-                    <button type="submit" class="submit-btn">Send Message</button>
-                </form>
-            </div>
-        </section>
+
     </main>
     
     <div class="theme-toggles">
