@@ -61,30 +61,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Project filtering
-    const workFilters = document.querySelectorAll('.work-filter');
-    const workItems = document.querySelectorAll('.work-item');
-    
-    workFilters.forEach(filter => {
-        filter.addEventListener('click', function() {
-            // Remove active class from all filters
-            workFilters.forEach(btn => btn.classList.remove('active'));
-            
-            // Add active class to clicked filter
-            this.classList.add('active');
-            
-            const filterValue = this.getAttribute('data-filter');
-            
-            // Filter work items
-            workItems.forEach(item => {
-                if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
-                    item.classList.remove('hidden');
-                } else {
-                    item.classList.add('hidden');
-                }
-            });
+   // Project filtering
+const workFilters = document.querySelectorAll('.work-filter');
+const workItems = document.querySelectorAll('.work-item');
+
+workFilters.forEach(filter => {
+    filter.addEventListener('click', function() {
+        // Remove active class from all filters
+        workFilters.forEach(btn => btn.classList.remove('active'));
+        
+        // Add active class to clicked filter
+        this.classList.add('active');
+        
+        const filterValue = this.getAttribute('data-filter');
+        
+        // Filter work items
+        workItems.forEach(item => {
+            if (filterValue === 'all' || item.getAttribute('data-category').split(' ').includes(filterValue)) {
+                item.classList.remove('hidden');
+            } else {
+                item.classList.add('hidden');
+            }
         });
     });
+});
     
     // Timeline animation with Intersection Observer
     const timelineItems = document.querySelectorAll('.timeline-item');
