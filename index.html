@@ -1,7 +1,215 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="Portfolio showcasing transdisciplinary design work across digital products">
+</head>
 <body>
-<h1>Hello World</h1>
-<p>this is kinda cool I guess, if it works!</p>
+    <header>
+        <div class="logo" aria-label="Portfolio logo">B</div>
+        <button class="menu-toggle" aria-label="Toggle navigation menu">
+            <span></span><span></span><span></span>
+        </button>
+    </header>
+    
+    <nav class="sidebar" aria-label="Main navigation">
+        <ul class="sidebar-menu">
+            <li><a href="#intro" class="active" aria-current="page">Intro</a></li>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#values">Values</a></li>
+            <li><a href="#background">Background</a></li>
+            <li><a href="#references">References</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <main class="main-content">
+        <section id="intro" class="content-section">
+            <div class="top-nav" role="tablist">
+                <button class="top-nav-item active" data-audience="anyone" role="tab" aria-selected="true">For anyone</button>
+                <button class="top-nav-item" data-audience="recruiters" role="tab" aria-selected="false">Recruiters</button>
+                <button class="top-nav-item" data-audience="designers" role="tab" aria-selected="false">Designers</button>
+            </div>
+            
+            <h1 class="headline" id="dynamic-headline">
+                I'm a systems thinker with a high bar for quality. From process to pixels, I'll collaborate with you, learn from you, and help make something we're proud of.
+            </h1>
+            
+            <div class="scroll-indicator" aria-hidden="true">
+                <span>Scroll to explore</span>
+                <div class="scroll-arrow"></div>
+            </div>
+        </section>
+
+        <section id="work" class="content-section">
+            <h2>Selected Work</h2>
+            
+            <div class="work-filters">
+                <button class="work-filter active" data-filter="all">All</button>
+                <button class="work-filter" data-filter="ux">UX/UI</button>
+                <button class="work-filter" data-filter="systems">Systems</button>
+                <button class="work-filter" data-filter="product">Product</button>
+            </div>
+            
+            <div class="work-grid">
+                <article class="work-item" data-category="ux">
+                    <div class="work-image">
+                        <div class="work-placeholder"></div>
+                        <div class="work-overlay">
+                            <span>View project</span>
+                        </div>
+                    </div>
+                    <h3>Project Alpha</h3>
+                    <p>UX/UI Design • 2024</p>
+                </article>
+                <article class="work-item" data-category="systems">
+                    <div class="work-image">
+                        <div class="work-placeholder"></div>
+                        <div class="work-overlay">
+                            <span>View project</span>
+                        </div>
+                    </div>
+                    <h3>Project Beta</h3>
+                    <p>Systems Design • 2023</p>
+                </article>
+                <article class="work-item" data-category="product">
+                    <div class="work-image">
+                        <div class="work-placeholder"></div>
+                        <div class="work-overlay">
+                            <span>View project</span>
+                        </div>
+                    </div>
+                    <h3>Project Gamma</h3>
+                    <p>Product Design • 2023</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="values" class="content-section">
+            <h2>Values</h2>
+            <div class="values-container">
+                <div class="value-column">
+                    <div class="value-circle" aria-hidden="true"></div>
+                    <h3>Systems Thinking</h3>
+                    <p>Understanding how parts influence the whole and designing for the ecosystem, not just components.</p>
+                </div>
+                <div class="value-column">
+                    <div class="value-circle" aria-hidden="true"></div>
+                    <h3>Collaboration</h3>
+                    <p>The best work emerges from diverse perspectives and open dialogue.</p>
+                </div>
+                <div class="value-column">
+                    <div class="value-circle" aria-hidden="true"></div>
+                    <h3>Craft</h3>
+                    <p>Details matter. Quality emerges from care and intentionality at every level.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="background" class="content-section">
+            <h2>Background</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot" aria-hidden="true"></div>
+                    <div class="timeline-content">
+                        <h3>2021-Present</h3>
+                        <h4>Senior Designer</h4>
+                        <p>Leading design for cross-platform experiences.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot" aria-hidden="true"></div>
+                    <div class="timeline-content">
+                        <h3>2019-2021</h3>
+                        <h4>Product Designer</h4>
+                        <p>Shipped features used by millions of users.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot" aria-hidden="true"></div>
+                    <div class="timeline-content">
+                        <h3>2018-2019</h3>
+                        <h4>UX Engineer</h4>
+                        <p>Bridged design and development teams.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="references" class="content-section">
+            <h2>References</h2>
+            <div class="references-grid">
+                <blockquote class="reference-card">
+                    <p class="quote">"An exceptional systems thinker who elevates every project they touch."</p>
+                    <footer class="reference-info">
+                        <div class="reference-avatar" aria-hidden="true"></div>
+                        <div class="reference-details">
+                            <cite>Alex Johnson</cite>
+                            <p>Design Director, Company X</p>
+                        </div>
+                    </footer>
+                </blockquote>
+                <blockquote class="reference-card">
+                    <p class="quote">"Balances technical knowledge with empathetic design thinking."</p>
+                    <footer class="reference-info">
+                        <div class="reference-avatar" aria-hidden="true"></div>
+                        <div class="reference-details">
+                            <cite>Maya Rodriguez</cite>
+                            <p>Product Lead, Company Y</p>
+                        </div>
+                    </footer>
+                </blockquote>
+            </div>
+        </section>
+
+        <section id="about" class="content-section">
+            <h2>About</h2>
+            <div class="about-container">
+                <div class="about-image" aria-hidden="true"></div>
+                <div class="about-text">
+                    <p>I combine a background in electrical engineering with expertise in play experience design to create meaningful digital experiences.</p>
+                    <p>My transdisciplinary approach allows me to navigate complex challenges while keeping human needs at the center.</p>
+                    <p>When not designing, you'll find me exploring new hiking trails, experimenting with interactive installations, or mentoring emerging designers.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="content-section">
+            <h2>Contact</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <a href="mailto:hello@designportfolio.com" class="contact-link">hello@designportfolio.com</a>
+                    <a href="https://linkedin.com/in/yourprofile" class="contact-link">LinkedIn</a>
+                    <a href="https://twitter.com/yourhandle" class="contact-link">Twitter</a>
+                </div>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    
+    <div class="theme-toggles">
+        <button class="theme-toggle light-mode" aria-label="Switch to light mode">☀️</button>
+        <button class="theme-toggle dark-mode active" aria-label="Switch to dark mode">☾</button>
+    </div>
+    
+    <script src="script.js"></script>
 </body>
 </html>
