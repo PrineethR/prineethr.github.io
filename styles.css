@@ -1,7 +1,7 @@
 :root {
     --bg-color: #0D0D0D;
     --text-color: #FFFFFF;
-    --accent-color: #ffffff;
+    --accent-color: #4D7FFF;
     --card-bg: #1A1A1A;
     --hover-color: rgba(255, 255, 255, 0.1);
     --transition-speed: 0.3s;
@@ -120,27 +120,13 @@ header {
 }
 
 .top-nav-item.active::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: var(--accent-color);
-    transform: scaleX(1);
-    transition: transform 0.3s ease;
+    /* Removed blue line */
+    display: none;
 }
 
 .top-nav-item:not(.active)::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: var(--accent-color);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
+    /* Removed blue line */
+    display: none;
 }
 
 .top-nav-item:hover::after {
@@ -163,9 +149,15 @@ h2 {
     display: inline-block;
 }
 
+/* Removed h2 after element (blue lines) */
 
 h3 {
     font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.experience-title {
+    font-size: 1.75rem;
     margin-bottom: 10px;
 }
 
@@ -192,6 +184,8 @@ p {
     transition: opacity var(--transition-speed);
     position: relative;
     padding: 5px 0;
+    font-size: 1rem;
+    text-transform: lowercase;
 }
 
 .work-filter:hover {
@@ -200,22 +194,14 @@ p {
 
 .work-filter.active {
     opacity: 1;
-}
-
-.work-filter.active::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: var(--accent-color);
+    text-decoration: underline;
 }
 
 .work-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 30px;
+    width: 100%;
 }
 
 .work-item {
@@ -223,6 +209,8 @@ p {
     opacity: 1;
     transform: translateY(0);
     transition: opacity 0.5s ease, transform 0.5s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 .work-item.hidden {
@@ -236,10 +224,14 @@ p {
     position: relative;
     overflow: hidden;
     border-radius: 8px;
+    background-color: var(--card-bg);
+    width: 100%;
+    aspect-ratio: 4/3;
 }
 
 .work-placeholder {
-    height: 240px;
+    height: 100%;
+    width: 100%;
     background-color: var(--card-bg);
     transition: transform 0.5s ease;
 }
@@ -310,18 +302,7 @@ p {
     background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent);
 }
 
-.experience-meta {
-    margin-bottom: 20px;
-    opacity: 0.8;
-    font-weight: normal; /* Since it's now an h3 */
-    font-size: 1rem; /* Control the size of h3 */
-}
-
-.experience-description {
-    max-width: 700px;
-    margin: 0;
-    line-height: 1.6;
-}/* Background Section */
+/* Background Section */
 #background {
     /* Changed from center to left alignment */
     text-align: left;
@@ -340,6 +321,54 @@ p {
     margin-bottom: 120px;
     text-align: left; /* Changed from center to left alignment */
     position: relative;
+}
+
+.experience-company {
+    font-size: 32px;
+    font-weight: bold;
+    z-index: 100;
+    display: block;
+    margin-bottom: 5px;
+    /* H2 reset to remove any default styling */
+    margin-top: 0;
+}
+
+.experience-title {
+    font-size: 5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    line-height: 1;
+    /* H1 reset to remove any default styling */
+    margin-top: 0;
+}
+
+.experience-meta {
+    margin-bottom: 20px;
+    opacity: 0.8;
+    font-weight: normal; /* Since it's now an h3 */
+    font-size: 1rem; /* Control the size of h3 */
+}
+
+.experience-description {
+    max-width: 700px;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.company-logo-container {
+    width: 100px;
+    height: 100px;
+    background-color: #1A1A1A;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 60px 0 0; /* Changed from auto to left alignment */
+}
+
+.company-logo {
+    max-width: 50%;
+    max-height: 50%;
 }
 
 .timeline {
@@ -367,20 +396,63 @@ p {
     display: none;
 }
 
-.timeline-item {
-    margin-bottom: 40px;
+/* References Section */
+.references-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.reference-card {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 0;
+}
+
+.reference-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.quote {
+    font-size: 1.25rem;
+    font-style: italic;
+    margin-bottom: 20px;
     position: relative;
-    padding: 0 20px;
-    opacity: 1;
-    transform: translateX(0);
-    text-align: left;
+    padding-left: 20px;
 }
 
-.timeline-dot {
-    /* Removed dot */
-    display: none;
+.quote::before {
+    content: '"';
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 2rem;
+    color: var(--accent-color);
+    line-height: 1;
 }
 
+.reference-info {
+    display: flex;
+    align-items: center;
+}
+
+.reference-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--hover-color);
+    margin-right: 15px;
+}
+
+cite {
+    font-style: normal;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
 
 /* About Section */
 .about-container {

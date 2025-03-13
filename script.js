@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-    
+    // Hero marquee functionality
+   
     // Mobile menu toggle
     const menuToggle = document.querySelector('.menu-toggle');
     
@@ -46,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 headline.textContent = headlines[audience];
                 headline.style.opacity = '1';
                 headline.style.transform = 'translateY(0)';
-            }, 0);
+            }, 300);
         });
     });
     
