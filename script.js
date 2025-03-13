@@ -1,87 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Hero marquee functionality
-    const marqueeItems = document.querySelectorAll('.marquee-item');
-    const centerPosition = window.innerHeight / 2;
-    let activeItem = null;
-    
-    // Define right side text for each marquee item
-    const rightTextMap = {
-        'questions': 'to uncover insights and opportunities',
-        'design': 'that crosses disciplines and boundaries',
-        'tech': 'to create meaningful experiences',
-        'behaviors': 'because every design is a mind game',
-        'senses': 'to create immersive experiences',
-        'experiences': 'that delight and inspire',
-        'marquee': 'as an experiment in motion'
-    };
-    
-    // Update right side text based on item type
-    function updateRightText(itemType) {
-        const rightText = document.querySelector('.dynamic-right-text p');
-        
-        if (rightTextMap[itemType]) {
-            rightText.textContent = rightTextMap[itemType];
-        }
-    }
-    
-    // Function to determine which item is closest to center
-    function findCenterItem() {
-        let closestItem = null;
-        let closestDistance = Infinity;
-        
-        // Only check the first 7 items (not the duplicates)
-        const uniqueItems = Array.from(marqueeItems).slice(0, 7);
-        
-        uniqueItems.forEach(item => {
-            const rect = item.getBoundingClientRect();
-            const itemCenter = rect.top + rect.height / 2;
-            const distance = Math.abs(itemCenter - centerPosition);
-            
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestItem = item;
-            }
-        });
-        
-        return closestItem;
-    }
-    
-    // Set active item
-    function setActiveItem(item) {
-        if (!item) return;
-        
-        // Remove active class from previous item
-        if (activeItem) {
-            // Remove active from all items with this data-item
-            const prevDataItem = activeItem.getAttribute('data-item');
-            document.querySelectorAll(`.marquee-item[data-item="${prevDataItem}"]`).forEach(item => {
-                item.classList.remove('active');
-            });
-        }
-        
-        // Add active class to new item and its duplicate
-        const dataItem = item.getAttribute('data-item');
-        document.querySelectorAll(`.marquee-item[data-item="${dataItem}"]`).forEach(item => {
-            item.classList.add('active');
-        });
-        
-        updateRightText(dataItem);
-        activeItem = item;
-    }
-    
-    // Continuously check which item is in the center and update active state
-    function updateCenterItem() {
-        const centerItem = findCenterItem();
-        if (centerItem && centerItem !== activeItem) {
-            setActiveItem(centerItem);
-        }
-    }
-    
-    // Check center item periodically (more frequently than animation changes)
-    setInterval(updateCenterItem, 100);
-    
-    // Set initial state
-    setTimeout(updateCenterItem, 500);
     
     // Mobile menu toggle
     const menuToggle = document.querySelector('.menu-toggle');
@@ -129,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 headline.textContent = headlines[audience];
                 headline.style.opacity = '1';
                 headline.style.transform = 'translateY(0)';
-            }, 300);
+            }, 0);
         });
     });
     
