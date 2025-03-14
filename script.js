@@ -113,14 +113,14 @@ document.addEventListener('DOMContentLoaded', function() {
    if (imageSpawner) {
        // Image paths with preloading for better performance
        const imagePaths = [
-           'https://github.com/PrineethR/prineethr.github.io/blob/main/images/me/me1.jpg',
-           'https://github.com/PrineethR/prineethr.github.io/blob/main/images/me/me2.jpg',
-           'https://github.com/PrineethR/prineethr.github.io/blob/main/images/me/me3.jpg',
-           'https://github.com/PrineethR/prineethr.github.io/blob/main/images/me/me4.jpg',
-           'https://github.com/PrineethR/prineethr.github.io/blob/main/images/me/me5.jpg',
-           'https://github.com/PrineethR/prineethr.github.io/blob/main/images/me/me6.jpg',
-           'https://github.com/PrineethR/prineethr.github.io/blob/main/images/me/me7.jpg',
-           'https://github.com/PrineethR/prineethr.github.io/blob/main/images/me/me8.jpg'
+           'images/me/me1.jpg',
+           'images/me/me2.JPG',
+           'images/me/me3.JPG',
+           'images/me/me4.JPG',
+           'images/me/me5.JPG',
+           'images/me/me6.JPG',
+           'images/me/me7.JPG',
+           'images/me/me8.JPG'
        ];
        
        // Preload images to improve performance

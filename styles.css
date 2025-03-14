@@ -1,10 +1,40 @@
 :root {
+    /* Theme colors */
     --bg-color: #0D0D0D;
     --text-color: #FFFFFF;
     --accent-color: #4D7FFF;
     --card-bg: #1A1A1A;
     --hover-color: rgba(255, 255, 255, 0.1);
     --transition-speed: 0.3s;
+    
+    /* Typography System */
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    
+    /* Font sizes */
+    --font-base: 1rem;         /* 16px base */
+    --font-sm: 0.875rem;       /* 14px for mobile base */
+    --font-md: 1.25rem;        /* 20px for quotes */
+    --font-lg: 1.5rem;         /* 24px for h3 */
+    --font-xl: 2rem;           /* 32px for experience-company */
+    --font-2xl: 2.5rem;        /* 40px for h2 */
+    --font-3xl: 3.5rem;        /* 56px for mobile value-title */
+    --font-4xl: 4rem;          /* 64px for headline max */
+    --font-5xl: 5rem;          /* 80px for experience-title */
+    --font-6xl: 7rem;          /* 112px for value-title */
+    
+    /* Line heights */
+    --line-tight: 1;           /* For large display text */
+    --line-normal: 1.1;        /* For headlines */
+    --line-relaxed: 1.6;       /* For body text */
+    
+    /* Font weights */
+    --weight-normal: 400;
+    --weight-medium: 500;
+    --weight-bold: 700;
+    
+    /* Letter spacing */
+    --tracking-normal: 0;
+    --tracking-wide: -0.02em;  /* For value-title */
 }
 
 .light-theme {
@@ -19,7 +49,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
 }
 
 html {
@@ -34,6 +64,7 @@ body {
     overflow-x: hidden;
     transition: background-color var(--transition-speed), color var(--transition-speed);
     flex-direction: column;
+    line-height: var(--line-relaxed);
 }
 
 /* Header and Navigation */
@@ -52,8 +83,7 @@ header {
 }
 
 .logo {
-    font-size: 24px;
-    font-weight: bold;
+    font-weight: var(--weight-bold);
     z-index: 100;
     filter: invert(1); /* Inverts the black SVG to white in dark mode */
     width: auto;
@@ -125,6 +155,7 @@ header {
 
 /* Adjust background section padding */
 #background {
+    text-align: left;
     padding-top: 10vh;
     padding-bottom: 10vh;
 }
@@ -133,6 +164,9 @@ header {
 #about {
     padding-top: 2vh;
     padding-bottom: 5vh;
+    min-height: 130vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Intro Section */
@@ -150,7 +184,7 @@ header {
     transition: opacity var(--transition-speed);
     position: relative;
     color: var(--text-color);
-    font-size: 1rem;
+    font-size: var(--font-base);
     padding: 5px 0;
 }
 
@@ -176,41 +210,35 @@ header {
     transform: scaleX(1);
 }
 
+/* Typography Styles */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: var(--weight-bold);
+    line-height: var(--line-normal);
+}
+
 .headline {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    line-height: 1.1;
+    font-size: clamp(var(--font-2xl), 5vw, var(--font-4xl));
+    line-height: var(--line-normal);
     max-width: 900px;
     margin-top: 40px;
     transition: opacity var(--transition-speed), transform var(--transition-speed);
 }
 
-/* Section Styles */
 h2 {
-    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-size: clamp(var(--font-lg), 3vw, var(--font-2xl));
     margin-bottom: 40px;
     position: relative;
     display: inline-block;
 }
 
-/* Removed h2 after element (blue lines) */
-
 h3 {
-    font-size: 1.5rem;
+    font-size: var(--font-lg);
     margin-bottom: 10px;
-}
-
-.experience-title {
-    font-size: 5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    line-height: 1;
-    /* H1 reset to remove any default styling */
-    margin-top: 0;
 }
 
 p {
     opacity: 0.8;
-    line-height: 1.6;
+    line-height: var(--line-relaxed);
     max-width: 65ch;
 }
 
@@ -231,7 +259,7 @@ p {
     transition: opacity var(--transition-speed);
     position: relative;
     padding: 5px 0;
-    font-size: 1rem;
+    font-size: var(--font-base);
     text-transform: lowercase;
 }
 
@@ -299,7 +327,7 @@ p {
 
 .work-overlay span {
     color: white;
-    font-weight: bold;
+    font-weight: var(--weight-bold);
     border-bottom: 2px solid white;
     padding-bottom: 5px;
 }
@@ -312,6 +340,7 @@ p {
     opacity: 1;
 }
 
+/* Values Section */
 .values-grid {
     display: grid;
     grid-template-columns: 1fr 2fr 2fr; /* Three columns with proportions */
@@ -333,11 +362,11 @@ p {
 }
 
 .value-title {
-    font-size: 7rem;
-    font-weight: 700;
-    line-height: 1; 
+    font-size: var(--font-6xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--line-tight);
     margin-bottom: 5px;
-    letter-spacing: -0.02em;
+    letter-spacing: var(--tracking-wide);
     text-align: left;
 }
 
@@ -346,39 +375,14 @@ p {
 }
 
 .values-description p {
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: var(--font-base);
+    line-height: var(--line-relaxed);
     margin-top: 0;
     opacity: 0.9;
     text-align: left;
 }
 
-/* For mobile */
-@media (max-width: 992px) {
-    .values-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .grid-col-1 {
-        display: none; /* Hide empty column on mobile */
-    }
-    
-    .value-title {
-        font-size: 3.5rem;
-    }
-    
-    .values-description p {
-        font-size: 1rem;
-    }
-}
-/* Background Section */
-#background {
-    text-align: left;
-    padding-top: 10vh;
-    padding-bottom: 10vh;
-}
-
-/* Center the experience section but keep contents left-aligned */
+/* Experience Section */
 .experience-list {
     display: flex;
     flex-direction: column;
@@ -387,49 +391,45 @@ p {
     margin: 0 auto; /* This centers the container horizontally */
 }
 
-/* Ensure experience items take full width of their container */
 .experience-item {
     width: 100%;
-    margin-bottom: 120px; /* Reduced from 120px */
+    margin-bottom: 120px;
     text-align: left;
     position: relative;
 }
 
-/* Only keep the last experience item's original margin */
 .experience-item:last-child {
     margin-bottom: 120px;
 }
 
 .experience-company {
-    font-size: 32px;
-    font-weight: bold;
+    font-size: var(--font-xl);
+    font-weight: var(--weight-bold);
     z-index: 100;
     display: block;
     margin-bottom: 5px;
-    /* H2 reset to remove any default styling */
     margin-top: 0;
 }
 
 .experience-title {
-    font-size: 5rem;
-    font-weight: bold;
+    font-size: var(--font-5xl);
+    font-weight: var(--weight-bold);
     margin-bottom: 20px;
-    line-height: 1;
-    /* H1 reset to remove any default styling */
+    line-height: var(--line-tight);
     margin-top: 0;
 }
 
 .experience-meta {
     margin-bottom: 20px;
     opacity: 0.8;
-    font-weight: normal;
-    font-size: 1rem;
+    font-weight: var(--weight-normal);
+    font-size: var(--font-base);
 }
 
 .experience-description {
     max-width: 700px;
     margin: 0;
-    line-height: 1.6;
+    line-height: var(--line-relaxed);
 }
 
 /* Remove the company logo container */
@@ -442,25 +442,7 @@ p {
     display: none;
 }
 
-/* Adjust responsive behavior */
-@media (max-width: 768px) {
-    .experience-list {
-        padding: 0 20px;
-        max-width: 100%; /* Allow full width on small screens with padding */
-    }
-    
-    .experience-title {
-        font-size: 3.5rem; /* Smaller font on mobile */
-    }
-}
-
 /* About Section */
-#about {
-    min-height: 130vh;
-    display: flex;
-    flex-direction: column;
-}
-
 .about-container {
     display: flex;
     flex-direction: column;
@@ -468,7 +450,6 @@ p {
     flex: 1;
 }
 
-/* Updated styles for the image spawner */
 #image-spawner {
     position: relative;
     flex: 1;
@@ -523,8 +504,30 @@ p {
     border-color: var(--accent-color);
 }
 
+/* Focus Styles for Accessibility */
+a:focus, button:focus, input:focus, textarea:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
 /* Responsive Design */
 @media (max-width: 992px) {
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .grid-col-1 {
+        display: none; /* Hide empty column on mobile */
+    }
+    
+    .value-title {
+        font-size: var(--font-3xl);
+    }
+    
+    .values-description p {
+        font-size: var(--font-base);
+    }
+    
     .values-container {
         flex-direction: column;
         gap: 40px;
@@ -541,7 +544,18 @@ p {
     }
     
     .content-section {
-        padding: 80px 20px;
+        padding: 40px 20px;
+    }
+    
+    #intro {
+        padding-top: 80px;
+        min-height: auto;
+        padding-bottom: 40px;
+    }
+    
+    #work, #values, #background, #about {
+        padding-top: 40px;
+        padding-bottom: 40px;
     }
     
     .work-grid {
@@ -551,10 +565,28 @@ p {
     .references-grid {
         grid-template-columns: 1fr;
     }
-}
-
-/* Focus Styles for Accessibility */
-a:focus, button:focus, input:focus, textarea:focus {
-    outline: 2px solid var(--accent-color);
-    outline-offset: 2px;
+    
+    .headline {
+        font-size: 2rem;
+        line-height: 1.2;
+    }
+    
+    .experience-list {
+        padding: 0 20px;
+        max-width: 100%; /* Allow full width on small screens with padding */
+    }
+    
+    .experience-title {
+        font-size: 2.5rem; /* Smaller font on mobile */
+    }
+    
+    h2 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+    
+    #image-spawner {
+        min-height: 200px;
+        height: 200px; /* Fixed height for mobile */
+    }
 }
