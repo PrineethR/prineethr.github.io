@@ -180,16 +180,16 @@ document.addEventListener('DOMContentLoaded', function() {
            img.src = preloadedImages[randomIndex].src;
            
            // Smaller size range for better performance
-           const size = Math.floor(Math.random() * 80) + 150; // Adjusted to 100-180px range
+           const size = Math.floor(Math.random() * 80) + 150; // 
            img.style.width = `${size}px`;
            img.style.height = `${size}px`;
            
-           // Position the image at the cursor location
+          
            img.style.position = 'absolute';
            img.style.left = `${x - size/2}px`;
            img.style.top = `${y - size/2}px`;
            
-           // Add styling
+           
            img.style.objectFit = 'cover';
            img.style.borderRadius = '4px';
            img.style.pointerEvents = 'none';
