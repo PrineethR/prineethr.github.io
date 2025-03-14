@@ -51,6 +51,36 @@
             align-items: center;
             background-color: var(--bg-color);
             position: relative;
+            overflow: hidden; /* Ensure background stays contained */
+        }
+        
+        /* Hero background styling */
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            object-fit: cover; /* For image backgrounds */
+        }
+        
+        /* Semi-transparent overlay to ensure text readability */
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(13, 13, 13, 0.5); /* Dark overlay with opacity */
+            z-index: 2;
+        }
+        
+        /* Position text above the background */
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
         }
         
         .project-title {
@@ -97,6 +127,7 @@
         header {
             background-color: transparent;
             backdrop-filter: blur(7.5px);
+            z-index: 10; /* Ensure header is above all elements */
         }
         
         /* Responsive adjustments */
@@ -120,10 +151,23 @@
         </a>
     </header>
     
-    <!-- Project Header Section -->
+    <!-- Project Header Section with Background -->
     <section class="project-header">
-        <h1 class="project-title">a living painting</h1>
-        <p class="project-subtitle">UX | Strategy | Sound • 2023-2024</p>
+        <!-- Background Image/Element (replace this with your actual background) -->
+        <div class="hero-background">
+            <!-- You can use an image or a div with CSS background -->
+            <img src="images\Desktop - 6.jpg" alt="" aria-hidden="true">
+            <!-- Alternatively, remove the img and add a background in CSS -->
+        </div>
+        
+        <!-- Semi-transparent overlay for better text visibility -->
+        <div class="hero-overlay"></div>
+        
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <h1 class="project-title">a living painting</h1>
+            <p class="project-subtitle">interaction | mixed reality • 2023-2024</p>
+        </div>
     </section>
     
     <!-- Project Sections with Placeholder Images -->
@@ -166,11 +210,20 @@
     <script>
         // Wait for DOM and images to load
         window.addEventListener('load', () => {
+            // Hero background animation
+            gsap.from('.hero-background', {
+                scale: 1.1,
+                opacity: 0.8,
+                duration: 2,
+                ease: 'power2.out'
+            });
+            
             // Header animations
             gsap.from('.project-title', {
                 opacity: 0,
                 y: 50,
                 duration: 0.8,
+                delay: 0.3,
                 ease: 'power3.out'
             });
             
@@ -178,7 +231,7 @@
                 opacity: 0,
                 y: 30,
                 duration: 0.8,
-                delay: 0.2,
+                delay: 0.5,
                 ease: 'power3.out'
             });
             
