@@ -19,10 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Define headlines for each audience
     const headlines = {
-        'anyone': "I design interactions at the convergence of humans, play, tech and design that bridge physical and digital worlds. From process to pixels, I'll collaborate with you, learn from you, and help make something we're proud of.",
+        'anyone': "I design interactions at the convergence of humans, play, tech and design that bridge physical and digital worlds. Let's turn speculations into reality that make both of us say 'wow, we made that.'",
         'recruiters': "An interaction designer with 6+ years of expertise in multimodal experiences, education, strategy, research and tech through more-than-human-centered design methodologies.",
         'designers': "Let's explore the messy, beautiful space of design, play experiences, and technology while questioning how we might dissolve artificial boundaries between users and interfaces.",
-        'whenyoustumbleuponagoldmine': "Congratulations, explorer—you've found my secret garden where theatrical experiments bloom alongside research papers, where I'm equally likely to be coding and soldering, or designing cardboard roller coasters for reasons I can never explain but somehow always make sense in the end"
+        'whenyoustumbleuponagoldmine': "Congratulations, explorer—you've found my secret garden where theatrical experiments bloom alongside research papers, where I'm equally likely to be coding and soldering, or designing cardboard roller coasters for reasons I can never explain but somehow always make sense in the end."
     };
     
     // Add click event listeners to top navigation items
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 headline.textContent = headlines[audience];
                 headline.style.opacity = '1';
                 headline.style.transform = 'translateY(0)';
-            }, 300);
+            }, 1);
         });
     });
     
