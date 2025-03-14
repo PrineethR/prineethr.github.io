@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Axis Bank</title>
-    <link rel="icon" href="prineeth.png" type="image/png">
+    <link rel="icon" href="prineeth.svg" type="image/png">
     <style>
         body {
             height: 100vh;
@@ -20,9 +20,9 @@
             left: 0;
             width: 100%;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
-            padding: 30px;
+            padding: 20px 30px;
             z-index: 100;
         }
         
@@ -31,6 +31,9 @@
             font-weight: bold;
             color: #FFFFFF;
             text-decoration: none;
+            height: 45px;
+            width: auto;
+            filter: invert(1); /* Makes the black SVG white */
         }
         
         .project-title {
@@ -45,7 +48,7 @@
         .project-subtitle {
             position: absolute;
             top: calc(10vh + 5rem);
-            color: #fffce1;
+            color: #ffffff;
             text-align: center;
             width: 100%;
             font-size: 1.5rem;
@@ -82,7 +85,7 @@
         .content-section {
             position: relative;
             padding: 20vh 5vw 5vh;
-            color: #fffce1;
+            color: #ffffff;
             max-width: 800px;
             margin: 0 auto;
         }
@@ -103,7 +106,7 @@
             left: 30px;
             background: rgba(255, 255, 255, 0.1);
             border: none;
-            color: #fffce1;
+            color: #ffffff;
             padding: 10px 20px;
             border-radius: 30px;
             cursor: pointer;
@@ -120,11 +123,13 @@
 </head>
 <body>
     <header>
-        <a href="index.html" class="logo" aria-label="Back to homepage">P</a>
+        <a href="index.html" aria-label="Back to homepage">
+            <img src="prineeth.svg" class="logo" alt="Prineeth logo">
+        </a>
     </header>
     
-    <h1 class="project-title">Project Alpha</h1>
-    <p class="project-subtitle">UX/UI Design • 2024</p>
+    <h1 class="project-title">Axis Bank</h1>
+    <p class="project-subtitle">UX | Strategy | Sound • 2023-2024</p>
     
     <section class="content-section">
         <h2>Project Overview</h2>
