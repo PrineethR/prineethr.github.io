@@ -373,22 +373,25 @@ p {
 }
 /* Background Section */
 #background {
-    /* Changed from center to left alignment */
     text-align: left;
+    padding-top: 10vh;
+    padding-bottom: 10vh;
 }
 
+/* Center the experience section but keep contents left-aligned */
 .experience-list {
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 100%;
+    max-width: 800px; /* Set a max-width for content area */
+    margin: 0 auto; /* This centers the container horizontally */
 }
 
+/* Ensure experience items take full width of their container */
 .experience-item {
     width: 100%;
-    max-width: 800px;
-    margin-bottom: 60px; /* Reduced from 120px */
-    text-align: left; /* Changed from center to left alignment */
+    margin-bottom: 120px; /* Reduced from 120px */
+    text-align: left;
     position: relative;
 }
 
@@ -407,11 +410,20 @@ p {
     margin-top: 0;
 }
 
+.experience-title {
+    font-size: 5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    line-height: 1;
+    /* H1 reset to remove any default styling */
+    margin-top: 0;
+}
+
 .experience-meta {
     margin-bottom: 20px;
     opacity: 0.8;
-    font-weight: normal; /* Since it's now an h3 */
-    font-size: 1rem; /* Control the size of h3 */
+    font-weight: normal;
+    font-size: 1rem;
 }
 
 .experience-description {
@@ -420,103 +432,26 @@ p {
     line-height: 1.6;
 }
 
+/* Remove the company logo container */
 .company-logo-container {
-    width: 100px;
-    height: 100px;
-    background-color: #1A1A1A;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 60px 0 0; /* Changed from auto to left alignment */
+    display: none;
 }
 
+/* Hide company logos */
 .company-logo {
-    max-width: 50%;
-    max-height: 50%;
-}
-
-.timeline {
-    position: relative;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.timeline:before {
-    /* Removed vertical line */
     display: none;
 }
 
-.timeline-item {
-    margin-bottom: 40px;
-    position: relative;
-    padding: 0 20px;
-    opacity: 1;
-    transform: translateX(0);
-    text-align: center;
-}
-
-.timeline-dot {
-    /* Removed dot */
-    display: none;
-}
-
-/* References Section */
-.references-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
-}
-
-.reference-card {
-    background-color: var(--card-bg);
-    padding: 30px;
-    border-radius: 8px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin: 0;
-}
-
-.reference-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-.quote {
-    font-size: 1.25rem;
-    font-style: italic;
-    margin-bottom: 20px;
-    position: relative;
-    padding-left: 20px;
-}
-
-.quote::before {
-    content: '"';
-    position: absolute;
-    left: 0;
-    top: 0;
-    font-size: 2rem;
-    color: var(--accent-color);
-    line-height: 1;
-}
-
-.reference-info {
-    display: flex;
-    align-items: center;
-}
-
-.reference-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: var(--hover-color);
-    margin-right: 15px;
-}
-
-cite {
-    font-style: normal;
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
+/* Adjust responsive behavior */
+@media (max-width: 768px) {
+    .experience-list {
+        padding: 0 20px;
+        max-width: 100%; /* Allow full width on small screens with padding */
+    }
+    
+    .experience-title {
+        font-size: 3.5rem; /* Smaller font on mobile */
+    }
 }
 
 /* About Section */
