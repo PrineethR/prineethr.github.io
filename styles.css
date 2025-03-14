@@ -1,3 +1,6 @@
+/* Import Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
 :root {
     /* Theme colors */
     --bg-color: #0D0D0D;
@@ -7,8 +10,8 @@
     --hover-color: rgba(255, 255, 255, 0.1);
     --transition-speed: 0.3s;
     
-    /* Typography System */
-    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    /* Typography System with Inter */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     
     /* Font sizes */
     --font-base: 1rem;         /* 16px base */
@@ -33,8 +36,9 @@
     --weight-bold: 700;
     
     /* Letter spacing */
-    --tracking-normal: 0;
-    --tracking-wide: -0.02em;  /* For value-title */
+    --tracking-normal: -0.02em;  /* -2% letter spacing for normal text */
+    --tracking-bold: -0.03em;    /* -3% letter spacing for bold text */
+    --tracking-wide: -0.04em;    /* Updated for value-title (was -0.02em) */
 }
 
 .light-theme {
@@ -65,6 +69,7 @@ body {
     transition: background-color var(--transition-speed), color var(--transition-speed);
     flex-direction: column;
     line-height: var(--line-relaxed);
+    letter-spacing: var(--tracking-normal);
 }
 
 /* Header and Navigation */
@@ -79,7 +84,7 @@ header {
     padding: 20px 30px;
     z-index: 100;
     background-color: rgba(13, 13, 13, 0.0);
-    backdrop-filter: blur(7.5px);
+    backdrop-filter: blur(2.5px);
 }
 
 .logo {
@@ -186,6 +191,7 @@ header {
     color: var(--text-color);
     font-size: var(--font-base);
     padding: 5px 0;
+    letter-spacing: var(--tracking-normal);
 }
 
 .top-nav-item:hover {
@@ -194,6 +200,7 @@ header {
 
 .top-nav-item.active {
     opacity: 1;
+    letter-spacing: var(--tracking-bold);
 }
 
 .top-nav-item.active::after {
@@ -214,21 +221,40 @@ header {
 h1, h2, h3, h4, h5, h6 {
     font-weight: var(--weight-bold);
     line-height: var(--line-normal);
+    letter-spacing: var(--tracking-bold);
 }
 
+/* Refined typography for the headline statement */
 .headline {
     font-size: clamp(var(--font-2xl), 5vw, var(--font-4xl));
-    line-height: var(--line-normal);
+    line-height: 1.15; /* Slightly increased from var(--line-normal) */
     max-width: 900px;
     margin-top: 40px;
     transition: opacity var(--transition-speed), transform var(--transition-speed);
+    font-weight: var(--weight-bold);
+    letter-spacing: -0.035em; /* Calibrated between normal and bold tracking */
+    
+    /* Create subtle rhythm with word spacing */
+    word-spacing: -0.01em;
+    
+    /* Add slight emphasis through subtle text-shadow */
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
-h2 {
+/* Adjust for light theme */
+.light-theme .headline {
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+/* Typography refinement for section headings */
+.content-section > h2 {
     font-size: clamp(var(--font-lg), 3vw, var(--font-2xl));
     margin-bottom: 40px;
     position: relative;
     display: inline-block;
+    font-weight: var(--weight-bold);
+    letter-spacing: -0.04em; /* Standard bold letter spacing */
+    text-transform: lowercase; /* Maintain your lowercase styling */
 }
 
 h3 {
@@ -240,6 +266,7 @@ p {
     opacity: 0.8;
     line-height: var(--line-relaxed);
     max-width: 65ch;
+    letter-spacing: var(--tracking-normal);
 }
 
 /* Work Section */
@@ -261,6 +288,7 @@ p {
     padding: 5px 0;
     font-size: var(--font-base);
     text-transform: lowercase;
+    letter-spacing: var(--tracking-normal);
 }
 
 .work-filter:hover {
@@ -270,6 +298,7 @@ p {
 .work-filter.active {
     opacity: 1;
     text-decoration: underline;
+    letter-spacing: var(--tracking-bold);
 }
 
 .work-grid {
@@ -330,6 +359,7 @@ p {
     font-weight: var(--weight-bold);
     border-bottom: 2px solid white;
     padding-bottom: 5px;
+    letter-spacing: var(--tracking-bold);
 }
 
 .work-item:hover .work-placeholder {
@@ -366,7 +396,7 @@ p {
     font-weight: var(--weight-bold);
     line-height: var(--line-tight);
     margin-bottom: 5px;
-    letter-spacing: var(--tracking-wide);
+    letter-spacing: var(--tracking-bold);
     text-align: left;
 }
 
@@ -380,6 +410,7 @@ p {
     margin-top: 0;
     opacity: 0.9;
     text-align: left;
+    letter-spacing: var(--tracking-normal);
 }
 
 /* Experience Section */
@@ -402,21 +433,25 @@ p {
     margin-bottom: 120px;
 }
 
+/* Enhanced typography for the background/experience section titles */
 .experience-company {
     font-size: var(--font-xl);
     font-weight: var(--weight-bold);
-    z-index: 100;
+    letter-spacing: -0.04em; /* Bold letter spacing */
     display: block;
     margin-bottom: 5px;
     margin-top: 0;
+    text-transform: lowercase; /* Maintaining the lowercase style from your design */
 }
 
 .experience-title {
     font-size: var(--font-5xl);
     font-weight: var(--weight-bold);
+    letter-spacing: -0.045em; /* Slightly tighter than standard bold for impact */
     margin-bottom: 20px;
-    line-height: var(--line-tight);
+    line-height: 0.95; /* Tighter line height for large display text */
     margin-top: 0;
+    color: var(--text-color);
 }
 
 .experience-meta {
@@ -424,12 +459,14 @@ p {
     opacity: 0.8;
     font-weight: var(--weight-normal);
     font-size: var(--font-base);
+    letter-spacing: var(--tracking-normal);
 }
 
 .experience-description {
     max-width: 700px;
     margin: 0;
     line-height: var(--line-relaxed);
+    letter-spacing: var(--tracking-normal);
 }
 
 /* Remove the company logo container */
@@ -467,6 +504,7 @@ p {
 
 .about-text p {
     margin-bottom: 20px;
+    letter-spacing: var(--tracking-normal);
 }
 
 /* Theme Toggles */
@@ -492,6 +530,7 @@ p {
     color: var(--text-color);
     transition: all var(--transition-speed);
     opacity: 0.6;
+    letter-spacing: var(--tracking-normal);
 }
 
 .theme-toggle:hover {
@@ -502,12 +541,21 @@ p {
     opacity: 1;
     background-color: var(--accent-color);
     border-color: var(--accent-color);
+    letter-spacing: var(--tracking-bold);
 }
 
 /* Focus Styles for Accessibility */
 a:focus, button:focus, input:focus, textarea:focus {
     outline: 2px solid var(--accent-color);
     outline-offset: 2px;
+}
+
+/* Create more dramatic presence on larger viewports */
+@media (min-width: 1200px) {
+    .headline {
+        letter-spacing: -0.038em; /* Slightly increased compression */
+        font-size: var(--font-4xl);
+    }
 }
 
 /* Responsive Design */
@@ -569,6 +617,7 @@ a:focus, button:focus, input:focus, textarea:focus {
     .headline {
         font-size: 2rem;
         line-height: 1.2;
+        letter-spacing: -0.03em; /* Slightly relaxed compression */
     }
     
     .experience-list {
@@ -578,9 +627,15 @@ a:focus, button:focus, input:focus, textarea:focus {
     
     .experience-title {
         font-size: 2.5rem; /* Smaller font on mobile */
+        letter-spacing: -0.04em; /* Return to standard bold tracking on mobile */
+        line-height: 1.05; /* Slightly increase line height for legibility */
     }
     
-    h2 {
+    .experience-company {
+        font-size: 1.75rem; /* Adjust for better proportion on mobile */
+    }
+    
+    .content-section > h2 {
         font-size: 1.8rem;
         margin-bottom: 20px;
     }
