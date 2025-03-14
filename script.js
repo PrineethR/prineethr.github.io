@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
    if (imageSpawner) {
        // Image paths with preloading for better performance
        const imagePaths = [
-           'prineethr.github.io/images/me/me1.JPG',
+           'images/me/me1.JPG',
            'images/me/me2.JPG',
            'images/me/me3.JPG',
            'images/me/me4.JPG',
