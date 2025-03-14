@@ -39,12 +39,13 @@
     --tracking-normal: -0.02em;  /* -2% letter spacing for normal text */
     --tracking-bold: -0.03em;    /* -3% letter spacing for bold text */
     --tracking-wide: -0.04em;    /* Updated for value-title (was -0.02em) */
+    --cursor-size: 6px;
 }
 
 .light-theme {
     --bg-color: #F5F5F5;
     --text-color: #222222;
-    --accent-color: #0057FF;
+    --accent-color: #000000;
     --card-bg: #FFFFFF;
     --hover-color: rgba(0, 0, 0, 0.05);
 }
@@ -70,6 +71,7 @@ body {
     flex-direction: column;
     line-height: var(--line-relaxed);
     letter-spacing: var(--tracking-normal);
+    
 }
 
 /* Header and Navigation */

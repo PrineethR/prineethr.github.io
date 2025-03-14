@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Hero marquee functionality
+    
    
     // Mobile menu toggle
     const menuToggle = document.querySelector('.menu-toggle');
@@ -19,9 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Define headlines for each audience
     const headlines = {
-        'anyone': "I'm a systems thinker with a high bar for quality. From process to pixels, I'll collaborate with you, learn from you, and help make something we're proud of.",
-        'recruiters': "I bring 5+ years of design experience across digital products. My background in both engineering and design helps me bridge technical and user needs effectively.",
-        'designers': "I value collaborative design processes and strong design systems. Let's share insights on creating cohesive, scalable experiences that delight users."
+        'anyone': "I design interactions at the convergence of humans, play, tech and design that bridge physical and digital worlds. From process to pixels, I'll collaborate with you, learn from you, and help make something we're proud of.",
+        'recruiters': "An interaction designer with 6+ years of expertise in multimodal experiences, education, strategy, research and tech through more-than-human-centered design methodologies.",
+        'designers': "Let's explore the messy, beautiful space of design, play experiences, and technology while questioning how we might dissolve artificial boundaries between users and interfaces.",
+        'whenyoustumbleuponagoldmine': "Congratulations, explorer—you've found my secret garden where theatrical experiments bloom alongside research papers, where I'm equally likely to be coding and soldering, or designing cardboard roller coasters for reasons I can never explain but somehow always make sense in the end"
     };
     
     // Add click event listeners to top navigation items
