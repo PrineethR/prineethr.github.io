@@ -113,14 +113,14 @@ document.addEventListener('DOMContentLoaded', function() {
    if (imageSpawner) {
        // Image paths with preloading for better performance
        const imagePaths = [
-           'images/me/me1.JPG',
-           'images/me/me2.JPG',
-           'images/me/me3.JPG',
-           'images/me/me4.JPG',
-           'images/me/me5.JPG',
-           'images/me/me6.JPG',
-           'images/me/me7.JPG',
-           'images/me/me8.JPG'
+           'images/me/me1.jpg',
+           'images/me/me2.jpg',
+           'images/me/me3.jpg',
+           'images/me/me4.jpg',
+           'images/me/me5.jpg',
+           'images/me/me6.jpg',
+           'images/me/me7.jpg',
+           'images/me/me8.jpg'
        ];
        
        // Preload images to improve performance
