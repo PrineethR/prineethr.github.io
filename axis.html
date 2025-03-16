@@ -14,33 +14,31 @@
     <style>
         /* Project-specific styles */
         .project-section {
-            height: 100vh;
+            min-height: 100vh;
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
             overflow: hidden;
-        }
-        
-        .project-section:nth-child(odd) {
-            background-color: var(--card-bg);
+            padding: 20px 0;
+            background-color: white;
         }
         
         .project-image-container {
             width: 100%;
-            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            padding: 0px;
         }
         
         .project-image {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0; /* Initially hidden for animation */
+            height: auto;
+            max-height: 100vh;
+            object-fit: contain;
         }
         
         .project-header {
@@ -82,6 +80,13 @@
             z-index: 3;
             text-align: center;
         }
+        .logo {
+    font-weight: var(--weight-bold);
+    z-index: 100;
+    filter: invert(0) !important;  /* Inverts the black SVG to white in dark mode */
+    width: auto;
+    height: 45px;
+}
         
         .project-title {
             font-size: clamp(3rem, 10vw, 6rem);
@@ -118,15 +123,17 @@
             font-family: var(--font-family);
             letter-spacing: var(--tracking-normal);
             transition: background 0.3s ease;
+            filter: invert(100%);
         }
         
         .back-button:hover {
             background: rgba(255, 255, 255, 0.2);
+            filter: invert(100%);
         }
         
         header {
             background-color: transparent;
-            backdrop-filter: blur(7.5px);
+            backdrop-filter: blur(0px);
             z-index: 10; /* Ensure header is above all elements */
         }
         
@@ -170,102 +177,67 @@
         </div>
     </section>
     
-    <!-- Project Sections with Placeholder Images -->
+    <!-- Project Sections with Images -->
     <section class="project-section" id="section1">
         <div class="project-image-container">
-            <img class="project-image" src="/api/placeholder/1920/1080" alt="Axis Bank project image 1" loading="lazy">
+            <img class="project-image" src="images\axis\opening.png" alt="Axis Bank project image 1" loading="eager">
         </div>
     </section>
     
     <section class="project-section" id="section2">
         <div class="project-image-container">
-            <img class="project-image" src="/api/placeholder/1920/1080" alt="Axis Bank project image 2" loading="lazy">
+            <img class="project-image" src="images\axis\p1.png" alt="Axis Bank project image 2" loading="eager">
         </div>
     </section>
     
     <section class="project-section" id="section3">
         <div class="project-image-container">
-            <img class="project-image" src="/api/placeholder/1920/1080" alt="Axis Bank project image 3" loading="lazy">
+            <img class="project-image" src="images\axis\p2.png" alt="Axis Bank project image 3" loading="eager">
         </div>
     </section>
     
     <section class="project-section" id="section4">
         <div class="project-image-container">
-            <img class="project-image" src="/api/placeholder/1920/1080" alt="Axis Bank project image 4" loading="lazy">
+            <img class="project-image" src="images\axis\p3.png" alt="Axis Bank project image 4" loading="eager">
         </div>
     </section>
     
     <section class="project-section" id="section5">
         <div class="project-image-container">
-            <img class="project-image" src="/api/placeholder/1920/1080" alt="Axis Bank project image 5" loading="lazy">
+            <img class="project-image" src="images\axis\p4.png" alt="Axis Bank project image 5" loading="eager">
+        </div>
+    </section>
+    <section class="project-section" id="section6">
+        <div class="project-image-container">
+            <img class="project-image" src="images\axis\p5.png" alt="Axis Bank project image 5" loading="eager">
+        </div>
+    </section>
+    <section class="project-section" id="section7">
+        <div class="project-image-container">
+            <img class="project-image" src="images\axis\p6.png" alt="Axis Bank project image 5" loading="eager">
+        </div>
+    </section>
+    <section class="project-section" id="section8">
+        <div class="project-image-container">
+            <img class="project-image" src="images\axis\p7.png" alt="Axis Bank project image 5" loading="eager">
+        </div>
+    </section>
+    <section class="project-section" id="section9">
+        <div class="project-image-container">
+            <img class="project-image" src="images\axis\p8.png" alt="Axis Bank project image 5" loading="eager">
+        </div>
+    </section>
+    <section class="project-section" id="section10">
+        <div class="project-image-container">
+            <img class="project-image" src="images\axis\p9.png" alt="Axis Bank project image 5" loading="eager">
+        </div>
+    </section>
+    <section class="project-section" id="section11">
+        <div class="project-image-container">
+            <img class="project-image" src="images\axis\p10.png" alt="Axis Bank project image 5" loading="eager">
         </div>
     </section>
     
     <a href="index.html" class="back-button">← back to projects</a>
-    
-    <!-- GSAP Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    
-    <script>
-        // Wait for DOM and images to load
-        window.addEventListener('load', () => {
-            // Hero background animation
-            gsap.from('.hero-background', {
-                scale: 1.1,
-                opacity: 0.8,
-                duration: 2,
-                ease: 'power2.out'
-            });
-            
-            // Header animations
-            gsap.from('.project-title', {
-                opacity: 0,
-                y: 50,
-                duration: 0.8,
-                delay: 0.3,
-                ease: 'power3.out'
-            });
-            
-            gsap.from('.project-subtitle', {
-                opacity: 0,
-                y: 30,
-                duration: 0.8,
-                delay: 0.5,
-                ease: 'power3.out'
-            });
-            
-            // Image reveal animations on scroll
-            const projectImages = document.querySelectorAll('.project-image');
-            
-            projectImages.forEach((image, index) => {
-                // Set initial state
-                gsap.set(image, { opacity: 0, scale: 1.05 });
-                
-                // Create scroll trigger animation
-                gsap.to(image, {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 1.2,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: image.parentElement.parentElement,
-                        start: 'top 80%',
-                        end: 'bottom 20%',
-                        toggleActions: 'play none none reverse'
-                    }
-                });
-            });
-            
-            // Back button animation
-            gsap.from('.back-button', {
-                opacity: 0,
-                y: 20,
-                duration: 0.5,
-                delay: 1,
-                ease: 'power2.out'
-            });
-        });
-    </script>
 </body>
 </html>

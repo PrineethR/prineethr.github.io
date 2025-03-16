@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const headlines = {
         'anyone': "I design interactions at the convergence of humans, play, tech and design that bridge physical and digital worlds. Let's turn speculations into reality that make both of us say 'wow, we made that.'",
         'recruiters': "An interaction designer with 6+ years of experience in multimodal experiences, education, strategy, research and tech through more-than-human-centered design methodologies.",
-        'designers': "Let's explore phenomena while questioning how we might dissolve artificial boundaries between users and interfaces.",
+        'designers': "I'm continuously exploring phenomena while questioning how we might dissolve artificial boundaries between users and interfaces.",
         'whenyoustumbleuponagoldmine': "Congratulations, explorer—you've found my secret garden where theatrical experiments bloom alongside research papers, where I'm equally likely to be coding and soldering, or designing cardboard roller coasters for reasons I can never explain but somehow always make sense in my head at the end."
     };
     
