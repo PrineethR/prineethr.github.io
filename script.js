@@ -10,6 +10,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    document.querySelectorAll('.work-image').forEach(image => {
+        image.addEventListener('click', function() {
+            const link = this.querySelector('.work-overlay span').parentElement.getAttribute('href') || 
+                         this.querySelector('a').getAttribute('href');
+            if (link) window.location.href = link;
+        });
+    });
+
     // Dynamic headline functionality
     const navItems = document.querySelectorAll('.top-nav-item');
     const headline = document.getElementById('dynamic-headline');
