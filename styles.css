@@ -36,7 +36,7 @@
     --weight-bold: 700;
     
     /* Letter spacing */
-    --tracking-normal: -0.02em;  /* -2% letter spacing for normal text */
+    --tracking-normal: -0.040em;  /* -2% letter spacing for normal text */
     --tracking-bold: -0.03em;    /* -3% letter spacing for bold text */
     --tracking-wide: -0.04em;    /* Updated for value-title (was -0.02em) */
     --cursor-size: 6px;
