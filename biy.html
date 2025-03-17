@@ -14,40 +14,31 @@
     <style>
         /* Project-specific styles */
         .project-section {
-            height: 100vh;
+            min-height: 100vh;
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
             overflow: hidden;
-        }
-        
-        .project-section:nth-child(odd) {
-            background-color: var(--card-bg);
+            padding: 20px 0;
+            background-color: white;
         }
         
         .project-image-container {
             width: 100%;
-            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            padding: 0px;
         }
-        .logo {
-    font-weight: var(--weight-bold);
-    z-index: 100;
-    filter: invert(0) !important;  /* Inverts the black SVG to white in dark mode */
-    width: auto;
-    height: 45px;
-}
         
         .project-image {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0; /* Initially hidden for animation */
+            height: auto;
+            max-height: 100vh;
+            object-fit: contain;
         }
         
         .project-header {
@@ -56,26 +47,38 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: var(--bg-color);
+            background-color: white;
             position: relative;
             overflow: hidden; /* Ensure background stays contained */
         }
         
-        /* Hero background styling */
+        /* Hero background styling - UPDATED */
         .hero-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-
-.hero-background img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Changed from fill to cover */
-}
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .hero-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures image covers the entire container */
+            object-position: center; /* Centers the image */
+        }
+        
+        /* Semi-transparent overlay to ensure text readability */
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.5); /* Light overlay with opacity */
+            z-index: 2;
+        }
         
         /* Position text above the background */
         .hero-content {
@@ -84,16 +87,23 @@
             text-align: center;
         }
         
+        .logo {
+            font-weight: var(--weight-bold);
+            z-index: 100;
+            filter: invert(0) !important;  /* Inverts the black SVG to white in dark mode */
+            width: auto;
+            height: 45px;
+        }
+        
         .project-title {
-    font-size: clamp(3rem, 10vw, 6rem);
-    font-weight: var(--weight-bold);
-    letter-spacing: var(--tracking-bold);
-    margin-bottom: 1rem;
-    text-align: center;
-    color: var(--text-color);
-    text-transform: lowercase;
-    filter: invert(100%); /* This will invert the text color */
-}
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: var(--weight-bold);
+            letter-spacing: var(--tracking-bold);
+            margin-bottom: 1rem;
+            text-align: center;
+            color: black;
+            text-transform: lowercase;
+        }
         
         .project-subtitle {
             font-size: clamp(1rem, 2vw, 1.5rem);
@@ -101,17 +111,16 @@
             letter-spacing: var(--tracking-normal);
             margin-top: 1rem;
             text-align: center;
-            color: var(--text-color);
-            filter: invert(100%);
+            color: black;
         }
         
         .back-button {
             position: fixed;
             bottom: 30px;
             left: 30px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.1);
             border: none;
-            color: var(--text-color);
+            color: black;
             padding: 10px 20px;
             border-radius: 30px;
             cursor: pointer;
@@ -121,19 +130,28 @@
             font-family: var(--font-family);
             letter-spacing: var(--tracking-normal);
             transition: background 0.3s ease;
-            filter: invert(100%);
         }
         
         .back-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            filter: invert(100%);
+            background: rgba(0, 0, 0, 0.2);
         }
         
         header {
             background-color: transparent;
             backdrop-filter: blur(0px);
             z-index: 10; /* Ensure header is above all elements */
-            
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 30px;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            font-family: 'Inter', sans-serif;
         }
         
         /* Responsive adjustments */
@@ -157,13 +175,10 @@
         </a>
     </header>
     
-    
+    <!-- Project Header Section with Background -->
     <section class="project-header">
-        
         <div class="hero-background">
-            
             <img src="images\biy\header.png" alt="" aria-hidden="true">
-            
         </div>
         
         <!-- Semi-transparent overlay for better text visibility -->
@@ -171,61 +186,78 @@
         
         <!-- Hero Content -->
         <div class="hero-content">
-            <h1 class="project-title">build it yourself</h1>
-            <p class="project-subtitle">play experience | learning </p>
-            <p class="project-subtitle">independent project at teach for india • 2018</p>
-            <p class="project-subtitle">how might we democratize creative learning by enabling children to build with what they already have?</p> 
-            </div>
-    </section>
-    
-    <!-- Project Sections with Placeholder Images -->
-    <section class="project-section" id="section1">
-        <div class="project-image-container">
-            <img class="project-image" src="images\biy\page1.png" alt="Axis Bank project image 1" loading="lazy">
+            <h1 class="project-title">build-it-yourself</h1>
+            <p class="project-subtitle">learning experience | interaction | phygital play • 2019-2020</p>
         </div>
     </section>
-    
-    <section class="project-section" id="section2">
+    <section class="project-section" id="section1">
         <div class="project-image-container">
-            <img class="project-image" src="images\biy\page2.png" alt="Axis Bank project image 2" loading="lazy">
+            <img class="project-image" src="images\biy\1.png" alt="Axis Bank project image 1" loading="eager">
         </div>
     </section>
     
     <section class="project-section" id="section3">
         <div class="project-image-container">
-            <img class="project-image" src="images\biy\page3.png" alt="Axis Bank project image 3" loading="lazy">
+            <img class="project-image" src="images\biy\2.png" alt="Axis Bank project image 3" loading="eager">
         </div>
     </section>
     
     <section class="project-section" id="section4">
         <div class="project-image-container">
-            <img class="project-image" src="images\biy\page4.png" alt="Axis Bank project image 4" loading="lazy">
+            <img class="project-image" src="images\biy\3.png" alt="Axis Bank project image 4" loading="eager">
         </div>
     </section>
     
-    <section class="project-section" id="section5">
-        <div class="project-image-container">
-            <img class="project-image" src="images\biy\page5.png" alt="Axis Bank project image 5" loading="lazy">
-        </div>
-    </section>
     <section class="project-section" id="section6">
         <div class="project-image-container">
-            <img class="project-image" src="images\biy\page5.png" alt="Axis Bank project image 5" loading="lazy">
+            <img class="project-image" src="images\biy\4.png" alt="Axis Bank project image 5" loading="eager">
         </div>
     </section>
+    
     <section class="project-section" id="section7">
         <div class="project-image-container">
-            <img class="project-image" src="images\biy\page5.png" alt="Axis Bank project image 5" loading="lazy">
+            <img class="project-image" src="images\biy\5.png" alt="Axis Bank project image 5" loading="eager">
+        </div>
+    </section>
+    
+    <section class="project-section" id="section8">
+        <div class="project-image-container">
+            <img class="project-image" src="images\biy\6.png" alt="Axis Bank project image 5" loading="eager">
         </div>
     </section>
     <section class="project-section" id="section8">
         <div class="project-image-container">
-            <img class="project-image" src="images\biy\page5.png" alt="Axis Bank project image 5" loading="lazy">
+            <img class="project-image" src="images\biy\7.png" alt="Axis Bank project image 5" loading="eager">
+        </div>
+    </section>
+    <section class="project-section" id="section8">
+        <div class="project-image-container">
+            <img class="project-image" src="images\biy\8.png" alt="Axis Bank project image 5" loading="eager">
+        </div>
+    </section>
+    <section class="project-section" id="section8">
+        <div class="project-image-container">
+            <img class="project-image" src="images\biy\9.png" alt="Axis Bank project image 5" loading="eager">
+        </div>
+    </section>
+    <section class="project-section" id="section8">
+        <div class="project-image-container">
+            <img class="project-image" src="images\biy\10.png" alt="Axis Bank project image 5" loading="eager">
+        </div>
+    </section>
+    <section class="project-section" id="section8">
+        <div class="project-image-container">
+            <img class="project-image" src="images\biy\11.png" alt="Axis Bank project image 5" loading="eager">
+        </div>
+    </section>
+    <section class="project-section" id="section8">
+        <div class="project-image-container">
+            <img class="project-image" src="images\biy\12.png" alt="Axis Bank project image 5" loading="eager">
         </div>
     </section>
     
     <a href="index.html" class="back-button">← back to projects</a>
-    
+
     <!-- GSAP Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -235,8 +267,8 @@
         window.addEventListener('load', () => {
             // Hero background animation
             gsap.from('.hero-background', {
-                scale: 1,
-                opacity: 1,
+                scale: 1.1,
+                opacity: 0.8,
                 duration: 2,
                 ease: 'power2.out'
             });
@@ -257,29 +289,7 @@
                 delay: 0.5,
                 ease: 'power3.out'
             });
-            
-            // Image reveal animations on scroll
-            const projectImages = document.querySelectorAll('.project-image');
-            
-            projectImages.forEach((image, index) => {
-                // Set initial state
-                gsap.set(image, { opacity: 0, scale: 1.00 });
-                
-                // Create scroll trigger animation
-                gsap.to(image, {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 0.0,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: image.parentElement.parentElement,
-                        start: 'top 100%',
-                        end: 'bottom 20%',
-                        toggleActions: 'play none none reverse'
-                    }
-                });
-            });
-            
+
             // Back button animation
             gsap.from('.back-button', {
                 opacity: 0,
