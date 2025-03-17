@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-   
     // Mobile menu toggle
     const menuToggle = document.querySelector('.menu-toggle');
     
@@ -85,21 +84,62 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Theme toggle functionality
+    // Theme toggle functionality with direct logo mapping
     const lightToggle = document.querySelector('.light-mode');
     const darkToggle = document.querySelector('.dark-mode');
     
+    // Define direct mappings for logo sources
+    const logoMappings = [
+        {
+            darkSrc: "images/rsd-dark.png",
+            lightSrc: "images/rsd-light.png",
+            selector: ".recognition-item:nth-child(1) .recognition-logo"
+        },
+        {
+            darkSrc: "images/pdc-dark.png",
+            lightSrc: "images/pdc-light.png",
+            selector: ".recognition-item:nth-child(2) .recognition-logo"
+        },
+        {
+            darkSrc: "images/nid-dark.png",
+            lightSrc: "images/nid-light.png",
+            selector: ".recognition-item:nth-child(3) .recognition-logo"
+        },
+        {
+            darkSrc: "images/iim-dark.png",
+            lightSrc: "images/iim-light.png",
+            selector: ".recognition-item:nth-child(4) .recognition-logo"
+        }
+    ];
+    
+    // Function to update logos based on theme
+    function updateLogos(isLightTheme) {
+        logoMappings.forEach(mapping => {
+            const logoElement = document.querySelector(mapping.selector);
+            if (logoElement) {
+                logoElement.src = isLightTheme ? mapping.lightSrc : mapping.darkSrc;
+            }
+        });
+    }
+    
+    // Light mode toggle
     lightToggle.addEventListener('click', () => {
         document.body.classList.add('light-theme');
         darkToggle.classList.remove('active');
         lightToggle.classList.add('active');
+        updateLogos(true);
     });
     
+    // Dark mode toggle
     darkToggle.addEventListener('click', () => {
         document.body.classList.remove('light-theme');
         lightToggle.classList.remove('active');
         darkToggle.classList.add('active');
+        updateLogos(false);
     });
+    
+    // Initialize logos based on initial theme
+    updateLogos(document.body.classList.contains('light-theme'));
     
     // Add keyboard accessibility for work items
     const workItemLinks = document.querySelectorAll('.work-item');
