@@ -513,7 +513,7 @@ p {
 #image-spawner {
     position: relative;
     flex: 1;
-    min-height: 40vh;
+    min-height: 70vh;
     background-color: transparent;
     border: 2px solid var(--text-color);
     overflow: hidden;
@@ -571,6 +571,161 @@ p {
 a:focus, button:focus, input:focus, textarea:focus {
     outline: 2px solid var(--accent-color);
     outline-offset: 2px;
+}
+.recognition-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 400px;
+}
+
+.recognition-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.recognition-logo {
+    width: 60px;
+    height: auto;
+    margin-bottom: 10px;
+    filter: invert(0); /* For dark mode, invert logo if needed */
+}
+
+.light-theme .recognition-logo {
+    filter: invert(1); /* For light mode */
+}
+
+.recognition-title {
+    font-size: var(--font-lg);
+    font-weight: var(--weight-bold);
+    margin: 0;
+    letter-spacing: var(--tracking-bold);
+}
+
+.recognition-subtitle {
+    font-size: var(--font-base);
+    margin: 0;
+    opacity: 0.8;
+    letter-spacing: var(--tracking-normal);
+}
+
+/* Contact Tabs */
+.contact-tabs {
+    display: flex;
+    gap: 20px;
+    margin-top: 60px;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.contact-tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all var(--transition-speed);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.light-theme .contact-tab {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.contact-tab:hover {
+    background-color: var(--hover-color);
+    transform: translateY(-2px);
+}
+
+.tab-arrow {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    margin-left: 8px;
+}
+
+.tab-arrow:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    border-top: 1px solid var(--text-color);
+    border-right: 1px solid var(--text-color);
+    transform: rotate(45deg);
+    transition: transform var(--transition-speed), right var(--transition-speed);
+}
+
+.contact-tab:hover .tab-arrow:after {
+    transform: translate(2px, -2px) rotate(45deg);
+}
+
+.tab-text {
+    font-size: var(--font-base);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-normal);
+}
+
+/* Adjust layout for the about container to be a grid with recognition on the right */
+@media (min-width: 992px) {
+    .about-container {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        grid-template-rows: auto 1fr;
+        gap: 40px;
+    }
+    
+    .about-text {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    
+    .recognition-container {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    
+    #image-spawner {
+        grid-column: 1 / span 2;
+        grid-row: 2;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .about-container {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .recognition-container {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .contact-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .contact-tab {
+        flex-grow: 1;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-tab {
+        padding: 10px 15px;
+    }
+    
+    .recognition-container {
+        max-width: 100%;
+    }
 }
 
 /* Create more dramatic presence on larger viewports */
