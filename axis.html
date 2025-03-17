@@ -47,7 +47,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: var(--bg-color);
+            background-color: white;
             position: relative;
             overflow: hidden; /* Ensure background stays contained */
         }
@@ -70,7 +70,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(13, 13, 13, 0.5); /* Dark overlay with opacity */
+            background-color: rgba(255, 255, 255, 0.5); /* Light overlay with opacity */
             z-index: 2;
         }
         
@@ -80,13 +80,14 @@
             z-index: 3;
             text-align: center;
         }
+        
         .logo {
-    font-weight: var(--weight-bold);
-    z-index: 100;
-    filter: invert(0) !important;  /* Inverts the black SVG to white in dark mode */
-    width: auto;
-    height: 45px;
-}
+            font-weight: var(--weight-bold);
+            z-index: 100;
+            filter: invert(0) !important;  /* Inverts the black SVG to white in dark mode */
+            width: auto;
+            height: 45px;
+        }
         
         .project-title {
             font-size: clamp(3rem, 10vw, 6rem);
@@ -94,7 +95,7 @@
             letter-spacing: var(--tracking-bold);
             margin-bottom: 1rem;
             text-align: center;
-            color: var(--text-color);
+            color: black;
             text-transform: lowercase;
         }
         
@@ -104,16 +105,16 @@
             letter-spacing: var(--tracking-normal);
             margin-top: 1rem;
             text-align: center;
-            color: var(--text-color);
+            color: black;
         }
         
         .back-button {
             position: fixed;
             bottom: 30px;
             left: 30px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.1);
             border: none;
-            color: var(--text-color);
+            color: black;
             padding: 10px 20px;
             border-radius: 30px;
             cursor: pointer;
@@ -123,18 +124,28 @@
             font-family: var(--font-family);
             letter-spacing: var(--tracking-normal);
             transition: background 0.3s ease;
-            filter: invert(100%);
         }
         
         .back-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            filter: invert(100%);
+            background: rgba(0, 0, 0, 0.2);
         }
         
         header {
             background-color: transparent;
             backdrop-filter: blur(0px);
             z-index: 10; /* Ensure header is above all elements */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 30px;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            font-family: 'Inter', sans-serif;
         }
         
         /* Responsive adjustments */
@@ -160,13 +171,6 @@
     
     <!-- Project Header Section with Background -->
     <section class="project-header">
-        <!-- Background Image/Element (replace this with your actual background) -->
-        <div class="hero-background">
-            <!-- You can use an image or a div with CSS background -->
-            
-            <!-- Alternatively, remove the img and add a background in CSS -->
-        </div>
-        
         <!-- Semi-transparent overlay for better text visibility -->
         <div class="hero-overlay"></div>
         
@@ -177,9 +181,7 @@
         </div>
     </section>
     
-    <!-- Project Sections with Images -->
-
-    
+    <!-- Project Sections with Images - Using eager loading to prevent flash -->
     <section class="project-section" id="section2">
         <div class="project-image-container">
             <img class="project-image" src="images\axis\p1.png" alt="Axis Bank project image 2" loading="eager">
@@ -198,32 +200,36 @@
         </div>
     </section>
     
-
     <section class="project-section" id="section6">
         <div class="project-image-container">
             <img class="project-image" src="images\axis\p5.png" alt="Axis Bank project image 5" loading="eager">
         </div>
     </section>
+    
     <section class="project-section" id="section7">
         <div class="project-image-container">
             <img class="project-image" src="images\axis\p6.png" alt="Axis Bank project image 5" loading="eager">
         </div>
     </section>
+    
     <section class="project-section" id="section8">
         <div class="project-image-container">
             <img class="project-image" src="images\axis\p7.png" alt="Axis Bank project image 5" loading="eager">
         </div>
     </section>
+    
     <section class="project-section" id="section9">
         <div class="project-image-container">
             <img class="project-image" src="images\axis\p8.png" alt="Axis Bank project image 5" loading="eager">
         </div>
     </section>
+    
     <section class="project-section" id="section10">
         <div class="project-image-container">
             <img class="project-image" src="images\axis\p9.png" alt="Axis Bank project image 5" loading="eager">
         </div>
     </section>
+    
     <section class="project-section" id="section11">
         <div class="project-image-container">
             <img class="project-image" src="images\axis\p10.png" alt="Axis Bank project image 5" loading="eager">
@@ -231,5 +237,49 @@
     </section>
     
     <a href="index.html" class="back-button">← back to projects</a>
+
+    <!-- GSAP Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script>
+        // Wait for DOM and images to load
+        window.addEventListener('load', () => {
+            // Hero background animation
+            gsap.from('.hero-background', {
+                scale: 1.1,
+                opacity: 0.8,
+                duration: 2,
+                ease: 'power2.out'
+            });
+            
+            // Header animations
+            gsap.from('.project-title', {
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                delay: 0.3,
+                ease: 'power3.out'
+            });
+            
+            gsap.from('.project-subtitle', {
+                opacity: 0,
+                y: 30,
+                duration: 0.8,
+                delay: 0.5,
+                ease: 'power3.out'
+            });
+
+                      // Back button animation
+                      gsap.from('.back-button', {
+                opacity: 0,
+                y: 20,
+                duration: 0.5,
+                delay: 1,
+                ease: 'power2.out'
+            });
+        });
+    </script>
 </body>
 </html>
+
