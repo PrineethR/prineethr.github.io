@@ -129,6 +129,10 @@ document.addEventListener('DOMContentLoaded', function() {
            'images/me/me5.jpg',
            'images/me/me6.jpg',
            'images/me/me7.jpg',
+           'images/me/me7.jpg',
+           'images/me/me9.jpg',
+           'images/me/me10.jpg',
+           'images/me/me7.jpg',
            'images/me/me8.jpg'
        ];
        
