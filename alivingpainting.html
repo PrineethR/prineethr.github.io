@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>axis bank - prineeth ramachandra</title>
+    <title>a living painting</title>
     <!-- Preconnect to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -148,6 +148,47 @@
             font-family: 'Inter', sans-serif;
         }
         
+        /* Video section styles */
+        .video-section {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 0;
+            background-color: white;
+        }
+        
+        .video-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            width: 90%;
+            max-width: 1400px;
+        }
+        
+        .video-wrapper {
+            width: 100%;
+            max-width: 560px;
+            margin-bottom: 20px;
+        }
+        
+        .video-embed {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .video-caption {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            text-align: center;
+            color: rgba(0, 0, 0, 0.7);
+        }
+        
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .project-title {
@@ -158,6 +199,10 @@
             .project-subtitle {
                 font-size: 1rem;
                 padding: 0 20px;
+            }
+            
+            .video-wrapper {
+                max-width: 100%;
             }
         }
     </style>
@@ -223,6 +268,23 @@
         </div>
     </section>
     
+    <!-- New Video Section with YouTube Embeds -->
+    <section class="video-section" id="video-section">
+        <div class="video-container">
+            <div class="video-wrapper">
+                <iframe class="video-embed" 
+                    src="https://youtube.com/embed/-QuiqxyqSz4" 
+                    title="Video 1" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+                <p class="video-caption">demos at the university</p>
+            </div>
+
+        </div>
+    </section>
+    
     <a href="index.html" class="back-button">← back to projects</a>
 
     <!-- GSAP Scripts -->
@@ -257,16 +319,28 @@
                 ease: 'power3.out'
             });
 
-                      // Back button animation
-                      gsap.from('.back-button', {
+            // Back button animation
+            gsap.from('.back-button', {
                 opacity: 0,
                 y: 20,
                 duration: 0.5,
                 delay: 1,
                 ease: 'power2.out'
             });
+            
+            // Video section animations
+            gsap.from('.video-wrapper', {
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                stagger: 0.2,
+                scrollTrigger: {
+                    trigger: '.video-section',
+                    start: 'top 80%',
+                    toggleActions: 'play none none none'
+                }
+            });
         });
     </script>
 </body>
 </html>
-
