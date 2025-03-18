@@ -575,14 +575,14 @@ a:focus, button:focus, input:focus, textarea:focus {
 .recognition-container {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 50px;
     max-width: 400px;
 }
 
 .recognition-item {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
 }
 
 .recognition-logo {
@@ -590,6 +590,12 @@ a:focus, button:focus, input:focus, textarea:focus {
     height: auto;
     margin-bottom: 10px;
     /* Removed the filter styles since we'll handle different versions with JavaScript */
+}
+
+/* Alternative approach using a class */
+.logo-nid {
+    width: 200px; /* Adjust this value as needed */
+    height: auto;  /* Preserves the aspect ratio */
 }
 
 .recognition-title {

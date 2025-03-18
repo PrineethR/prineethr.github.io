@@ -1,95 +1,89 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>axis bank - prineeth ramachandra</title>
+    <title>naptick sleep experience - prineeth ramachandra</title>
     <!-- Preconnect to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Import Inter font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="prineeth.png" type="image/png">
     <style>
-        /* Project-specific styles */
-        .project-section {
-            height: 100vh;
+        :root {
+            --font-family: 'Inter', sans-serif;
+            --weight-normal: 400;
+            --weight-medium: 500;
+            --weight-bold: 700;
+            --tracking-normal: -0.04em;
+            --tracking-bold: -0.03em;
+            --color-sleep: #333333; /* Monochrome primary color */
+            --color-text: #333333;
+            --color-bg: #FFFFFF;
+            --color-light: #F5F5F5; /* Light monochrome background */
+        }
+        
+        /* Base styles */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-bg);
+            font-family: var(--font-family);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+        
+        /* Header styles */
+        header {
+            background-color: transparent;
+            backdrop-filter: blur(0px);
+            z-index: 10;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
+            padding: 20px 30px;
         }
         
-        .project-section:nth-child(odd) {
-            background-color: var(--card-bg);
+        .logo {
+            font-weight: var(--weight-bold);
+            z-index: 100;
+            filter: invert(0) !important;
+            width: auto;
+            height: 45px;
         }
         
-        .project-image-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-        
-        .project-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0; /* Initially hidden for animation */
-        }
-        
+        /* Project header styles */
         .project-header {
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: var(--bg-color);
+            background-color: var(--color-light);
             position: relative;
-            overflow: hidden; /* Ensure background stays contained */
+            overflow: hidden;
         }
         
-        /* Hero background styling */
         .hero-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            object-fit: cover; /* For image backgrounds */
+            display: none;
         }
         
-        /* Semi-transparent overlay to ensure text readability */
         .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(13, 13, 13, 0.5); /* Dark overlay with opacity */
-            z-index: 2;
+            display: none;
         }
         
-        /* Position text above the background */
         .hero-content {
             position: relative;
             z-index: 3;
-            text-align: center;
+            text-align: left;
+            padding: 0 20px;
+            max-width: 1000px;
+            width: 90%;
+            margin: 0 auto;
         }
         
-        .project-title {
-            font-size: clamp(3rem, 10vw, 6rem);
-            font-weight: var(--weight-bold);
-            letter-spacing: var(--tracking-bold);
-            margin-bottom: 1rem;
-            text-align: center;
-            color: var(--text-color);
+        .project-title, .section-title, .key-point-title, .highlight-title, .step-title {
             text-transform: lowercase;
         }
         
@@ -99,16 +93,267 @@
             letter-spacing: var(--tracking-normal);
             margin-top: 1rem;
             text-align: center;
-            color: var(--text-color);
+            color: var(--color-text);
+            text-transform: lowercase;
         }
         
+        /* Section styles */
+        .project-section {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 100px 0;
+        }
+        
+        .section-content {
+            max-width: 1000px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section-title {
+            font-size: 100px;
+            font-weight: var(--weight-bold);
+            letter-spacing: var(--tracking-bold);
+            line-height: 0.9;
+            margin-bottom: 2rem;
+            color: var(--color-text);
+            text-align: left;
+        }
+        
+        .section-text {
+            font-size: 22px;
+            font-weight: var(--weight-normal);
+            line-height: 140%;
+            letter-spacing: var(--tracking-normal);
+            margin-bottom: 2rem;
+            text-align: left;
+            text-transform: lowercase;
+        }
+        
+        /* Light/dark alternate sections */
+        .section-light {
+            background-color: var(--color-bg);
+        }
+        
+        .section-dark {
+            background-color: #FFFFFF;
+        }
+        
+        /* Highlight box */
+        .highlight-box {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--color-text);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            box-shadow: none;
+        }
+        
+        .highlight-title {
+            font-size: 40px;
+            font-weight: var(--weight-normal);
+            letter-spacing: var(--tracking-normal);
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        
+        .highlight-text {
+            font-size: 22px;
+            font-weight: var(--weight-normal);
+            line-height: 140%;
+            letter-spacing: var(--tracking-normal);
+            text-align: left;
+            text-transform: lowercase;
+        }
+        
+        /* Key points list */
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .key-point {
+            background-color: rgba(0, 0, 0, 0.02);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: none;
+        }
+        
+        .key-point-title {
+            font-weight: var(--weight-bold);
+            font-size: 40px;
+            margin-bottom: 10px;
+            letter-spacing: var(--tracking-normal);
+            line-height: 1.1;
+            color: var(--color-text);
+            text-align: left;
+        }
+        
+        .key-point-text {
+            font-size: 22px;
+            font-weight: var(--weight-normal);
+            line-height: 140%;
+            letter-spacing: var(--tracking-normal);
+            text-align: left;
+            text-transform: lowercase;
+        }
+        
+        /* Process visualization */
+        .process-steps {
+            display: flex;
+            flex-direction: column;
+            margin: 40px 0;
+        }
+        
+        .process-step {
+            display: flex;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .step-number {
+            flex: 0 0 50px;
+            height: 50px;
+            background-color: var(--color-sleep);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: var(--weight-bold);
+            margin-right: 20px;
+            z-index: 2;
+        }
+        
+        .step-content {
+            flex: 1;
+            padding: 0 0 20px 0;
+        }
+        
+        .step-title {
+            font-weight: var(--weight-normal);
+            font-size: 40px;
+            letter-spacing: var(--tracking-normal);
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+        
+        .step-text {
+            font-size: 22px;
+            font-weight: var(--weight-normal);
+            line-height: 140%;
+            letter-spacing: var(--tracking-normal);
+        }
+        
+        /* Connected steps with timeline */
+        .process-step::after {
+            content: '';
+            position: absolute;
+            top: 50px;
+            left: 25px;
+            width: 2px;
+            height: calc(100% - 30px);
+            background-color: rgba(91, 110, 245, 0.3);
+            z-index: 1;
+        }
+        
+        .process-step:last-child::after {
+            display: none;
+        }
+        
+        /* Stats visualization */
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 40px 0;
+        }
+        
+        .stat-item {
+            flex: 1 0 200px;
+            text-align: center;
+            margin: 20px;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: var(--weight-bold);
+            color: var(--color-sleep);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+        
+        /* Sleep product visualization */
+        .product-visualization {
+            height: 400px;
+            width: 100%;
+            margin: 40px 0;
+            position: relative;
+            background: linear-gradient(45deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.05) 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .product-shape {
+            height: 300px;
+            width: 150px;
+            background: white;
+            border-radius: 75px 75px 20px 20px;
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .product-light {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0.1) 100%);
+            border-radius: 75px 75px 0 0;
+            animation: breathe 5s infinite ease-in-out;
+        }
+        
+        .product-controls {
+            position: absolute;
+            bottom: 20px;
+            width: 80%;
+            height: 40px;
+            left: 10%;
+            background: rgba(91, 110, 245, 0.1);
+            border-radius: 20px;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        /* Back button */
         .back-button {
             position: fixed;
             bottom: 30px;
             left: 30px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(91, 110, 245, 0.1);
             border: none;
-            color: var(--text-color);
+            color: var(--color-text);
             padding: 10px 20px;
             border-radius: 30px;
             cursor: pointer;
@@ -121,25 +366,45 @@
         }
         
         .back-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        header {
-            background-color: transparent;
-            backdrop-filter: blur(0px);
-            z-index: 10; /* Ensure header is above all elements */
+            background: rgba(91, 110, 245, 0.2);
         }
         
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .project-title {
-                font-size: 2.5rem;
+            .section-content {
                 padding: 0 20px;
+                flex-direction: column !important;
             }
             
-            .project-subtitle {
-                font-size: 1rem;
-                padding: 0 20px;
+            .key-points {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+            }
+            
+            .stat-item {
+                margin: 10px 0;
+            }
+            
+            .process-step {
+                flex-direction: column;
+            }
+            
+            .step-number {
+                margin-bottom: 15px;
+            }
+            
+            .process-step::after {
+                left: 25px;
+                top: 50px;
+                height: calc(100% - 50px);
+            }
+            
+            h2[style*="text-align: right"] {
+                text-align: left !important;
+                margin-bottom: 40px !important;
             }
         }
     </style>
@@ -151,57 +416,318 @@
         </a>
     </header>
     
-    <!-- Project Header Section with Background -->
-    <section class="project-header">
-        <!-- Background Image/Element (replace this with your actual background) -->
-        <div class="hero-background">
-            <!-- You can use an image or a div with CSS background -->
-            <img src="images\Desktop - 6.jpg" alt="" aria-hidden="true">
-            <!-- Alternatively, remove the img and add a background in CSS -->
-        </div>
-        
-        <!-- Semi-transparent overlay for better text visibility -->
-        <div class="hero-overlay"></div>
-        
-        <div class="hero-content">
-            <h1 class="project-title">naptick</h1>
-            <p class="project-subtitle">industrial | interaction • 2018-2020 </p>
+    <!-- Project Header Section -->
+    <section class="project-header" style="background-color: #FFFFFF; display: flex; align-items: center; justify-content: center;">
+        <div class="hero-content" style="text-align: center; max-width: 1000px; width: 90%; margin: 0 auto;">
+            <h1 class="project-title" style="text-align: center; font-size: clamp(2rem, 10vw, 5rem);">naptick</h1>
+            <p class="project-subtitle" style="text-align: center;">ux | industrial design | physical interaction • 2023</p>
         </div>
     </section>
-    
-    <!-- Project Sections with Placeholder Images -->
-    <section class="project-section" id="section1">
-        <div class="project-image-container">
-            <img class="project-image" src="/api/placeholder/1920/1080" alt="Axis Bank project image 1" loading="lazy">
+
+    <!-- Introduction Section -->
+    <section class="project-section section-light">
+        <div class="section-content">
+            <h2 class="section-title">Introduction</h2>
+            <p class="section-text">
+                The Naptick Sleep Experience Device represented a 4-month intensive design challenge where I led UX and industrial design for a sleep enhancement product. The device combines light therapy, ambient sound, and voice assistance in a form factor designed for the bedside environment. My brief was to create an experience that would serve users across their entire sleep cycle – from evening wind-down through morning wake-up.
+            </p>
+            <p class="section-text">
+                The primary design challenge centered on crafting interactions that would be intuitive during moments of reduced cognitive function (when half-asleep) while maintaining aesthetic appeal when inactive. This required balancing competing needs: simplicity of interaction, quality of light/sound, manufacturing feasibility, and cost constraints for our 200-unit friends & family release.
+            </p>
+            
+            <div class="product-visualization">
+                <div class="product-shape">
+                    <div class="product-light"></div>
+                    <div class="product-controls"></div>
+                </div>
+            </div>
+            
+            <p class="section-text">
+                My role encompassed user research, industrial design, physical interaction design, and digital experience development – essentially shepherding the product from concept through to production-ready prototypes.
+            </p>
         </div>
     </section>
-    
-    <section class="project-section" id="section2">
-        <div class="project-image-container">
-            <img class="project-image" src="/api/placeholder/1920/1080" alt="Axis Bank project image 2" loading="lazy">
+
+    <!-- Discovery & Research Section -->
+    <section class="project-section section-dark">
+        <div class="section-content">
+            <h2 class="section-title">Discovery & Research</h2>
+            <p class="section-text">
+                I applied a multi-faceted research approach to understand the sleep technology space:
+            </p>
+            
+            <div class="key-points">
+                <div class="key-point">
+                    <div class="key-point-title">Competitive Analysis</div>
+                    <div class="key-point-text">Evaluated key players (Philips Wake-Up Light, Hatch Restore, Google Nest Hub) to identify opportunity gaps. I found most devices excelled either at light therapy or sound, but rarely both, and many lacked intuitive physical controls.</div>
+                </div>
+                
+                <div class="key-point">
+                    <div class="key-point-title">Contextual Interviews</div>
+                    <div class="key-point-text">Conducted 12 in-home interviews observing nightstand setups, morning/evening routines, and existing product interactions. Key finding: users often interacted with devices while in various states of consciousness, requiring extremely intuitive controls.</div>
+                </div>
+                
+                <div class="key-point">
+                    <div class="key-point-title">Technical Exploration</div>
+                    <div class="key-point-text">Collaborated with engineering to test various LED arrays, diffuser materials, and speaker configurations, evaluating performance and manufacturing viability.</div>
+                </div>
+            </div>
+            
+            <h3 class="section-title" style="font-size: 40px; margin-top: 60px; font-weight: var(--weight-normal); letter-spacing: var(--tracking-normal); line-height: 140%;">Critical Insights</h3>
+            
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Half-Conscious Interaction</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Environmental Integration</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Light Quality Perception</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Transition Support</div>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <div class="highlight-title">Design Principles</div>
+                <div class="highlight-text">
+                    <p><strong>Elliptical Harmony:</strong> Using flowing, continuous forms that feel organic rather than technical</p>
+                    <p><strong>Ambient Presence:</strong> Creating a device that visually recedes when not in active use</p>
+                    <p><strong>Gestural Simplicity:</strong> Ensuring primary functions are accessible through intuitive physical interactions</p>
+                    <p><strong>Adaptive Response:</strong> Designing the device to respond appropriately to different states of user consciousness</p>
+                </div>
+            </div>
         </div>
     </section>
-    
-    <section class="project-section" id="section3">
-        <div class="project-image-container">
-            <img class="project-image" src="/api/placeholder/1920/1080" alt="Axis Bank project image 3" loading="lazy">
+
+    <!-- Industrial Design Process Section -->
+    <section class="project-section section-light">
+        <div class="section-content">
+            <h2 class="section-title">Industrial Design Process</h2>
+            <p class="section-text">
+                The industrial design process focused on creating a form that would support both functional requirements and emotional connection:
+            </p>
+            
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Initial Form Exploration</div>
+                        <div class="step-text">
+                            I sketched over 30 initial concepts, then narrowed to four distinct approaches:
+                            <ul>
+                                <li>Vertical stacked forms (inspired by traditional bedside lamps)</li>
+                                <li>Tapered cone variations (optimizing light projection)</li>
+                                <li>Faceted geometric forms (creating interesting light/shadow play)</li>
+                                <li>Organic, curved profiles (referencing the Naptick logo's flowing curve)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Prototype Iteration</div>
+                        <div class="step-text">
+                            Created five scaled foam models to test proportions and physical presence, followed by three functional prototypes testing different:
+                            <ul>
+                                <li>Light diffusion methods (internal reflection vs. direct projection)</li>
+                                <li>Material combinations (opacity, transmission, finish)</li>
+                                <li>Button mechanisms (capacitive, mechanical, hybrid)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Material Development</div>
+                        <div class="step-text">
+                            The material selection process required balancing aesthetic goals with light performance:
+                            <ul>
+                                <li>Tested seven diffuser materials, measuring light quality and visual appeal</li>
+                                <li>Conducted blind user tests to determine preferred light quality</li>
+                                <li>Created finish samples to validate manufacturing capability at scale</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Final Design Refinement</div>
+                        <div class="step-text">
+                            Through this process, I refined the design to a form that balanced technical requirements with aesthetic goals:
+                            <ul>
+                                <li>A gently tapered cylindrical form (200mm height, 150mm base) that provided optimal light projection while maintaining stability</li>
+                                <li>Distinct material transitions that doubled as intuitive grip points</li>
+                                <li>A weighted base with integrated cable management</li>
+                                <li>A distinctive light diffusion pattern that referenced the brand's flowing curve</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
-    
-    <section class="project-section" id="section4">
-        <div class="project-image-container">
-            <img class="project-image" src="/api/placeholder/1920/1080" alt="Axis Bank project image 4" loading="lazy">
+
+    <!-- Physical Interaction Design Section -->
+    <section class="project-section section-dark">
+        <div class="section-content">
+            <h2 class="section-title">Physical Interaction Design</h2>
+            <p class="section-text">
+                For the physical interaction design, I focused on creating a system that would serve users in various states of consciousness – from fully alert to barely awake:
+            </p>
+            
+            <div class="key-points">
+                <div class="key-point">
+                    <div class="key-point-title">critical interaction mapping</div>
+                    <div class="key-point-text">
+                        i mapped the full sleep experience to identify key moments requiring physical interaction:
+                        <ul>
+                            <li>evening wind-down (setting sleep timer, adjusting light choreography and sound atmosphere)</li>
+                            <li>middle-of-night disruptions (subtle light activation, ambient sound adjustment)</li>
+                            <li>morning wake-up (gentle transition, alarm dismissal, progressive light intensity)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="key-point">
+                    <div class="key-point-title">light choreography</div>
+                    <div class="key-point-text">
+                        designed responsive light behaviors that support the sleep journey:
+                        <ul>
+                            <li>evening sequences that gradually shift color temperature from energizing to calming</li>
+                            <li>nighttime illumination providing just enough visibility without disrupting melatonin production</li>
+                            <li>morning wake-up choreography mimicking sunrise with natural color progression</li>
+                            <li>emotional light patterns that communicate device state through subtle pulsing and transitions</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="key-point">
+                    <div class="key-point-title">sound design</div>
+                    <div class="key-point-text">
+                        created a comprehensive sound experience that complements the sleep cycle:
+                        <ul>
+                            <li>ambient soundscapes with generative compositions that evolve without repetitive patterns</li>
+                            <li>interaction sounds providing subtle feedback without jarring the user from their relaxed state</li>
+                            <li>morning audio wake-up designed with gradual intensity increase matched to light changes</li>
+                            <li>acoustically engineered response patterns that feel natural and intuitive to half-conscious users</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <div class="highlight-title">sensory experience design</div>
+                <div class="highlight-text">
+                    <p>i developed a cohesive multi-sensory approach that respects users' cognitive states:</p>
+                    <ul>
+                        <li>textured physical controls with distinctive tactile feedback for intuitive nighttime interaction</li>
+                        <li>tangible interaction points positioned at natural grip locations on the device surface</li>
+                        <li>audio feedback tones specially designed to be recognizable yet gentle when users are half-asleep</li>
+                        <li>integrated light and sound experiences that work in harmony to create appropriate sleep or wake atmospheres</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </section>
-    
-    <section class="project-section" id="section5">
-        <div class="project-image-container">
-            <img class="project-image" src="/api/placeholder/1920/1080" alt="Axis Bank project image 5" loading="lazy">
+
+    <!-- UX Strategy Section -->
+    <section class="project-section section-light">
+        <div class="section-content">
+            <h2 class="section-title">UX Strategy & Digital Integration</h2>
+            <p class="section-text">
+                The physical product needed to work in concert with digital touchpoints, creating a cohesive ecosystem:
+            </p>
+            
+            <div class="key-points">
+                <div class="key-point">
+                    <div class="key-point-title">Cross-Platform Experience Mapping</div>
+                    <div class="key-point-text">
+                        Defined which interactions belonged where:
+                        <ul>
+                            <li>Physical product: Time-sensitive, frequent, and simple interactions</li>
+                            <li>Mobile app: Complex settings, scheduling, and personalization</li>
+                            <li>Voice: Convenience functions and accessibility support</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="key-point">
+                    <div class="key-point-title">Contextual Experience Design</div>
+                    <div class="key-point-text">
+                        The system needed to adapt based on context:
+                        <ul>
+                            <li>Time-aware responses (different behaviors morning vs. evening)</li>
+                            <li>Ambient light sensing to adjust brightness</li>
+                            <li>Gradual transitions between states to avoid jarring experiences</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="key-point">
+                    <div class="key-point-title">Information Architecture</div>
+                    <div class="key-point-text">
+                        Created a streamlined app structure with three primary sections:
+                        <ul>
+                            <li>Sleep setup (evening routines, sounds, schedules)</li>
+                            <li>Wake up (alarm settings, light patterns, intensities)</li>
+                            <li>Settings (device management, preferences)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="key-point">
+                    <div class="key-point-title">Interaction Continuity</div>
+                    <div class="key-point-text">
+                        Designed handoff moments between physical and digital:
+                        <ul>
+                            <li>Physical button press could trigger app options when appropriate</li>
+                            <li>App settings directly reflected in physical product behavior</li>
+                            <li>Consistent terminology and mental models across touchpoints</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Outcomes Section -->
+    <section class="project-section section-dark" style="display: flex; align-items: center; min-height: 100vh;">
+        <div class="section-content" style="display: flex; flex-direction: row; align-items: center; max-width: 1200px; gap: 80px;">
+            <div style="flex: 1;">
+                <h2 style="font-size: 100px; font-weight: var(--weight-bold); letter-spacing: var(--tracking-bold); line-height: 0.85; text-align: right; margin: 0; color: var(--color-text); text-transform: lowercase;">
+                    outcomes<br>
+                    and<br>
+                    learnings
+                </h2>
+            </div>
+            <div style="flex: 1.5;">
+                <p class="section-text" style="text-align: left; margin-bottom: 40px; text-transform: lowercase;">
+                    the naptick project revealed profound insights about designing for vulnerable states of consciousness. moving between research, prototyping, and refinement uncovered how deeply personal our relationship with sleep technology can be. the tactile quality of physical interfaces became not just a functional consideration but an emotional anchor for users navigating the liminal spaces between wakefulness and sleep.
+                </p>
+                <p class="section-text" style="text-align: left; text-transform: lowercase;">
+                    perhaps most significant was discovering how design decisions ripple through the sleep experience ecosystem. the careful crafting of transitions—both in the digital interface and physical product—created moments of genuine connection with users. this project reinforced my belief that thoughtful design can transform our relationship with technology into something that enhances rather than disrupts our natural rhythms.
+                </p>
+            </div>
         </div>
     </section>
     
     <a href="index.html" class="back-button">← back to projects</a>
-    
+
+
+
     <!-- GSAP Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
