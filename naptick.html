@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>naptick sleep experience</title>
+    <title>naptick - prineeth ramachandra</title>
     <!-- Preconnect to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,67 +24,103 @@
             --color-light: #F5F5F5; /* Light monochrome background */
         }
         
-        /* Base styles */
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--color-bg);
-            font-family: var(--font-family);
-            color: var(--color-text);
-            line-height: 1.6;
-        }
-        
-        /* Header styles */
-        header {
-            background-color: transparent;
-            backdrop-filter: blur(0px);
-            z-index: 10;
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* Project-specific styles */
+        .project-section {
+            min-height: 100vh;
             width: 100%;
-            padding: 20px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 0;
+            background-color: white;
         }
         
-        .logo {
-            font-weight: var(--weight-bold);
-            z-index: 100;
-            filter: invert(0) !important;
-            width: auto;
-            height: 45px;
+        .project-image-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 0px;
+            gap: 0;
         }
         
-        /* Project header styles */
+        .image-caption {
+            font-size: 16px;
+            color: #777;
+            margin-top: 8px;
+            font-weight: var(--weight-normal);
+            text-align: center;
+            max-width: 80%;
+            text-transform: lowercase;
+        }
+        
+        .project-image {
+            width: 100%;
+            height: auto;
+            max-height: 100vh;
+            object-fit: contain;
+            margin-bottom: 0;
+        }
+        
         .project-header {
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: var(--color-light);
+            background-color: white;
             position: relative;
-            overflow: hidden;
+            overflow: hidden; /* Ensure background stays contained */
         }
         
+        /* Hero background styling */
         .hero-background {
-            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            object-fit: fill; /* For image backgrounds */
         }
         
+        /* Semi-transparent overlay to ensure text readability */
         .hero-overlay {
-            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.5); /* Light overlay with opacity */
+            z-index: 2;
         }
         
+        /* Position text above the background */
         .hero-content {
             position: relative;
             z-index: 3;
-            text-align: left;
-            padding: 0 20px;
-            max-width: 1000px;
-            width: 90%;
-            margin: 0 auto;
+            text-align: center;
         }
         
-        .project-title, .section-title, .key-point-title, .highlight-title, .step-title {
+        .logo {
+            font-weight: var(--weight-bold);
+            z-index: 100;
+            filter: invert(0) !important;  /* Inverts the black SVG to white in dark mode */
+            width: auto;
+            height: 45px;
+        }
+        
+        .project-title {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: var(--weight-bold);
+            letter-spacing: var(--tracking-bold);
+            margin-bottom: 1rem;
+            text-align: center;
+            color: black;
             text-transform: lowercase;
         }
         
@@ -93,26 +130,58 @@
             letter-spacing: var(--tracking-normal);
             margin-top: 1rem;
             text-align: center;
-            color: var(--color-text);
+            color: black;
             text-transform: lowercase;
         }
         
-        /* Section styles */
-        .project-section {
-            min-height: 100vh;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            padding: 100px 0;
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            color: black;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            z-index: 100;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-family: var(--font-family);
+            letter-spacing: var(--tracking-normal);
+            transition: background 0.3s ease;
         }
         
+        .back-button:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        header {
+            background-color: transparent;
+            backdrop-filter: blur(0px);
+            z-index: 10; /* Ensure header is above all elements */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 30px;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            font-family: 'Inter', sans-serif;
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+        
+        /* Content styles */
         .section-content {
-            max-width: 1000px;
+            max-width: 1200px;
             width: 90%;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0;
         }
         
         .section-title {
@@ -123,6 +192,7 @@
             margin-bottom: 2rem;
             color: var(--color-text);
             text-align: left;
+            text-transform: lowercase;
         }
         
         .section-text {
@@ -144,45 +214,17 @@
             background-color: #FFFFFF;
         }
         
-        /* Highlight box */
-        .highlight-box {
-            background-color: rgba(0, 0, 0, 0.05);
-            color: var(--color-text);
-            padding: 40px;
-            border-radius: 20px;
-            margin: 40px 0;
-            box-shadow: none;
-        }
-        
-        .highlight-title {
-            font-size: 40px;
-            font-weight: var(--weight-normal);
-            letter-spacing: var(--tracking-normal);
-            line-height: 1.1;
-            margin-bottom: 1rem;
-            text-align: left;
-        }
-        
-        .highlight-text {
-            font-size: 22px;
-            font-weight: var(--weight-normal);
-            line-height: 140%;
-            letter-spacing: var(--tracking-normal);
-            text-align: left;
-            text-transform: lowercase;
-        }
-        
         /* Key points list */
         .key-points {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            grid-gap: 30px;
-            margin: 40px 0;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-gap: 20px;
+            margin: 30px 0;
         }
         
         .key-point {
             background-color: rgba(0, 0, 0, 0.02);
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
             box-shadow: none;
         }
@@ -195,9 +237,39 @@
             line-height: 1.1;
             color: var(--color-text);
             text-align: left;
+            text-transform: lowercase;
         }
         
         .key-point-text {
+            font-size: 22px;
+            font-weight: var(--weight-normal);
+            line-height: 140%;
+            letter-spacing: var(--tracking-normal);
+            text-align: left;
+            text-transform: lowercase;
+        }
+        
+        /* Highlight box */
+        .highlight-box {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--color-text);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px 0;
+            box-shadow: none;
+        }
+        
+        .highlight-title {
+            font-size: 40px;
+            font-weight: var(--weight-normal);
+            letter-spacing: var(--tracking-normal);
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            text-align: left;
+            text-transform: lowercase;
+        }
+        
+        .highlight-text {
             font-size: 22px;
             font-weight: var(--weight-normal);
             line-height: 140%;
@@ -210,12 +282,12 @@
         .process-steps {
             display: flex;
             flex-direction: column;
-            margin: 40px 0;
+            margin: 30px 0;
         }
         
         .process-step {
             display: flex;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             position: relative;
         }
         
@@ -244,6 +316,7 @@
             letter-spacing: var(--tracking-normal);
             line-height: 1.1;
             margin-bottom: 10px;
+            text-transform: lowercase;
         }
         
         .step-text {
@@ -251,6 +324,7 @@
             font-weight: var(--weight-normal);
             line-height: 140%;
             letter-spacing: var(--tracking-normal);
+            text-transform: lowercase;
         }
         
         /* Connected steps with timeline */
@@ -296,79 +370,6 @@
             opacity: 0.7;
         }
         
-        /* Sleep product visualization */
-        .product-visualization {
-            height: 400px;
-            width: 100%;
-            margin: 40px 0;
-            position: relative;
-            background: linear-gradient(45deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.05) 100%);
-            border-radius: 20px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .product-shape {
-            height: 300px;
-            width: 150px;
-            background: white;
-            border-radius: 75px 75px 20px 20px;
-            position: relative;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        
-        .product-light {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 70%;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0.1) 100%);
-            border-radius: 75px 75px 0 0;
-            animation: breathe 5s infinite ease-in-out;
-        }
-        
-        .product-controls {
-            position: absolute;
-            bottom: 20px;
-            width: 80%;
-            height: 40px;
-            left: 10%;
-            background: rgba(91, 110, 245, 0.1);
-            border-radius: 20px;
-        }
-        
-        @keyframes breathe {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-        
-        /* Back button */
-        .back-button {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            background: rgba(91, 110, 245, 0.1);
-            border: none;
-            color: var(--color-text);
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            z-index: 100;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-family: var(--font-family);
-            letter-spacing: var(--tracking-normal);
-            transition: background 0.3s ease;
-        }
-        
-        .back-button:hover {
-            background: rgba(91, 110, 245, 0.2);
-        }
-        
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .section-content {
@@ -406,6 +407,18 @@
                 text-align: left !important;
                 margin-bottom: 40px !important;
             }
+            
+            .project-title {
+                font-size: 60px;
+            }
+            
+            .section-title {
+                font-size: 60px;
+            }
+            
+            .image-caption {
+                max-width: 90%;
+            }
         }
     </style>
 </head>
@@ -415,47 +428,41 @@
             <img src="prineeth.svg" class="logo" alt="Prineeth logo" aria-label="Portfolio logo">
         </a>
     </header>
+    
     <!-- Project Header Section -->
-    <section class="project-header" style="background-color: #FFFFFF; display: flex; align-items: center; justify-content: center;">
-        <div class="hero-content" style="text-align: center; max-width: 1000px; width: 90%; margin: 0 auto;">
-            <div class="hero-background">
-            
-                <img src="images\naptickheader.jpg" alt="" aria-hidden="true">
-                
-            </div>
-            
-            <!-- Semi-transparent overlay for better text visibility -->
-            <div class="hero-overlay"></div>
-            <h1 class="project-title" style="text-align: center; font-size: clamp(2rem, 10vw, 5rem);">naptick</h1>
-            <p class="project-subtitle" style="text-align: center;">ux | industrial design | physical interaction • 2023</p>
+    <section class="project-header">
+        <div class="hero-background">
+            <img src="images\naptickheader.jpg" alt="" aria-hidden="true" style="opacity: 1.0;">
+        </div>
+        
+        <!-- Semi-transparent overlay for better text visibility -->
+        <div class="hero-overlay"></div>
+        
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <h1 class="project-title">naptick</h1>
+            <p class="project-subtitle">ux | industrial design | physical interaction • 2023</p>
         </div>
     </section>
 
     <!-- Introduction Section -->
     <section class="project-section section-light">
         <div class="section-content">
-            <h2 class="section-title">Introduction</h2>
+            <h2 class="section-title">introduction</h2>
             <p class="section-text">
-                The Naptick Sleep Experience Device represented a very interesting design problem, where I led UX and industrial design for a sleep enhancement product. The device combines light therapy, ambient sound, and voice assistance in a form factor designed for the bedside environment. My brief was to create an experience that would serve users across their entire sleep cycle – from evening wind-down through morning wake-up.
+                the naptick sleep experience device represents a 4-month intensive design challenge where i am leading ux and industrial design for a sleep enhancement product. the device combines light therapy, ambient sound, and voice assistance in a form factor designed for the bedside environment. my brief is to create an experience that will serve users across their entire sleep cycle – from evening wind-down through morning wake-up.
             </p>
             <p class="section-text">
-                The primary design brief centered on crafting interactions that would be intuitive during moments of reduced cognitive function (when half-asleep) while maintaining aesthetic appeal when inactive. This required balancing competing needs: simplicity of interaction, quality of light/sound, manufacturing feasibility, and cost constraints for our 200-unit friends & family release.
+                the primary design challenge centers on crafting interactions that will be intuitive during moments of reduced cognitive function (when half-asleep) while maintaining aesthetic appeal when inactive. this requires balancing competing needs: simplicity of interaction, quality of light/sound, manufacturing feasibility, and cost constraints for our planned friends & family release.
             </p>
             
-            <div class="product-visualization">
-                <div class="product-shape">
-                    <div class="product-light"></div>
-                    <div class="product-controls"></div>
-                </div>
-            </div>
-            
             <p class="section-text">
-                My role encompassed user research, industrial design, physical interaction design, and digital experience development – essentially shepherding the product from concept through to production-ready prototypes.
+                my role encompasses user research, industrial design, physical interaction design, and digital experience development
             </p>
             <p class="section-text">
-                As this product is still in design and development, <b>for confidentiality reasons I have omitted all details, designs and specifications
-                </p>
-            </div></b>
+                this is an ongoing project, details of which are <b>under an NDA. the visuals are therefore omitted.</b>
+            </p>
+        </div>
     </section>
 
     <!-- Discovery & Research Section -->
@@ -469,21 +476,21 @@
             <div class="key-points">
                 <div class="key-point">
                     <div class="key-point-title">Competitive Analysis</div>
-                    <div class="key-point-text">Evaluated key players (Philips Wake-Up Light, Hatch Restore, Google Nest Hub) to identify opportunity gaps. I found most devices excelled either at light therapy or sound, but rarely both, and many lacked intuitive physical controls.</div>
+                    <div class="key-point-text">Evaluated key players (Philips Twilight Hue, Hatch Restore, Google Nest Hub) to identify opportunity gaps. I found most devices excelled either at light therapy or sound, but rarely both, and many lacked intuitive physical controls.</div>
                 </div>
                 
                 <div class="key-point">
-                    <div class="key-point-title">Contextual Interviews</div>
-                    <div class="key-point-text">Conducted 12 in-home interviews observing nightstand setups, morning/evening routines, and existing product interactions. Key finding: users often interacted with devices while in various states of consciousness, requiring extremely intuitive controls.</div>
+                    <div class="key-point-title">Contextual Inquiries</div>
+                    <div class="key-point-text">Conducted research observing nightstand setups, morning/evening routines, and existing product interactions. <p><b>Key finding:</b> users often interacted with devices while in various states of consciousness, requiring extremely intuitive controls.</p></div>
                 </div>
                 
                 <div class="key-point">
                     <div class="key-point-title">Technical Exploration</div>
-                    <div class="key-point-text">Collaborated with engineering to test various LED arrays, diffuser materials, and speaker configurations, evaluating performance and manufacturing viability.</div>
+                    <div class="key-point-text">prototyped and tested various LED arrays, diffuser materials, and speaker configurations, evaluating performance and manufacturing viability.</div>
                 </div>
             </div>
             
-            <h3 class="section-title" style="text-align:left;font-size: 40px; margin-top: 60px; font-weight: var(--weight-normal); letter-spacing: var(--tracking-normal); line-height: 120%;">Critical Insights</h3>
+            <h3 class="section-title" style="font-size: 40px; margin-top: 60px; font-weight: var(--weight-normal); letter-spacing: var(--tracking-normal); line-height: 140%;">Critical Insights</h3>
             
             <div class="stats-container">
                 <div class="stat-item">
@@ -516,26 +523,33 @@
         </div>
     </section>
 
+    <!-- Prototype Sketches Image Section -->
+    <section class="project-section">
+        <div class="project-image-container">
+            <img class="project-image" src="images\sketches.png" alt="Naptick prototype sketches">
+        </div>
+    </section>
+
     <!-- Industrial Design Process Section -->
     <section class="project-section section-light">
         <div class="section-content">
-            <h2 class="section-title">Industrial Design</h2>
+            <h2 class="section-title">industrial design process</h2>
             <p class="section-text">
-                The industrial design process focused on creating a form that would support both functional requirements and emotional connection:
+                the industrial design process focuses on creating a form that will support both functional requirements and emotional connection:
             </p>
             
             <div class="process-steps">
                 <div class="process-step">
                     <div class="step-number">1</div>
                     <div class="step-content">
-                        <div class="step-title">Initial Form Exploration</div>
+                        <div class="step-title">initial form exploration</div>
                         <div class="step-text">
-                            I sketched over 30 initial concepts, then narrowed to four distinct approaches:
+                            i've sketched over 30 initial concepts, then narrowed to four distinct approaches:
                             <ul>
-                                <li>Vertical stacked forms (inspired by traditional bedside lamps)</li>
-                                <li>Tapered cone variations (optimizing light projection)</li>
-                                <li>Faceted geometric forms (creating interesting light/shadow play)</li>
-                                <li>Organic, curved profiles (referencing the Naptick logo's flowing curve)</li>
+                                <li>vertical stacked forms (inspired by traditional bedside lamps)</li>
+                                <li>tapered cone variations (optimizing light projection)</li>
+                                <li>faceted geometric forms (creating interesting light/shadow play)</li>
+                                <li>organic, curved profiles (referencing the naptick logo's flowing curve)</li>
                             </ul>
                         </div>
                     </div>
@@ -544,13 +558,13 @@
                 <div class="process-step">
                     <div class="step-number">2</div>
                     <div class="step-content">
-                        <div class="step-title">Prototype Iteration</div>
+                        <div class="step-title">prototype iteration</div>
                         <div class="step-text">
-                            Created five scaled foam models to test proportions and physical presence, followed by three functional prototypes testing different:
+                            creating scaled foam models to test proportions and physical presence, followed by functional prototypes testing different:
                             <ul>
-                                <li>Light diffusion methods (internal reflection vs. direct projection)</li>
-                                <li>Material combinations (opacity, transmission, finish)</li>
-                                <li>Button mechanisms (capacitive, mechanical, hybrid)</li>
+                                <li>light diffusion methods (internal reflection vs. direct projection)</li>
+                                <li>material combinations (opacity, transmission, finish)</li>
+                                <li>button mechanisms (capacitive, mechanical, hybrid)</li>
                             </ul>
                         </div>
                     </div>
@@ -559,13 +573,13 @@
                 <div class="process-step">
                     <div class="step-number">3</div>
                     <div class="step-content">
-                        <div class="step-title">Material Development</div>
+                        <div class="step-title">material development</div>
                         <div class="step-text">
-                            The material selection process required balancing aesthetic goals with light performance:
+                            the material selection process requires balancing aesthetic goals with light performance:
                             <ul>
-                                <li>Tested seven diffuser materials, measuring light quality and visual appeal</li>
-                                <li>Conducted user tests to determine preferred light quality</li>
-                                <li>Created samples to validate capability at scale</li>
+                                <li>testing diffuser materials, measuring light quality and visual appeal</li>
+                                <li>planning user tests to determine preferred light quality</li>
+                                <li>creating finish samples to validate manufacturing capability at scale</li>
                             </ul>
                         </div>
                     </div>
@@ -574,14 +588,14 @@
                 <div class="process-step">
                     <div class="step-number">4</div>
                     <div class="step-content">
-                        <div class="step-title">Final Design Refinement</div>
+                        <div class="step-title">final design refinement</div>
                         <div class="step-text">
-                            Through this process, I refined the design to a form that balanced technical requirements with aesthetic goals:
+                            through this process, i'm refining the design to a form that balances technical requirements with aesthetic goals:
                             <ul>
-                                <li>A gently tapered form (200mm height, 150mm base) that provided optimal light projection while maintaining structural stability and integrity</li>
-                                <li>Distinct material transitions that doubled as intuitive grip points</li>
-                                <li>A weighted base with integrated cable management</li>
-                                <li>A distinctive light diffusion pattern that referenced the brand's flowing curve</li>
+                                <li>a gently tapered cylindrical form that provides optimal light projection while maintaining stability</li>
+                                <li>distinct material transitions that double as intuitive grip points</li>
+                                <li>a weighted base with integrated cable management</li>
+                                <li>a distinctive light diffusion pattern that references the brand's flowing curve</li>
                             </ul>
                         </div>
                     </div>
@@ -590,12 +604,20 @@
         </div>
     </section>
 
+    <!-- Interaction Model Image Section -->
+    <section class="project-section" style="background-color: #FFFFFF;">
+        <div class="project-image-container">
+            <img class="project-image" src="images\Somnus.png" alt="Naptick interaction model">
+            
+        </div>
+    </section>
+
     <!-- Physical Interaction Design Section -->
     <section class="project-section section-dark">
         <div class="section-content">
-            <h2 class="section-title">Physical Interaction Design</h2>
+            <h2 class="section-title">physical interaction design</h2>
             <p class="section-text">
-                For the physical interaction design, I focused on creating a system that would serve users in various states of consciousness – from fully alert to barely awake:
+                for the physical interaction design, i'm focusing on creating a system that will serve users in various states of consciousness – from fully alert to barely awake:
             </p>
             
             <div class="key-points">
@@ -656,20 +678,20 @@
     <!-- UX Strategy Section -->
     <section class="project-section section-light">
         <div class="section-content">
-            <h2 class="section-title">UX & Digital Integration</h2>
+            <h2 class="section-title">ux strategy & digital integration</h2>
             <p class="section-text">
-                The physical product needed to work in concert with digital touchpoints, creating a cohesive ecosystem:
+                the physical product needs to work in concert with digital touchpoints, creating a cohesive ecosystem:
             </p>
             
             <div class="key-points">
                 <div class="key-point">
-                    <div class="key-point-title">Cross-Platform Experience Mapping</div>
+                    <div class="key-point-title">cross-platform experience mapping</div>
                     <div class="key-point-text">
-                        Defined which interactions belonged where:
+                        defining which interactions belong where:
                         <ul>
-                            <li>Physical product: Time-sensitive, frequent, and simple interactions</li>
-                            <li>Mobile app: Complex settings, scheduling, and personalization</li>
-                            <li>Voice: Convenience functions and accessibility support</li>
+                            <li>physical product: time-sensitive, frequent, and simple interactions</li>
+                            <li>mobile app: complex settings, scheduling, and personalization</li>
+                            <li>voice: convenience functions and accessibility support</li>
                         </ul>
                     </div>
                 </div>
@@ -714,8 +736,8 @@
     </section>
 
     <!-- Outcomes Section -->
-    <section class="project-section section-dark" style="display: flex; align-items: center; min-height: 100vh;">
-        <div class="section-content" style="display: flex; flex-direction: row; align-items: center; max-width: 1200px; gap: 80px;">
+    <section class="project-section section-dark">
+        <div class="section-content" style="display: flex; flex-direction: row; align-items: center; max-width: 1200px; gap: 60px;">
             <div style="flex: 1;">
                 <h2 style="font-size: 100px; font-weight: var(--weight-bold); letter-spacing: var(--tracking-bold); line-height: 0.85; text-align: right; margin: 0; color: var(--color-text); text-transform: lowercase;">
                     outcomes<br>
@@ -728,13 +750,15 @@
                     the naptick project revealed profound insights about designing for vulnerable states of consciousness. moving between research, prototyping, and refinement uncovered how deeply personal our relationship with sleep technology can be. the tactile quality of physical interfaces became not just a functional consideration but an emotional anchor for users navigating the liminal spaces between wakefulness and sleep.
                 </p>
                 <p class="section-text" style="text-align: left; text-transform: lowercase;">
-                    perhaps most significant was discovering how design decisions ripple through the sleep experience ecosystem. the careful crafting of transitions—both in the digital interface and physical product—created moments of genuine connection with users. this project reinforced my belief that thoughtful design can transform our relationship with technology into something that enhances rather than disrupts our natural rhythms.
+                    perhaps most significant was discovering how design decisions ripple through the sleep experience ecosystem. the careful crafting of transitions—both in the digital interface and physical product— can easily create moments of genuine connection with users. this project reinforced my belief that thoughtful design can transform our relationship with technology into something that enhances rather than disrupts our natural rhythms.
                 </p>
             </div>
         </div>
     </section>
-    
+
     <a href="index.html" class="back-button">← back to projects</a>
+</body>
+</html>
 
 
 
