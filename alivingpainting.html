@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>a living painting</title>
+    <title>axis bank - prineeth ramachandra</title>
     <!-- Preconnect to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -148,7 +148,7 @@
             font-family: 'Inter', sans-serif;
         }
         
-        /* Video section styles */
+        /* GIF section styles */
         .video-section {
             min-height: 100vh;
             width: 100%;
@@ -171,14 +171,18 @@
         
         .video-wrapper {
             width: 100%;
-            max-width: 560px;
+            max-width: 400px;
             margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .video-wrapper:hover {
+            transform: scale(1.02);
         }
         
         .video-embed {
             width: 100%;
-            aspect-ratio: 16/9;
-            border: none;
+            border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
         
@@ -223,7 +227,6 @@
         <div class="hero-content">
             <h1 class="project-title">a living painting</h1>
             <p class="project-subtitle">interaction design | mixed reality | exhibitions • 2023</p>
-            <p class="project-subtitle">how might we maintain artistic integrity while creating new pathways for connection beyond passive viewing?</p>
         </div>
     </section>
     
@@ -269,20 +272,19 @@
         </div>
     </section>
     
-    <!-- New Video Section with YouTube Embeds -->
-    <section class="video-section" id="video-section">
+    <!-- GIF Section -->
+    <section class="video-section" id="gif-section">
         <div class="video-container">
             <div class="video-wrapper">
-                <iframe class="video-embed" 
-                    src="https://youtube.com/embed/-QuiqxyqSz4" 
-                    title="Video 1" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
-                <p class="video-caption">demos at the university</p>
+                <img class="video-embed" src="images/alivingpainting/gif1.gif" alt="Interactive experience demonstration">
+                <p class="video-caption">testing at the university</p>
             </div>
+            
 
+            <div class="video-wrapper">
+                <img class="video-embed" src="images/alivingpainting/gif3.gif" alt="Behind the scenes process">
+                <p class="video-caption"></p>
+            </div>
         </div>
     </section>
     
@@ -329,14 +331,14 @@
                 ease: 'power2.out'
             });
             
-            // Video section animations
+            // GIF animations
             gsap.from('.video-wrapper', {
                 opacity: 0,
                 y: 50,
                 duration: 0.8,
                 stagger: 0.2,
                 scrollTrigger: {
-                    trigger: '.video-section',
+                    trigger: '#gif-section',
                     start: 'top 80%',
                     toggleActions: 'play none none none'
                 }
