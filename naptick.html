@@ -370,6 +370,88 @@
             opacity: 0.7;
         }
         
+        /* Password Overlay Styles */
+        #password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        #password-container {
+            text-align: center;
+            max-width: 400px;
+            padding: 40px;
+            border-radius: 15px;
+            background-color: rgba(0, 0, 0, 0.02);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        #password-title {
+            font-size: 40px;
+            font-weight: var(--weight-bold);
+            margin-bottom: 20px;
+            letter-spacing: var(--tracking-bold);
+            text-transform: lowercase;
+        }
+        
+        #password-subtitle {
+            font-size: 18px;
+            opacity: 0.7;
+            margin-bottom: 30px;
+            letter-spacing: var(--tracking-normal);
+            text-transform: lowercase;
+        }
+        
+        #password-input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-size: 16px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        
+        #submit-password {
+            padding: 12px 25px;
+            background-color: var(--color-sleep);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        #submit-password:hover {
+            background-color: #555;
+        }
+        
+        #password-error {
+            color: #ff3b30;
+            margin-top: 15px;
+            font-size: 14px;
+            min-height: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Hide content initially */
+        #content-container {
+            display: none;
+        }
+        
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .section-content {
@@ -419,357 +501,469 @@
             .image-caption {
                 max-width: 90%;
             }
+            
+            #password-container {
+                width: 90%;
+                padding: 30px 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <a href="index.html" aria-label="Back to homepage">
-            <img src="prineeth.svg" class="logo" alt="Prineeth logo" aria-label="Portfolio logo">
-        </a>
-    </header>
-    
-    <!-- Project Header Section -->
-    <section class="project-header">
-        <div class="hero-background">
-            <img src="images\naptickheader.jpg" alt="" aria-hidden="true" style="opacity: 1.0;">
+    <!-- Password Overlay -->
+    <div id="password-overlay">
+        <div id="password-container">
+            <div id="password-title">naptick</div>
+            <div id="password-subtitle">this project is password protected</div>
+            <input type="password" id="password-input" placeholder="enter password" autocomplete="off">
+            <button id="submit-password">view project</button>
+            <div id="password-error">incorrect password. please try again.</div>
         </div>
+    </div>
+
+    <!-- Content Container (Hidden Until Password is Entered) -->
+    <div id="content-container">
+        <header>
+            <a href="index.html" aria-label="Back to homepage">
+                <img src="prineeth.svg" class="logo" alt="Prineeth logo" aria-label="Portfolio logo">
+            </a>
+        </header>
         
-        <!-- Semi-transparent overlay for better text visibility -->
-        <div class="hero-overlay"></div>
-        
-  
-        <div class="hero-content">
-            <h1 class="project-title">naptick</h1>
-            <p class="project-subtitle">ux | industrial design | physical interaction • 2025</p>
-            <p class="project-subtitle">how might we design for a better sleep and improved human performance?</p>
-        </div>
-    </section>
-
-    <!-- Introduction Section -->
-    <section class="project-section section-light">
-        <div class="section-content">
-            <h2 class="section-title">introduction</h2>
-            <p class="section-text">
-                the naptick sleep experience device represents a 4-month intensive design challenge where i am leading ux and industrial design for a sleep enhancement product. the device combines light therapy, ambient sound, and voice assistance in a form factor designed for the bedside environment. my brief is to create an experience that will serve users across their entire sleep cycle – from evening wind-down through morning wake-up.
-            </p>
-            <p class="section-text">
-                the primary design challenge centers on crafting interactions that will be intuitive during moments of reduced cognitive function (when half-asleep) while maintaining aesthetic appeal when inactive. this requires balancing competing needs: simplicity of interaction, quality of light/sound, manufacturing feasibility, and cost constraints for our planned friends & family release.
-            </p>
-            
-            <p class="section-text">
-                my role encompasses user research, industrial design, physical interaction design, and digital experience development
-            </p>
-            <p class="section-text">
-                this is an ongoing project, details of which are <b>under an NDA. the visuals are therefore omitted.</b>
-            </p>
-        </div>
-    </section>
-
-    <!-- Discovery & Research Section -->
-    <section class="project-section section-dark">
-        <div class="section-content">
-            <h2 class="section-title">Discovery & Research</h2>
-            <p class="section-text">
-                I applied a multi-faceted research approach to understand the sleep technology space:
-            </p>
-            
-            <div class="key-points">
-                <div class="key-point">
-                    <div class="key-point-title">Competitive Analysis</div>
-                    <div class="key-point-text">Evaluated key players (Philips Twilight Hue, etc) to identify opportunity gaps. I found most devices excelled either at light therapy or sound, but rarely both, and many lacked intuitive physical controls.</div>
-                </div>
-                
-                <div class="key-point">
-                    <div class="key-point-title">Contextual Inquiries</div>
-                    <div class="key-point-text">Conducted research observing nightstand setups, morning/evening routines, and existing product interactions. <p><b>Key finding:</b> users often interacted with devices while in various states of consciousness, requiring extremely intuitive controls.</p></div>
-                </div>
-                
-                <div class="key-point">
-                    <div class="key-point-title">Technical Exploration</div>
-                    <div class="key-point-text">prototyped and tested various LED arrays, diffuser materials, and speaker configurations, evaluating performance and manufacturing viability.</div>
-                </div>
+        <!-- Project Header Section -->
+        <section class="project-header">
+            <div class="hero-background">
+                <img src="images\naptickheader.jpg" alt="" aria-hidden="true" style="opacity: 1.0;">
             </div>
             
-            <h3 class="section-title" style="font-size: 40px; margin-top: 60px; font-weight: var(--weight-normal); letter-spacing: var(--tracking-normal); line-height: 140%;">Critical Insights</h3>
+            <!-- Semi-transparent overlay for better text visibility -->
+            <div class="hero-overlay"></div>
             
-            <div class="stats-container">
-                <div class="stat-item">
-                    <div class="stat-number">1</div>
-                    <div class="stat-label">Half-Conscious Interaction</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">2</div>
-                    <div class="stat-label">Environmental Integration</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">3</div>
-                    <div class="stat-label">Light Quality Perception</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">4</div>
-                    <div class="stat-label">Transition Support</div>
-                </div>
+      
+            <div class="hero-content">
+                <h1 class="project-title">naptick</h1>
+                <p class="project-subtitle">ux | industrial design | physical interaction • 2025</p>
+                <p class="project-subtitle">how might we design for a better sleep and improved human performance?</p>
             </div>
-            
-            <div class="highlight-box">
-                <div class="highlight-title">Design Principles</div>
-                <div class="highlight-text">
-                    <p><strong>Elliptical Harmony:</strong> Using flowing, continuous forms that feel organic rather than technical</p>
-                    <p><strong>Ambient Presence:</strong> Creating a device that visually recedes when not in active use</p>
-                    <p><strong>Gestural Simplicity:</strong> Ensuring primary functions are accessible through intuitive physical interactions</p>
-                    <p><strong>Adaptive Response:</strong> Designing the device to respond appropriately to different states of user consciousness</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Prototype Sketches Image Section -->
-    <section class="project-section">
-        <div class="project-image-container">
-            <img class="project-image" src="images\sketches.png" alt="Naptick prototype sketches">
-        </div>
-    </section>
-
-    <!-- Industrial Design Process Section -->
-    <section class="project-section section-light">
-        <div class="section-content">
-            <h2 class="section-title">industrial design process</h2>
-            <p class="section-text">
-                the industrial design process focuses on creating a form that will support both functional requirements and emotional connection:
-            </p>
-            
-            <div class="process-steps">
-                <div class="process-step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <div class="step-title">initial form exploration</div>
-                        <div class="step-text">
-                            i've sketched over 30 initial concepts, then narrowed to four distinct approaches:
-                            <ul>
-                                <li>stacked forms (inspired by traditional bedside lamps)</li>
-                                <li>tapered cone variations (optimizing light projection)</li>
-                                <li>faceted geometric forms (creating interesting light/shadow play)</li>
-                                <li>organic, curved profiles (referencing the naptick logo's flowing curve)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="process-step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <div class="step-title">prototype iteration</div>
-                        <div class="step-text">
-                            creating scaled 3D printed and foam models to test proportions and physical presence, followed by functional prototypes testing different:
-                            <ul>
-                                <li>light diffusion methods (internal reflection vs. direct projection)</li>
-                                <li>material combinations (opacity, transmission, finish)</li>
-                                <li>button mechanisms (capacitive, mechanical, hybrid)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="process-step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <div class="step-title">material development</div>
-                        <div class="step-text">
-                            the material selection process requires balancing aesthetic goals with light performance:
-                            <ul>
-                                <li>testing diffuser materials, measuring light quality and visual appeal</li>
-                                <li>planning user tests to determine preferred light quality</li>
-                                <li>creating finish samples to validate manufacturing capability at scale</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="process-step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <div class="step-title">final design refinement</div>
-                        <div class="step-text">
-                            through this process, we're refining the design to a form that balances technical requirements with aesthetic goals:
-                            <ul>
-                                <li>a gently tapered cylindrical form that provides optimal light projection while maintaining stability</li>
-                                <li>distinct material transitions that double as intuitive grip points</li>
-                                <li>a weighted base with integrated cable management</li>
-                                <li>a distinctive light diffusion pattern that references the brand's curve</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Interaction Model Image Section -->
-    <section class="project-section" style="background-color: #FFFFFF;">
-        <div class="project-image-container">
-            <img class="project-image" src="images\Somnus.png" alt="Naptick interaction model">
-            
-        </div>
-    </section>
-
-    <!-- Physical Interaction Design Section -->
-    <section class="project-section section-dark">
-        <div class="section-content">
-            <h2 class="section-title">physical interaction design</h2>
-            <p class="section-text">
-                for the physical interaction design, i'm focusing on creating a system that will serve users in various states of consciousness – from fully alert to barely awake:
-            </p>
-            
-            <div class="key-points">
-                <div class="key-point">
-                    <div class="key-point-title">critical interaction mapping</div>
-                    <div class="key-point-text">
-                        i mapped the full sleep experience to identify key moments requiring physical interaction:
-                        <ul>
-                            <li>evening wind-downs (setting sleep timer, adjusting light choreography and sound atmosphere)</li>
-                            <li>middle-of-night disruptions (subtle light activation, ambient sound adjustment)</li>
-                            <li>morning wake-up (gentle transitions, alarm dismissal, progressive light intensity)</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="key-point">
-                    <div class="key-point-title">light choreography</div>
-                    <div class="key-point-text">
-                        designed responsive light behaviors that support the sleep journey:
-                        <ul>
-                            <li>evening sequences that gradually shift color temperature from energizing to calming</li>
-                            <li>nighttime illumination providing just enough visibility without disrupting melatonin production</li>
-                            <li>morning wake-up choreography mimicking sunrise with natural color progression</li>
-                            <li>emotional light patterns that communicate device state through subtle pulsing and transitions</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="key-point">
-                    <div class="key-point-title">sound design</div>
-                    <div class="key-point-text">
-                        created a comprehensive sound experience that complements the sleep cycle:
-                        <ul>
-                            <li>ambient soundscapes with generative compositions that evolve without repetitive patterns</li>
-                            <li>interaction sounds providing subtle feedback without jarring the user from their relaxed state</li>
-                            <li>morning audio wake-up designed with gradual intensity increase matched to light changes</li>
-                            <li>acoustically engineered response patterns that feel natural and intuitive to half-conscious users</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="highlight-box">
-                <div class="highlight-title">sensory experience design</div>
-                <div class="highlight-text">
-                    <p>i developed a cohesive multi-sensory approach that respects users' cognitive states:</p>
-                    <ul>
-                        <li>textured physical controls with distinctive tactile feedback for intuitive nighttime interaction</li>
-                        <li>tangible interaction points positioned at natural grip locations on the device surface</li>
-                        <li>audio feedback tones specially designed to be recognizable yet gentle when users are half-asleep</li>
-                        <li>integrated light and sound experiences that work in harmony to create appropriate sleep or wake atmospheres</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- UX Strategy Section -->
-    <section class="project-section section-light">
-        <div class="section-content">
-            <h2 class="section-title">ux strategy & digital integration</h2>
-            <p class="section-text">
-                the physical product needs to work in concert with digital touchpoints, creating a cohesive ecosystem:
-            </p>
-            
-            <div class="key-points">
-                <div class="key-point">
-                    <div class="key-point-title">cross-platform experience mapping</div>
-                    <div class="key-point-text">
-                        we defined which interactions belong where:
-                        <ul>
-                            <li>physical product: time-sensitive, frequent, and simple interactions</li>
-                            <li>mobile app: complex settings, scheduling, and personalization</li>
-                            <li>voice: convenience functions and accessibility support</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="key-point">
-                    <div class="key-point-title">Contextual Experience Design</div>
-                    <div class="key-point-text">
-                        The system needed to adapt based on context:
-                        <ul>
-                            <li>Time-aware responses (different behaviors morning vs. evening)</li>
-                            <li>Ambient light sensing to adjust brightness</li>
-                            <li>Gradual transitions between states to avoid jarring experiences</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="key-point">
-                    <div class="key-point-title">Information Architecture</div>
-                    <div class="key-point-text">
-                        We created a streamlined app structure with three primary sections:
-                        <ul>
-                            <li>Sleep setup (evening routines, sounds, schedules)</li>
-                            <li>Wake up (alarm settings, light patterns, intensities)</li>
-                            <li>Settings (device management, preferences)</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="key-point">
-                    <div class="key-point-title">Interaction Continuity</div>
-                    <div class="key-point-text">
-                        We designed handoff moments between physical and digital:
-                        <ul>
-                            <li>Physical button press could trigger app options when appropriate</li>
-                            <li>App settings directly reflected in physical product behavior</li>
-                            <li>Consistent terminology and mental models across touchpoints</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Outcomes Section -->
-    <section class="project-section section-dark">
-        <div class="section-content" style="display: flex; flex-direction: row; align-items: center; max-width: 1200px; gap: 60px;">
-            <div style="flex: 1;">
-                <h2 style="font-size: 100px; font-weight: var(--weight-bold); letter-spacing: var(--tracking-bold); line-height: 0.85; text-align: right; margin: 0; color: var(--color-text); text-transform: lowercase;">
-                    outcomes<br>
-                    and<br>
-                    learnings
-                </h2>
-            </div>
-            <div style="flex: 1.5;">
-                <p class="section-text" style="text-align: left; margin-bottom: 40px; text-transform: lowercase;">
-                    the naptick project revealed profound insights about designing for vulnerable states of consciousness. moving between research, prototyping, and refinement uncovered how deeply personal our relationship with sleep technology can be. the tactile quality of physical interfaces became not just a functional consideration but an emotional anchor for users navigating the liminal spaces between wakefulness and sleep.
+        <!-- Introduction Section -->
+        <section class="project-section section-light">
+            <div class="section-content">
+                <h2 class="section-title">introduction</h2>
+                <p class="section-text">
+                    the naptick sleep experience device represents a 4-month intensive design challenge where i am leading ux and industrial design for a sleep enhancement product. the device combines light therapy, ambient sound, and voice assistance in a form factor designed for the bedside environment. my brief is to create an experience that will serve users across their entire sleep cycle – from evening wind-down through morning wake-up.
                 </p>
-                <p class="section-text" style="text-align: left; text-transform: lowercase;">
-                    perhaps most significant was discovering how design decisions ripple through the sleep experience ecosystem. the careful crafting of transitions—both in the digital interface and physical product— can easily create moments of genuine connection with users. this project reinforced my belief that thoughtful design can transform our relationship with technology into something that enhances rather than disrupts our natural rhythms.
+                <p class="section-text">
+                    the primary design challenge centers on crafting interactions that will be intuitive during moments of reduced cognitive function (when half-asleep) while maintaining aesthetic appeal when inactive. this requires balancing competing needs: simplicity of interaction, quality of light/sound, manufacturing feasibility, and cost constraints for our planned friends & family release.
+                </p>
+                
+                <p class="section-text">
+                    my role encompasses user research, industrial design, physical interaction design, and digital experience development
+                </p>
+                <p class="section-text">
+                    this is an ongoing project, details of which are <b>under an NDA. the visuals are therefore omitted.</b>
                 </p>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <a href="index.html" class="back-button">← back to projects</a>
-</body>
-</html>
+        <!-- Discovery & Research Section -->
+        <section class="project-section section-dark">
+            <div class="section-content">
+                <h2 class="section-title">Discovery & Research</h2>
+                <p class="section-text">
+                    I applied a multi-faceted research approach to understand the sleep technology space:
+                </p>
+                
+                <div class="key-points">
+                    <div class="key-point">
+                        <div class="key-point-title">Competitive Analysis</div>
+                        <div class="key-point-text">Evaluated key players (Philips Twilight Hue, etc) to identify opportunity gaps. I found most devices excelled either at light therapy or sound, but rarely both, and many lacked intuitive physical controls.</div>
+                    </div>
+                    
+                    <div class="key-point">
+                        <div class="key-point-title">Contextual Inquiries</div>
+                        <div class="key-point-text">Conducted research observing nightstand setups, morning/evening routines, and existing product interactions. <p><b>Key finding:</b> users often interacted with devices while in various states of consciousness, requiring extremely intuitive controls.</p></div>
+                    </div>
+                    
+                    <div class="key-point">
+                        <div class="key-point-title">Technical Exploration</div>
+                        <div class="key-point-text">prototyped and tested various LED arrays, diffuser materials, and speaker configurations, evaluating performance and manufacturing viability.</div>
+                    </div>
+                </div>
+                
+                <h3 class="section-title" style="font-size: 40px; margin-top: 60px; font-weight: var(--weight-normal); letter-spacing: var(--tracking-normal); line-height: 140%;">Critical Insights</h3>
+                
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">Half-Conscious Interaction</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">Environmental Integration</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Light Quality Perception</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Transition Support</div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">Design Principles</div>
+                    <div class="highlight-text">
+                        <p><strong>Elliptical Harmony:</strong> Using flowing, continuous forms that feel organic rather than technical</p>
+                        <p><strong>Ambient Presence:</strong> Creating a device that visually recedes when not in active use</p>
+                        <p><strong>Gestural Simplicity:</strong> Ensuring primary functions are accessible through intuitive physical interactions</p>
+                        <p><strong>Adaptive Response:</strong> Designing the device to respond appropriately to different states of user consciousness</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <!-- Prototype Sketches Image Section -->
+        <section class="project-section">
+            <div class="project-image-container">
+                <img class="project-image" src="images\sketches.png" alt="Naptick prototype sketches">
+            </div>
+        </section>
 
+        <!-- Industrial Design Process Section -->
+        <section class="project-section section-light">
+            <div class="section-content">
+                <h2 class="section-title">industrial design process</h2>
+                <p class="section-text">
+                    the industrial design process focuses on creating a form that will support both functional requirements and emotional connection:
+                </p>
+                
+                <div class="process-steps">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">initial form exploration</div>
+                            <div class="step-text">
+                                i've sketched over 30 initial concepts, then narrowed to four distinct approaches:
+                                <ul>
+                                    <li>stacked forms (inspired by traditional bedside lamps)</li>
+                                    <li>tapered cone variations (optimizing light projection)</li>
+                                    <li>faceted geometric forms (creating interesting light/shadow play)</li>
+                                    <li>organic, curved profiles (referencing the naptick logo's flowing curve)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">prototype iteration</div>
+                            <div class="step-text">
+                                creating scaled 3D printed and foam models to test proportions and physical presence, followed by functional prototypes testing different:
+                                <ul>
+                                    <li>light diffusion methods (internal reflection vs. direct projection)</li>
+                                    <li>material combinations (opacity, transmission, finish)</li>
+                                    <li>button mechanisms (capacitive, mechanical, hybrid)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="step-title">material development</div>
+                            <div class="step-text">
+                                the material selection process requires balancing aesthetic goals with light performance:
+                                <ul>
+                                    <li>testing diffuser materials, measuring light quality and visual appeal</li>
+                                    <li>planning user tests to determine preferred light quality</li>
+                                    <li>creating finish samples to validate manufacturing capability at scale</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-title">final design refinement</div>
+                            <div class="step-text">
+                                through this process, we're refining the design to a form that balances technical requirements with aesthetic goals:
+                                <ul>
+                                    <li>a gently tapered cylindrical form that provides optimal light projection while maintaining stability</li>
+                                    <li>distinct material transitions that double as intuitive grip points</li>
+                                    <li>a weighted base with integrated cable management</li>
+                                    <li>a distinctive light diffusion pattern that references the brand's curve</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interaction Model Image Section -->
+        <section class="project-section" style="background-color: #FFFFFF;">
+            <div class="project-image-container">
+                <img class="project-image" src="images\Somnus.png" alt="Naptick interaction model">
+                
+            </div>
+        </section>
+
+        <!-- Physical Interaction Design Section -->
+        <section class="project-section section-dark">
+            <div class="section-content">
+                <h2 class="section-title">physical interaction design</h2>
+                <p class="section-text">
+                    for the physical interaction design, i'm focusing on creating a system that will serve users in various states of consciousness – from fully alert to barely awake:
+                </p>
+                
+                <div class="key-points">
+                    <div class="key-point">
+                        <div class="key-point-title">critical interaction mapping</div>
+                        <div class="key-point-text">
+                            i mapped the full sleep experience to identify key moments requiring physical interaction:
+                            <ul>
+                                <li>evening wind-downs (setting sleep timer, adjusting light choreography and sound atmosphere)</li>
+                                <li>middle-of-night disruptions (subtle light activation, ambient sound adjustment)</li>
+                                <li>morning wake-up (gentle transitions, alarm dismissal, progressive light intensity)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="key-point">
+                        <div class="key-point-title">light choreography</div>
+                        <div class="key-point-text">
+                            designed responsive light behaviors that support the sleep journey:
+                            <ul>
+                                <li>evening sequences that gradually shift color temperature from energizing to calming</li>
+                                <li>nighttime illumination providing just enough visibility without disrupting melatonin production</li>
+                                <li>morning wake-up choreography mimicking sunrise with natural color progression</li>
+                                <li>emotional light patterns that communicate device state through subtle pulsing and transitions</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="key-point">
+                        <div class="key-point-title">sound design</div>
+                        <div class="key-point-text">
+                            created a comprehensive sound experience that complements the sleep cycle:
+                            <ul>
+                                <li>ambient soundscapes with generative compositions that evolve without repetitive patterns</li>
+                                <li>interaction sounds providing subtle feedback without jarring the user from their relaxed state</li>
+                                <li>morning audio wake-up designed with gradual intensity increase matched to light changes</li>
+                                <li>acoustically engineered response patterns that feel natural and intuitive to half-conscious users</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="highlight-title">sensory experience design</div>
+                    <div class="highlight-text">
+                        <p>i developed a cohesive multi-sensory approach that respects users' cognitive states:</p>
+                        <ul>
+                            <li>textured physical controls with distinctive tactile feedback for intuitive nighttime interaction</li>
+                            <li>tangible interaction points positioned at natural grip locations on the device surface</li>
+                            <li>audio feedback tones specially designed to be recognizable yet gentle when users are half-asleep</li>
+                            <li>integrated light and sound experiences that work in harmony to create appropriate sleep or wake atmospheres</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- UX Strategy Section -->
+        <section class="project-section section-light">
+            <div class="section-content">
+                <h2 class="section-title">ux strategy & digital integration</h2>
+                <p class="section-text">
+                    the physical product needs to work in concert with digital touchpoints, creating a cohesive ecosystem:
+                </p>
+                
+                <div class="key-points">
+                    <div class="key-point">
+                        <div class="key-point-title">cross-platform experience mapping</div>
+                        <div class="key-point-text">
+                            we defined which interactions belong where:
+                            <ul>
+                                <li>physical product: time-sensitive, frequent, and simple interactions</li>
+                                <li>mobile app: complex settings, scheduling, and personalization</li>
+                                <li>voice: convenience functions and accessibility support</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="key-point">
+                        <div class="key-point-title">Contextual Experience Design</div>
+                        <div class="key-point-text">
+                            The system needed to adapt based on context:
+                            <ul>
+                                <li>Time-aware responses (different behaviors morning vs. evening)</li>
+                                <li>Ambient light sensing to adjust brightness</li>
+                                <li>Gradual transitions between states to avoid jarring experiences</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="key-point">
+                        <div class="key-point-title">Information Architecture</div>
+                        <div class="key-point-text">
+                            We created a streamlined app structure with three primary sections:
+                            <ul>
+                                <li>Sleep setup (evening routines, sounds, schedules)</li>
+                                <li>Wake up (alarm settings, light patterns, intensities)</li>
+                                <li>Settings (device management, preferences)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="key-point">
+                        <div class="key-point-title">Interaction Continuity</div>
+                        <div class="key-point-text">
+                            We designed handoff moments between physical and digital:
+                            <ul>
+                                <li>Physical button press could trigger app options when appropriate</li>
+                                <li>App settings directly reflected in physical product behavior</li>
+                                <li>Consistent terminology and mental models across touchpoints</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Outcomes Section -->
+        <section class="project-section section-dark">
+            <div class="section-content" style="display: flex; flex-direction: row; align-items: center; max-width: 1200px; gap: 60px;">
+                <div style="flex: 1;">
+                    <h2 style="font-size: 100px; font-weight: var(--weight-bold); letter-spacing: var(--tracking-bold); line-height: 0.85; text-align: right; margin: 0; color: var(--color-text); text-transform: lowercase;">
+                        outcomes<br>
+                        and<br>
+                        learnings
+                    </h2>
+                </div>
+                <div style="flex: 1.5;">
+                    <p class="section-text" style="text-align: left; margin-bottom: 40px; text-transform: lowercase;">
+                        the naptick project revealed profound insights about designing for vulnerable states of consciousness. moving between research, prototyping, and refinement uncovered how deeply personal our relationship with sleep technology can be. the tactile quality of physical interfaces became not just a functional consideration but an emotional anchor for users navigating the liminal spaces between wakefulness and sleep.
+                    </p>
+                    <p class="section-text" style="text-align: left; text-transform: lowercase;">
+                        perhaps most significant was discovering how design decisions ripple through the sleep experience ecosystem. the careful crafting of transitions—both in the digital interface and physical product— can easily create moments of genuine connection with users. this project reinforced my belief that thoughtful design can transform our relationship with technology into something that enhances rather than disrupts our natural rhythms.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modified back button that forces authentication reset -->
+        <a href="index.html" class="back-button" onclick="localStorage.removeItem('naptickAuth')">← back to projects</a>
+    </div>
 
     <!-- GSAP Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
     <script>
-        // Wait for DOM and images to load
-        window.addEventListener('load', () => {
+        // Password verification - Enhanced version for local development
+        document.addEventListener('DOMContentLoaded', function() {
+            const correctPassword = "290796"; // The password you specified
+            const passwordOverlay = document.getElementById('password-overlay');
+            const contentContainer = document.getElementById('content-container');
+            const passwordInput = document.getElementById('password-input');
+            const submitButton = document.getElementById('submit-password');
+            const passwordError = document.getElementById('password-error');
+            
+            // Force password check on every page load for naptick page
+            const isNaptickPage = window.location.pathname.includes('naptick') || 
+                                 document.title.toLowerCase().includes('naptick');
+            
+            // Get URL parameters to see if we're bypassing password (for development only)
+            const urlParams = new URLSearchParams(window.location.search);
+            const bypassAuth = urlParams.get('auth') === correctPassword;
+            
+            // Use localStorage instead of sessionStorage for more persistence
+            let hasAuth = false;
+            
+            // Check if this is a fresh page load (not a back/forward navigation)
+            if (performance.navigation && performance.navigation.type === 0) {
+                // Clear any existing auth on fresh page loads
+                localStorage.removeItem('naptickAuth');
+                hasAuth = false;
+            } else {
+                // Check existing auth
+                hasAuth = localStorage.getItem('naptickAuth') === correctPassword;
+            }
+            
+            // If we have auth or bypass, show content
+            if ((hasAuth || bypassAuth) && isNaptickPage) {
+                if (bypassAuth) {
+                    // Store password in localStorage for future navigation
+                    localStorage.setItem('naptickAuth', correctPassword);
+                }
+                
+                passwordOverlay.style.display = 'none';
+                contentContainer.style.display = 'block';
+                initializeAnimations();
+            } else if (isNaptickPage) {
+                // Clear any existing auth just to be safe
+                localStorage.removeItem('naptickAuth');
+                
+                // Show password overlay
+                passwordOverlay.style.display = 'flex';
+                contentContainer.style.display = 'none';
+            }
+            
+            // Handle password submission
+            function checkPassword() {
+                if (passwordInput.value === correctPassword) {
+                    // Success - hide overlay and show content
+                    passwordOverlay.style.opacity = '0';
+                    
+                    // Store password in localStorage
+                    localStorage.setItem('naptickAuth', correctPassword);
+                    
+                    setTimeout(() => {
+                        passwordOverlay.style.display = 'none';
+                        contentContainer.style.display = 'block';
+                        
+                        // Initialize animations after password is entered
+                        initializeAnimations();
+                    }, 500);
+                } else {
+                    // Show error message with animation
+                    passwordError.style.opacity = '1';
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                    
+                    // Shake animation for error
+                    const tl = gsap.timeline();
+                    tl.to('#password-container', {x: -10, duration: 0.1})
+                      .to('#password-container', {x: 10, duration: 0.1})
+                      .to('#password-container', {x: -10, duration: 0.1})
+                      .to('#password-container', {x: 10, duration: 0.1})
+                      .to('#password-container', {x: 0, duration: 0.1});
+                }
+            }
+            
+            // Add event listeners
+            submitButton.addEventListener('click', checkPassword);
+            passwordInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassword();
+                }
+                
+                // Hide error message when typing
+                passwordError.style.opacity = '0';
+            });
+            
+            // Add focus to password input when page loads
+            passwordInput.focus();
+        });
+        
+        // Initialize animations after content is visible
+        function initializeAnimations() {
             // Hero background animation
             gsap.from('.hero-background', {
                 scale: 1.1,
@@ -817,6 +1011,38 @@
                 });
             });
             
+            // Create scroll animations for content sections
+            const sectionTitles = document.querySelectorAll('.section-title');
+            sectionTitles.forEach((title) => {
+                gsap.from(title, {
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.8,
+                    scrollTrigger: {
+                        trigger: title,
+                        start: 'top 80%',
+                        end: 'bottom 20%',
+                        toggleActions: 'play none none reverse'
+                    }
+                });
+            });
+            
+            // Animate key points
+            const keyPoints = document.querySelectorAll('.key-point');
+            keyPoints.forEach((point, index) => {
+                gsap.from(point, {
+                    opacity: 0,
+                    y: 30,
+                    duration: 0.6,
+                    delay: index * 0.1,
+                    scrollTrigger: {
+                        trigger: point,
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    }
+                });
+            });
+            
             // Back button animation
             gsap.from('.back-button', {
                 opacity: 0,
@@ -825,7 +1051,7 @@
                 delay: 1,
                 ease: 'power2.out'
             });
-        });
+        }
     </script>
 </body>
 </html>
