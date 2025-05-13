@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'anyone': "Prineeth designs interactions at the convergence of humans, play, tech and design that bridge physical and digital worlds.",
         'recruiters': "An interaction designer with 6+ years of experience in multimodal experiences, education, strategy, research and tech through more-than-human-centered design methodologies.",
         'designers': "I'm continuously exploring phenomena while questioning how we might dissolve artificial boundaries between users and interfaces.",
-        'whenyoustumbleuponagoldmine': "Congratulations — you've found a secret garden where theatrical experiments bloom alongside research, where I'm equally likely to be coding and soldering, or designing cardboard roller coasters for reasons I can never explain but somehow always make sense in my head at the end."
+        'whenyoustumbleuponagoldmine': "Hello! — you've found a secret garden where theatrical experiments bloom alongside research, where I'm equally likely to be coding and soldering, or designing cardboard roller coasters for reasons I can never explain but somehow always make sense in my head at the end."
     };
     
     // Add click event listeners to top navigation items

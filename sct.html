@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>social cognitive determiners - prineeth ramachandra</title>
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Import Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-family: 'Inter', sans-serif;
+            --weight-normal: 400;
+            --weight-medium: 500;
+            --weight-bold: 700;
+            --tracking-normal: -0.04em;
+            --tracking-bold: -0.03em;
+            --color-primary: #333333; /* Primary color */
+            --color-text: #333333;
+            --color-bg: #FFFFFF;
+            --color-light: #F5F5F5; /* Light background */
+        }
+        
+        /* Global styles */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            font-family: 'Inter', sans-serif;
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: transparent;
+            backdrop-filter: blur(0px);
+            z-index: 10; /* Ensure header is above all elements */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 30px;
+        }
+        
+        .logo {
+            font-weight: var(--weight-bold);
+            z-index: 100;
+            filter: invert(0) !important;
+            width: auto;
+            height: 45px;
+        }
+        
+        /* Project-specific styles */
+        .project-section {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 0;
+            background-color: white;
+        }
+        
+        .project-header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Hero background styling */
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            object-fit: fill;
+            background-color: #f5f5f5;
+        }
+        
+        /* Semi-transparent overlay to ensure text readability */
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.5);
+            z-index: 2;
+        }
+        
+        /* Position text above the background */
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+        }
+        
+        .project-title {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: var(--weight-bold);
+            letter-spacing: var(--tracking-bold);
+            margin-bottom: 1rem;
+            text-align: center;
+            color: black;
+            text-transform: lowercase;
+        }
+        
+        .project-subtitle {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            opacity: 0.7;
+            letter-spacing: var(--tracking-normal);
+            margin-top: 1rem;
+            text-align: center;
+            color: black;
+            text-transform: lowercase;
+        }
+        
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            color: black;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            z-index: 100;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-family: var(--font-family);
+            letter-spacing: var(--tracking-normal);
+            transition: background 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Content styles */
+        .section-content {
+            max-width: 1200px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        .section-title {
+            font-size: 100px;
+            font-weight: var(--weight-bold);
+            letter-spacing: var(--tracking-bold);
+            line-height: 0.9;
+            margin-bottom: 2rem;
+            color: var(--color-text);
+            text-align: left;
+            text-transform: lowercase;
+        }
+        
+        .section-text {
+            font-size: 22px;
+            font-weight: var(--weight-normal);
+            line-height: 140%;
+            letter-spacing: var(--tracking-normal);
+            margin-bottom: 2rem;
+            text-align: left;
+            text-transform: lowercase;
+        }
+        
+        /* Light/dark alternate sections */
+        .section-light {
+            background-color: var(--color-bg);
+        }
+        
+        .section-dark {
+            background-color: #FFFFFF;
+        }
+        
+        /* Key points list */
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .key-point {
+            background-color: rgba(0, 0, 0, 0.02);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: none;
+        }
+        
+        .key-point-title {
+            font-weight: var(--weight-bold);
+            font-size: 40px;
+            margin-bottom: 10px;
+            letter-spacing: var(--tracking-normal);
+            line-height: 1.1;
+            color: var(--color-text);
+            text-align: left;
+            text-transform: lowercase;
+        }
+        
+        .key-point-text {
+            font-size: 22px;
+            font-weight: var(--weight-normal);
+            line-height: 140%;
+            letter-spacing: var(--tracking-normal);
+            text-align: left;
+            text-transform: lowercase;
+        }
+        
+        /* Highlight box */
+        .highlight-box {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--color-text);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px 0;
+            box-shadow: none;
+        }
+        
+        .highlight-title {
+            font-size: 40px;
+            font-weight: var(--weight-normal);
+            letter-spacing: var(--tracking-normal);
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            text-align: left;
+            text-transform: lowercase;
+        }
+        
+        .highlight-text {
+            font-size: 22px;
+            font-weight: var(--weight-normal);
+            line-height: 140%;
+            letter-spacing: var(--tracking-normal);
+            text-align: left;
+            text-transform: lowercase;
+        }
+        
+        /* Process steps */
+        .process-steps {
+            display: flex;
+            flex-direction: column;
+            margin: 30px 0;
+        }
+        
+        .process-step {
+            display: flex;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .step-number {
+            flex: 0 0 50px;
+            height: 50px;
+            background-color: var(--color-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: var(--weight-bold);
+            margin-right: 20px;
+            z-index: 2;
+        }
+        
+        .step-content {
+            flex: 1;
+            padding: 0 0 20px 0;
+        }
+        
+        .step-title {
+            font-weight: var(--weight-normal);
+            font-size: 40px;
+            letter-spacing: var(--tracking-normal);
+            line-height: 1.1;
+            margin-bottom: 10px;
+            text-transform: lowercase;
+        }
+        
+        .step-text {
+            font-size: 22px;
+            font-weight: var(--weight-normal);
+            line-height: 140%;
+            letter-spacing: var(--tracking-normal);
+            text-transform: lowercase;
+        }
+        
+        /* Connected steps with timeline */
+        .process-step::after {
+            content: '';
+            position: absolute;
+            top: 50px;
+            left: 25px;
+            width: 2px;
+            height: calc(100% - 30px);
+            background-color: rgba(51, 51, 51, 0.3);
+            z-index: 1;
+        }
+        
+        .process-step:last-child::after {
+            display: none;
+        }
+        
+        /* Stats visualization */
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 40px 0;
+        }
+        
+        .stat-item {
+            flex: 1 0 200px;
+            text-align: center;
+            margin: 20px;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: var(--weight-bold);
+            color: var(--color-primary);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+        
+        /* Data table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 18px;
+        }
+        
+        .data-table th {
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            text-align: left;
+            font-weight: var(--weight-medium);
+            text-transform: lowercase;
+        }
+        
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Project image container */
+        .project-image-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 0px;
+            gap: 0;
+        }
+        
+        .project-image {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            max-height: 100vh;
+            object-fit: contain;
+            margin-bottom: 0;
+        }
+        
+        .image-caption {
+            font-size: 16px;
+            color: #777;
+            margin-top: 8px;
+            font-weight: var(--weight-normal);
+            text-align: center;
+            max-width: 80%;
+            text-transform: lowercase;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .section-content {
+                padding: 0 20px;
+                flex-direction: column !important;
+            }
+            
+            .key-points {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+            }
+            
+            .stat-item {
+                margin: 10px 0;
+            }
+            
+            .process-step {
+                flex-direction: column;
+            }
+            
+            .step-number {
+                margin-bottom: 15px;
+            }
+            
+            .process-step::after {
+                left: 25px;
+                top: 50px;
+                height: calc(100% - 50px);
+            }
+            
+            h2[style*="text-align: right"] {
+                text-align: left !important;
+                margin-bottom: 40px !important;
+            }
+            
+            .project-title {
+                font-size: 60px;
+            }
+            
+            .section-title {
+                font-size: 60px;
+            }
+            
+            .image-caption {
+                max-width: 90%;
+            }
+        }
+        
+        /* Chart placeholders */
+        .chart-placeholder {
+            width: 100%;
+            height: 300px;
+            background-color: rgba(0, 0, 0, 0.02);
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" aria-label="Back to homepage">
+            <img src="prineeth.svg" class="logo" alt="Prineeth logo" aria-label="Portfolio logo">
+        </a>
+    </header>
+    
+    <!-- Project Header Section -->
+    <section class="project-header">
+        <div class="hero-background">
+            <!-- Abstract background could go here -->
+        </div>
+        
+        <!-- Semi-transparent overlay for better text visibility -->
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-content">
+            <h1 class="project-title">social cognitive determiners</h1>
+            <p class="project-subtitle">educational research | behavioral science | pedagogy • 2023</p>
+            <p class="project-subtitle">how do environmental and cognitive factors influence academic performance?</p>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section class="project-section section-light">
+        <div class="section-content">
+            <h2 class="section-title">introduction</h2>
+            <p class="section-text">
+                this research project explores the relationship between social cognitive determiners and academic performance. based on bandura's social cognitive theory, which posits that learning occurs in a social context with dynamic interaction between person, environment, and behavior, this study investigates how self-efficacy and environmental conditions impact student achievement.
+            </p>
+            <p class="section-text">
+                the primary research challenge centers on objectively determining learner behavior while accounting for numerous variables that affect assessment outcomes. through classroom research in both bengaluru and ahmedabad, this project examines how factors like environment design, mindsets, values, motivation, and self-efficacy correlate with academic performance.
+            </p>
+            
+            <p class="section-text">
+                my role encompassed research design, data collection methodology, classroom implementation, and analysis of results to formulate insights for improving educational approaches.
+            </p>
+        </div>
+    </section>
+
+    <!-- Theoretical Framework Section -->
+    <section class="project-section section-dark">
+        <div class="section-content">
+            <h2 class="section-title">theoretical framework</h2>
+            <p class="section-text">
+                the research is grounded in social cognitive theory, which emphasizes the critical role of social influence and both external and internal reinforcement in learning outcomes.
+            </p>
+            
+            <div class="key-points">
+                <div class="key-point">
+                    <div class="key-point-title">perceived self-efficacy</div>
+                    <div class="key-point-text">people's beliefs in their capabilities to produce given attainments, which vary across different domains and development paths. these beliefs significantly impact how learners approach challenges and persist through difficulties.</div>
+                </div>
+                
+                <div class="key-point">
+                    <div class="key-point-title">social influence</div>
+                    <div class="key-point-text">the unique emphasis on external and internal social reinforcement, where past experiences shape expectations and determine whether a person engages in specific behaviors and the underlying reasons for that engagement.</div>
+                </div>
+                
+                <div class="key-point">
+                    <div class="key-point-title">reciprocal determinism</div>
+                    <div class="key-point-text">the core concept that learning occurs through a dynamic and reciprocal interaction between three key subsystems: personal characteristics, behavior, and environmental conditions.</div>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <div class="highlight-title">research hypothesis</div>
+                <div class="highlight-text">
+                    <p>i hypothesized that factors including interior design and layout of learning environments, operating mindsets, stakeholder value systems, quality of intrinsic motivation, and self-efficacy can be controlled to predict academic performance and growth.</p>
+                    <p>while mindset shifts and value changes may take longer to manifest measurable results, i anticipated significant correlations between immediate environmental factors, stakeholder interactions, personal characteristics, and academic achievement.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Methodology Section -->
+    <section class="project-section section-light">
+        <div class="section-content">
+            <h2 class="section-title">research methodology</h2>
+            <p class="section-text">
+                the study employed both qualitative and quantitative assessments to gather comprehensive data about self-efficacy and academic performance across different environmental conditions.
+            </p>
+            
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">general self-efficacy survey</div>
+                        <div class="step-text">
+                            administered the GSES to measure nine distinct elements of self-efficacy:
+                            <ul>
+                                <li>self-efficacy in enlisting social resources</li>
+                                <li>self-efficacy for academic achievement</li>
+                                <li>self-efficacy for self-regulated learning</li>
+                                <li>self-efficacy for leisure time and extracurricular activities</li>
+                                <li>self-regulatory efficacy</li>
+                                <li>self-efficacy to meet others' expectations</li>
+                                <li>social self-efficacy</li>
+                                <li>self-assertive efficacy</li>
+                                <li>self-efficacy for enlisting parental and community support</li>
+                            </ul>
+                            
+                            learners responded to statements with teacher assistance on a confidence scale of 0-100, allowing for thorough reflection on their current mindsets and operating principles.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">pisa testing across controlled environments</div>
+                        <div class="step-text">
+                            selected three high-rigor learners from thakkarbapanagar english school no. 1 and administered PISA tests over three separate days while controlling their experiences from the start of each day until testing began.
+                            
+                            <p>the test assessed multiple cognitive dimensions:</p>
+                            <ul>
+                                <li>critical thinking</li>
+                                <li>reading comprehension</li>
+                                <li>mathematical thinking</li>
+                                <li>patience and grit</li>
+                                <li>creativity</li>
+                                <li>problem-solving</li>
+                            </ul>
+                            
+                            <p>tests were administered under controlled conditions with consistent rules across all three sessions.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">environmental manipulation</div>
+                        <div class="step-text">
+                            systematically varied three distinct environmental conditions:
+                            
+                            <p><strong>day 1: riverfront</strong> - parents instructed to be extremely kind and supportive, no criticism or forced activities, testing conducted in a moderately quiet outdoor location with students seated close together.</p>
+                            
+                            <p><strong>day 2: office</strong> - parents instructed to radically change behavior, burden students with unusual morning work, behave rudely, and withhold breakfast; testing conducted in a large office room with other adults present.</p>
+                            
+                            <p><strong>day 3: tea shop</strong> - parents instructed to behave normally; testing conducted in a noisy tea shop with poor infrastructure, uncomfortable seating, and significant air and noise pollution.</p>
+                            
+                            <p>maintained continuous documentation of experiences and parental communication throughout the study period.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Data Visualization Section -->
+    <section class="project-section section-dark">
+        <div class="section-content">
+            <h2 class="section-title">research findings</h2>
+            <p class="section-text">
+                the data collected revealed fascinating patterns about the relationship between self-efficacy, environmental conditions, and academic performance.
+            </p>
+            
+            <h3 style="font-size: 40px; margin-top: 60px; font-weight: var(--weight-normal); letter-spacing: var(--tracking-normal); line-height: 140%; text-transform: lowercase;">general self-efficacy survey results</h3>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>GSES Element</th>
+                        <th>Rohan</th>
+                        <th>Khushbu</th>
+                        <th>Jayraj</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Self-Efficacy in Enlisting Social Resources</td>
+                        <td>80</td>
+                        <td>100</td>
+                        <td>50</td>
+                    </tr>
+                    <tr>
+                        <td>Self-Efficacy for Academic Achievement</td>
+                        <td>65</td>
+                        <td>40</td>
+                        <td>80</td>
+                    </tr>
+                    <tr>
+                        <td>Self-Efficacy for Self-Regulated Learning</td>
+                        <td>85</td>
+                        <td>90</td>
+                        <td>93</td>
+                    </tr>
+                    <tr>
+                        <td>Self-Efficacy for Leisure Time and Extracurricular Activities</td>
+                        <td>76</td>
+                        <td>84</td>
+                        <td>44</td>
+                    </tr>
+                    <tr>
+                        <td>Self-Regulatory Efficacy</td>
+                        <td>35</td>
+                        <td>48</td>
+                        <td>77</td>
+                    </tr>
+                    <tr>
+                        <td>Self-Efficacy to Meet Others' Expectations</td>
+                        <td>83</td>
+                        <td>75</td>
+                        <td>88</td>
+                    </tr>
+                    <tr>
+                        <td>Social Self-Efficacy</td>
+                        <td>93</td>
+                        <td>95</td>
+                        <td>69</td>
+                    </tr>
+                    <tr>
+                        <td>Self-Assertive Efficacy</td>
+                        <td>89</td>
+                        <td>91</td>
+                        <td>94</td>
+                    </tr>
+                    <tr>
+                        <td>Self-Efficacy for Enlisting Parental and Community Support</td>
+                        <td>73</td>
+                        <td>92</td>
+                        <td>81</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p class="section-text">
+                the self-efficacy results revealed intriguing individual patterns. all three students demonstrated unique profiles across the nine dimensions, with notable variations in academic achievement efficacy, self-regulatory efficacy, and social efficacy.
+            </p>
+            
+            <h3 style="font-size: 40px; margin-top: 60px; font-weight: var(--weight-normal); letter-spacing: var(--tracking-normal); line-height: 140%; text-transform: lowercase;">pisa test results across environments</h3>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Day 1: Riverfront</th>
+                        <th>Day 2: Office</th>
+                        <th>Day 3: Tea Shop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Rohan</td>
+                        <td>7/10</td>
+                        <td>8/10</td>
+                        <td>4/10</td>
+                    </tr>
+                    <tr>
+                        <td>Khushbu</td>
+                        <td>8/10</td>
+                        <td>6/10</td>
+                        <td>7/10</td>
+                    </tr>
+                    <tr>
+                        <td>Jayraj</td>
+                        <td>8/10</td>
+                        <td>7/10</td>
+                        <td>8/10</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="highlight-box">
+                <div class="highlight-title">key performance insights</div>
+                <div class="highlight-text">
+                    <ul>
+                        <li><strong>unexpected resilience:</strong> rohan's performance paradoxically improved on day 2 despite negative environmental factors. upon investigation, he reported using the emotional stress as motivation to prove himself.</li>
+                        <li><strong>environmental sensitivity:</strong> the tea shop environment (day 3) showed the most dramatic impact on rohan's performance, suggesting physical environment may matter more than emotional state for some students.</li>
+                        <li><strong>individual variation:</strong> jayraj maintained relatively consistent performance across all three environments, demonstrating higher resilience to external factors.</li>
+                        <li><strong>expectation gap:</strong> all three students expected to achieve a minimum score of 9/10, but none achieved this target, highlighting an important disconnect between self-assessment and actual performance.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="chart-placeholder">
+                <p style="text-align: center; color: #777;">Data visualization comparing self-efficacy scores to performance across environments</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusions Section -->
+    <section class="project-section section-light">
+        <div class="section-content" style="display: flex; flex-direction: row; align-items: center; max-width: 1200px; gap: 60px;">
+            <div style="flex: 1;">
+                <h2 style="font-size: 100px; font-weight: var(--weight-bold); letter-spacing: var(--tracking-bold); line-height: 0.85; text-align: right; margin: 0; color: var(--color-text); text-transform: lowercase;">
+                    conclusions<br>
+                    and<br>
+                    implications
+                </h2>
+            </div>
+            <div style="flex: 1.5;">
+                <p class="section-text" style="text-align: left; margin-bottom: 40px; text-transform: lowercase;">
+                    this research reaffirmed that academic performance is influenced by a complex interplay of factors beyond what is immediately apparent. the experiment demonstrated that environmental conditions, emotional states, and self-efficacy all contribute to academic outcomes, but in ways that are highly individualized and sometimes counterintuitive.
+                </p>
+                <p class="section-text" style="text-align: left; text-transform: lowercase;">
+                    perhaps most significant was discovering how physical environment can dramatically impact performance for some students while others show remarkable resilience across varied conditions. the study also highlighted a critical gap between student expectations and actual performance, suggesting an opportunity to develop more accurate self-assessment capabilities.
+                </p>
+                <p class="section-text" style="text-align: left; text-transform: lowercase;">
+                    these findings provide valuable direction for improving pedagogy, classroom management techniques, and curriculum development. by understanding the patterns of how social cognitive determiners influence performance, educators can create more effective, personalized learning environments that support diverse student needs.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Back button -->
+    <a href="index.html" class="back-button">← back to projects</a>
+    
+    <!-- GSAP Scripts for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script>
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hero background animation
+            gsap.from('.hero-background', {
+                scale: 1.1,
+                opacity: 0.8,
+                duration: 2,
+                ease: 'power2.out'
+            });
+            
+            // Header animations
+            gsap.from('.project-title', {
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                delay: 0.3,
+                ease: 'power3.out'
+            });
+            
+            gsap.from('.project-subtitle', {
+                opacity: 0,
+                y: 30,
+                duration: 0.8,
+                delay: 0.5,
+                ease: 'power3.out'
+            });
+            
+            // Create scroll animations for section titles
+            const sectionTitles = document.querySelectorAll('.section-title');
+            sectionTitles.forEach((title) => {
+                gsap.from(title, {
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.8,
+                    scrollTrigger: {
+                        trigger: title,
+                        start: 'top 80%',
+                        end: 'bottom 20%',
+                        toggleActions: 'play none none reverse'
+                    }
+                });
+            });
+            
+            // Animate key points
+            const keyPoints = document.querySelectorAll('.key-point');
+            keyPoints.forEach((point, index) => {
+                gsap.from(point, {
+                    opacity: 0,
+                    y: 30,
+                    duration: 0.6,
+                    delay: index * 0.1,
+                    scrollTrigger: {
+                        trigger: point,
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    }
+                });
+            });
+            
+            // Animate process steps
+            const processSteps = document.querySelectorAll('.process-step');
+            processSteps.forEach((step, index) => {
+                gsap.from(step, {
+                    opacity: 0,
+                    x: -30,
+                    duration: 0.7,
+                    delay: index * 0.2,
+                    scrollTrigger: {
+                        trigger: step,
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    }
+                });
+            });
+            
+            // Animate data tables
+            gsap.from('.data-table', {
+                opacity: 0,
+                y: 30,
+                duration: 0.8,
+                scrollTrigger: {
+                    trigger: '.data-table',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+            
+            // Back button animation
+            gsap.from('.back-button', {
+                opacity: 0,
+                y: 20,
+                duration: 0.5,
+                delay: 1,
+                ease: 'power2.out'
+            });
+        });
+    </script>
+</body>
+</html>
