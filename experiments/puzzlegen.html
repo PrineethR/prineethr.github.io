@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>puzzlegen</title>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .text-section {
+            padding: 4rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .sketch-section {
+            padding: 2rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #111;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        .color-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .color-sample {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+        }
+        .interaction-hint {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+      a {
+    color: #87CEEB;  /* Light blue, matching your background */
+    text-decoration: underline;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 1;
+    color: white;
+}
+    </style>
+</head>
+<body>
+    <div class="text-section">
+        <h1>puzzles!</h1>
+        <p>i created this to be later laser cut because I thought it was kinda cool, and then a strangely difficult puzzle was formed when i pushed the segments out! Ah serendipity! </p>
+        <p>for this form - I've just added a little lerpy colors </p>
+    </div>
+
+    <div class="sketch-section">
+        <div id="sketch-container"></div>
+    </div>
+
+    <div class="text-section">
+        <h2>color palettes</h2>
+        <p>the piece alternates between two distinct color palettes:</p>
+      <div class="color-list" id="palette-display">
+
+    <div class="interaction-hint">Click anywhere to generate a new pattern</div>
+
+    <script>
+    new p5(function(p) {
+        const MAX_HEIGHT = 600;
+        const MAX_WIDTH = 600;
+        const STEP = 16;
+        const VARIANCE_FACTOR = 175;
+        const TRANSITION_DURATION = 400;
+
+        const COLORS = {
+            vibrant: [
+                [255, 71, 87],   // Coral red
+                [46, 213, 115],  // Mint green
+                [54, 95, 214],   // Royal blue
+                [255, 168, 1],   // Golden
+                [241, 90, 235],  // Pink
+                [32, 191, 107],  // Emerald
+                [165, 94, 234],  // Purple
+                [75, 123, 236],  // Blue
+                [247, 159, 31],  // Orange
+                [68, 189, 198]   // Turquoise
+            ],
+            pastels: [
+                [255, 184, 184], // Soft pink
+                [187, 222, 251], // Light blue
+                [192, 255, 188], // Mint
+                [255, 218, 188], // Peach
+                [206, 147, 216]  // Lavender
+            ]
+        };
+
+        let currentGradient, nextGradient;
+        let currentLines, nextLines;
+        let transitionStart;
+        let isTransitioning = false;
+
+        function generateRandomGradient() {
+            const useVibrant = p.random() > 0.3;
+            const palette = useVibrant ? COLORS.vibrant : COLORS.pastels;
+            
+            const gradientType = p.random();
+            
+            if (gradientType < 0.2) {
+                const baseColor = p.random(palette);
+                return {
+                    start: baseColor.map(c => c * 0.7),
+                    end: baseColor.map(c => Math.min(c * 1.3, 255))
+                };
+            } else if (gradientType < 0.4) {
+                const mainColor = p.random(palette);
+                const endColor = mainColor.map(c => (c + p.random(-40, 40)));
+                return {
+                    start: mainColor,
+                    end: endColor.map(c => Math.min(Math.max(c, 0), 255))
+                };
+            } else {
+                return {
+                    start: p.random(palette),
+                    end: p.random(palette)
+                };
+            }
+        }
+
+        function generateLines() {
+            const lines = [];
+            for(let i = STEP; i < MAX_HEIGHT - STEP; i += STEP) {
+                let line = [];
+                for(let j = STEP; j <= MAX_HEIGHT - STEP; j += STEP) {
+                    let distanceToCenter = Math.abs(j - MAX_HEIGHT / 2);
+                    let variance = Math.max(MAX_HEIGHT/2 - VARIANCE_FACTOR - distanceToCenter, 0);
+                    let random = Math.random() * variance / 2 * -0.65;
+                    let point = {x: j, y: i + random};
+                    line.push(point);
+                }
+                lines.push(line);
+            }
+            return lines;
+        }
+
+        p.setup = function() {
+            const canvas = p.createCanvas(MAX_HEIGHT, MAX_WIDTH);
+            canvas.parent('sketch-container');
+            p.strokeWeight(3);
+            
+            currentGradient = generateRandomGradient();
+            currentLines = generateLines();
+            
+            // Display color palettes
+            displayPalettes();
+        };
+
+        function displayPalettes() {
+            const paletteContainer = document.getElementById('palette-display');
+            
+            // Display vibrant colors
+            COLORS.vibrant.forEach(color => {
+                const swatch = document.createElement('div');
+                swatch.className = 'color-sample';
+                swatch.style.backgroundColor = `rgb(${color.join(',')})`;
+                paletteContainer.appendChild(swatch);
+            });
+        }
+
+        p.draw = function() {
+            if (isTransitioning) {
+                const t = (p.millis() - transitionStart) / TRANSITION_DURATION;
+                
+                if (t >= 1) {
+                    isTransitioning = false;
+                    currentGradient = nextGradient;
+                    currentLines = nextLines;
+                    drawGradient(currentGradient);
+                    drawPattern(currentLines);
+                } else {
+                    const lerpedGradient = lerpGradient(currentGradient, nextGradient, t);
+                    drawGradient(lerpedGradient);
+                    
+                    const lerpedLines = currentLines.map((line, i) => 
+                        line.map((point, j) => 
+                            lerpPoint(point, nextLines[i][j], t)
+                        )
+                    );
+                    drawPattern(lerpedLines);
+                }
+            } else {
+                drawGradient(currentGradient);
+                drawPattern(currentLines);
+            }
+        };
+
+        function lerpPoint(p1, p2, t) {
+            return {
+                x: p.lerp(p1.x, p2.x, t),
+                y: p.lerp(p1.y, p2.y, t)
+            };
+        }
+
+        function lerpGradient(g1, g2, t) {
+            return {
+                start: [
+                    p.lerp(g1.start[0], g2.start[0], t),
+                    p.lerp(g1.start[1], g2.start[1], t),
+                    p.lerp(g1.start[2], g2.start[2], t)
+                ],
+                end: [
+                    p.lerp(g1.end[0], g2.end[0], t),
+                    p.lerp(g1.end[1], g2.end[1], t),
+                    p.lerp(g1.end[2], g2.end[2], t)
+                ]
+            };
+        }
+
+        function drawGradient(gradient) {
+            for(let y = 0; y < MAX_HEIGHT; y++) {
+                const inter = p.map(y, 0, MAX_HEIGHT, 0, 1);
+                const c = p.lerpColor(
+                    p.color(gradient.start[0], gradient.start[1], gradient.start[2]),
+                    p.color(gradient.end[0], gradient.end[1], gradient.end[2]),
+                    inter
+                );
+                p.stroke(c);
+                p.line(0, y, MAX_WIDTH, y);
+            }
+        }
+
+        function drawPattern(lines) {
+            p.stroke(1, 1, 1);
+            p.strokeWeight(3);
+            
+            for(let i = 1; i < lines.length; i++) {
+                p.beginShape();
+                for(let j = 0; j < lines[i].length; j+=2) {
+                    p.curveVertex(lines[i][j].x, lines[i][j].y);
+                    p.curveVertex(lines[i][j+1].x, lines[i][j+1].y);
+                }
+                p.endShape();
+            }
+        }
+
+        p.mousePressed = function() {
+            if (!isTransitioning) {
+                nextGradient = generateRandomGradient();
+                nextLines = generateLines();
+                transitionStart = p.millis();
+                isTransitioning = true;
+            }
+        };
+    }, 'sketch-container');
+    </script>
+</body>
+</html>

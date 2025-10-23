@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>depth</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+      <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .text-section {
+            height: 50vh;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        #sketch-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+        }
+
+        .controls input[type="range"] {
+            width: 150px;
+        }
+
+        .control-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        a {
+    color: #87CEEB;  /* Light blue, matching your background */
+    text-decoration: underline;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 1;
+    color: white;
+}
+    </style>
+</head>
+<body>
+    <div class="text-section">
+        <h1>how high is our map</h1>
+        <p>this exploration looks at the interplay between depth perception and dynamic patterns. this is what I feel I would see if I was a bird flying over an ocean - just jaded and dreaming, with what seems like clouds underneath my wings. the visualization combines multiple layers of noise functions, including Voronoi patterns and Simplex noise. took a while, and 'twas a tad difficult to do this while keeping the code simple and running smoothly (or maybe i'm just not the best programmer around)</p>
+    </div>
+    <!-- Vertex Shader -->
+    <script id="vertex-shader" type="x-shader/x-vertex">#ifdef GL_ES
+precision mediump float;
+#endif
+
+attribute vec3 aPosition;
+attribute vec2 aTexCoord;
+
+varying vec2 vTexCoord;
+
+void main() {
+  vTexCoord = aTexCoord;
+  vec4 positionVec4 = vec4(aPosition, 1.0);
+  gl_Position = positionVec4;
+}</script>
+
+    <!-- Fragment Shader -->
+    <script id="fragment-shader" type="x-shader/x-fragment">#ifdef GL_ES
+precision mediump float;
+#endif
+
+// Constants
+#define PI 3.14159265359
+#define TWO_PI 6.28318530718
+
+varying vec2 vTexCoord;
+
+uniform float uTime;
+uniform float uNoiseScale;
+uniform int uLayers;
+
+// Voronoi noise function for cellular patterns
+vec2 random2(vec2 p) {
+    return fract(sin(vec2(dot(p,vec2(127.1,311.7)), dot(p,vec2(269.5,183.3))))*43758.5453);
+}
+
+float voronoi(vec2 x) {
+    vec2 n = floor(x);
+    vec2 f = fract(x);
+
+    float m_dist = 8.0;
+    for(int j=-1; j<=1; j++) {
+        for(int i=-1; i<=1; i++) {
+            vec2 g = vec2(float(i),float(j));
+            vec2 o = random2(n + g);
+            o = 0.5 + 0.5*sin(uTime + TWO_PI*o);
+            vec2 r = g + o - f;
+            float d = dot(r,r);
+            m_dist = min(m_dist, d);
+        }
+    }
+    return sqrt(m_dist);
+}
+
+// Simplex-style noise
+float noise(vec2 p) {
+    const float K1 = 0.366025404;
+    const float K2 = 0.211324865;
+    
+    vec2 i = floor(p + (p.x + p.y) * K1);
+    vec2 a = p - i + (i.x + i.y) * K2;
+    vec2 o = (a.x > a.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+    vec2 b = a - o + K2;
+    vec2 c = a - 1.0 + 2.0 * K2;
+    
+    vec3 h = max(0.5 - vec3(dot(a,a), dot(b,b), dot(c,c)), 0.0);
+    vec3 n = h*h*h*h * vec3(
+        dot(a, random2(i)),
+        dot(b, random2(i + o)),
+        dot(c, random2(i + 1.0))
+    );
+    return dot(vec3(70.0), n);
+}
+
+// FBM with rotation for more organic patterns
+float fbm(vec2 p) {
+    float sum = 0.0;
+    float amp = 0.5;
+    float freq = 1.0;
+    mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));
+    
+    for(int i=0; i<6; i++) {
+        sum += amp * noise(p);
+        p = rot * p * 2.0 + vec2(uTime * 0.1);
+        amp *= 0.5;
+        freq *= 2.0;
+    }
+    return sum;
+}
+
+vec3 plasma(vec2 pos, float time) {
+    float v = 0.0;
+    vec2 c = pos * uNoiseScale - vec2(time * 2.0);
+    v += sin((c.x + time));
+    v += sin((c.y + time) / 2.0);
+    v += sin((c.x + c.y + time) / 2.0);
+    c += vec2(0.7, 0.8);
+    v += sin(sqrt(c.x * c.x + c.y * c.y + 1.0) + time);
+    v = v/2.0;
+    vec3 col = vec3(1, sin(PI*v), cos(PI*v));
+    return col * 0.5 + 0.5;
+}
+
+float calculateDepth(vec2 pos, float time) {
+    // Combine different noise types
+    float depth = fbm(pos * 0.01 + time * 0.1);
+    float cells = voronoi(pos * 0.05 + time * 0.2);
+    
+    // Create flowing patterns
+    vec2 q = vec2(0.0);
+    q.x = fbm(pos + vec2(0.0, 0.0));
+    q.y = fbm(pos + vec2(1.0, 1.0));
+    
+    vec2 r = vec2(0.0);
+    r.x = fbm(pos + 1.0 * q + vec2(1.7, 9.2) + 0.15 * time);
+    r.y = fbm(pos + 1.0 * q + vec2(8.3, 2.8) + 0.126 * time);
+    
+    float pattern = fbm(pos + r);
+    
+    // Mix everything together
+    depth = mix(depth, cells, 0.5);
+    depth = mix(depth, pattern, 0.5);
+    
+    return clamp(depth, 0.0, 1.0);
+}
+
+vec3 colorize(float depth, vec2 pos, float time) {
+    // Create base color from plasma effect
+    vec3 baseColor = plasma(pos * 0.01, time);
+    
+    // Add color variations based on depth
+    vec3 deepColor = vec3(0.1, 0.2, 0.3);
+    vec3 shallowColor = vec3(0.8, 0.9, 1.0);
+    vec3 depthColor = mix(deepColor, shallowColor, depth);
+    
+    // Mix with plasma effect
+    return mix(depthColor, baseColor, 0.5);
+}
+
+void main() {
+    vec2 uv = vTexCoord;
+    vec2 pos = uv * vec2(800.0);
+    
+    float depth = calculateDepth(pos, uTime);
+    vec3 color = colorize(depth, pos, uTime);
+    
+    // Add interference patterns
+    float interference = 0.0;
+    for(int i = 0; i < 5; i++) {
+        if(i >= uLayers) break;
+        
+        float layerDepth = float(i) / float(uLayers);
+        float layerInfluence = 1.0 - abs(depth - layerDepth);
+        layerInfluence = pow(layerInfluence, 2.0);
+        
+        // Create complex wave patterns
+        vec2 wavePos = pos * (1.0 + depth) * 0.01 + uTime;
+        float wave = sin(wavePos.x * 1.5) * cos(wavePos.y * 1.5);
+        wave += sin((wavePos.x + wavePos.y) * 0.8) * 0.5;
+        
+        interference += wave * layerInfluence;
+    }
+    
+    // Add highlights and shadows
+    float highlight = pow(max(0.0, 1.0 - depth * 2.0), 4.0);
+    float shadow = smoothstep(0.3, 0.7, depth);
+    
+    // Final color composition
+    color = mix(color, vec3(1.0), highlight * 0.5);
+    color = mix(color, vec3(0.0, 0.1, 0.2), shadow * 0.5);
+    color += vec3(interference) * 0.2;
+    
+    // Add some color grading
+    color = pow(color, vec3(0.8)); // Contrast
+    color = mix(color, vec3(dot(color, vec3(0.299, 0.587, 0.114))), 0.1); // Slight desaturation
+    
+    gl_FragColor = vec4(color, 1.0);
+}</script>
+
+    <!-- Main Sketch -->
+    <script>
+        const s = ( sketch ) => {
+            let depthShader;
+            let time = 0;
+            let shaderLoaded = false;
+
+            // Default values for uniforms
+            const defaults = {
+                noiseScale: 3.0,
+                layers: 4,
+                timeSpeed: 0.005
+            };
+
+            // UI control variables
+            let noiseScaleSlider, layersSlider, timeSpeedSlider;
+
+            sketch.setup = () => {
+                const container = sketch.createDiv();
+                container.id('sketch-container');
+
+                const canvas = sketch.createCanvas(800, 800, sketch.WEBGL);
+                canvas.parent(container);
+
+                if (!canvas.GL) {
+                    console.error('WebGL not supported');
+                    return;
+                }
+
+                // Load shaders
+                depthShader = sketch.createShader(
+                    document.getElementById('vertex-shader').textContent,
+                    document.getElementById('fragment-shader').textContent
+                );
+                shaderLoaded = true;
+
+                sketch.noStroke();
+                setupControls();
+            };
+
+            function setupControls() {
+                const controlsDiv = sketch.createDiv();
+                controlsDiv.class('controls');
+                controlsDiv.parent('sketch-container');
+
+                noiseScaleSlider = sketch.createSlider(0.5, 5, defaults.noiseScale, 0.1);
+                layersSlider = sketch.createSlider(1, 5, defaults.layers, 1);
+                timeSpeedSlider = sketch.createSlider(0, 0.01, defaults.timeSpeed, 0.0001);
+
+                const controls = [
+                    { label: 'Pattern Size: ', slider: noiseScaleSlider },
+                    { label: 'Depth Layers: ', slider: layersSlider },
+                    { label: 'Animation Speed: ', slider: timeSpeedSlider }
+                ];
+
+                controls.forEach(control => {
+                    const wrapper = sketch.createDiv();
+                    wrapper.class('control-wrapper');
+                    wrapper.parent(controlsDiv);
+                    sketch.createSpan(control.label).parent(wrapper);
+                    control.slider.parent(wrapper);
+                });
+            }
+
+            function getUniformValues() {
+                return {
+                    noiseScale: noiseScaleSlider ? noiseScaleSlider.value() : defaults.noiseScale,
+                    layers: layersSlider ? layersSlider.value() : defaults.layers,
+                    timeSpeed: timeSpeedSlider ? timeSpeedSlider.value() : defaults.timeSpeed
+                };
+            }
+
+            sketch.draw = () => {
+                sketch.background(0);
+
+                if (!shaderLoaded || !depthShader) {
+                    return;
+                }
+
+                try {
+                    sketch.shader(depthShader);
+
+                    const values = getUniformValues();
+
+                    depthShader.setUniform('uTime', time);
+                    depthShader.setUniform('uNoiseScale', sketch.float(values.noiseScale));
+                    depthShader.setUniform('uLayers', sketch.int(values.layers));
+
+                    sketch.beginShape();
+                    sketch.vertex(-1, -1, 0, 0, 0);
+                    sketch.vertex(1, -1, 0, 1, 0);
+                    sketch.vertex(1, 1, 0, 1, 1);
+                    sketch.vertex(-1, 1, 0, 0, 1);
+                    sketch.endShape(sketch.CLOSE);
+
+                    time += values.timeSpeed;
+                } catch (e) {
+                    console.error('Error in draw:', e);
+                    shaderLoaded = false;
+                }
+            };
+        };
+
+        new p5(s);
+    </script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>blots</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: black;
+        color: #fff;
+      }
+      .text-section {
+        height: 50vh;
+        padding: 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+      }
+      p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+      }
+      main {
+        display: block;
+        position: relative;
+      }
+      canvas {
+        display: block;
+      }
+      a {
+    color: #87CEEB;  /* Light blue, matching your background */
+    text-decoration: underline;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 1;
+    color: white;
+}
+    </style>
+  </head>
+  <body>
+    <div class="text-section">
+      <h1>blots</h1>
+      <p>an attempt at blotting out what my strands of thought, and sonifying them. Moving your mouse across the canvas controls both the movement of the circles and the pitch of the sound. The vertical position affects the volume, while the horizontal position determines the frequency.</p>
+      <p>Click anywhere to create a sound, and release to fade it out. Press the space bar to reset the canvas :)</p>
+    </div>
+    <main>
+    </main>
+    <script>
+let noiseScale = 0.02;
+let circles = [];
+let maxSize = 60;
+let osc, playing = false;
+let baseFreq = 100;  // Base frequency in Hz
+
+function setup() {
+  let cnv = createCanvas(windowWidth, windowHeight);
+  colorMode(HSB, 360, 100, 100, 100);
+  
+  osc = new p5.Oscillator('square');
+  osc.freq(baseFreq);
+  osc.amp(0);
+  osc.start();
+  
+  // Create circles
+  for (let i = 0; i < 100; i++) {
+    circles.push({
+      x: random(width),
+      y: random(height),
+      size: random(20, 60),
+      offsetX: 0,
+      offsetY: 0
+    });
+  }
+  
+  cnv.mousePressed(playOscillator);
+}
+
+function draw() {
+  background(0, 0.5);
+  
+  let steps = int(map(mouseX, 0, width, 0, 9));  // Map mouseX to 9 steps
+  let freq = baseFreq * pow(2, steps / 9);       // Calculate frequency for each step
+  
+  let amp = constrain(map(mouseY, height, 0, 0, 1), 0, 1);  // Amplitude based on mouseY
+
+  if (playing) {
+    osc.freq(freq);  // Set frequency based on calculated steps
+    osc.amp(amp);    // Set amplitude
+  }
+
+  circles.forEach(circle => {
+    let distance = dist(mouseX, mouseY, circle.x, circle.y);
+    let proximity = max(0, 300 - distance);
+    let angle = atan2(circle.y - mouseY, circle.x - mouseX);
+
+    // Intensify movement and color change near the mouse
+    circle.offsetX = cos(angle) * proximity * 0.1;
+    circle.offsetY = sin(angle) * proximity * 0.1;
+
+    let noiseVal = noise((circle.x + circle.offsetX) * noiseScale, (circle.y + circle.offsetY) * noiseScale);
+    fill(noiseVal * 360, 80, 100);
+
+    // Apply unexpected movement
+    circle.x += map(noiseVal, 0, 1, -1, 1) + circle.offsetX;
+    circle.y += map(noiseVal, 0, 1, -1, 1) + circle.offsetY;
+    
+    // Draw circle
+    ellipse(circle.x, circle.y, circle.size + sin(frameCount * 0.1) * 5);
+
+    // Keep circles within canvas bounds
+    circle.x = (circle.x + width) % width;
+    circle.y = (circle.y + height) % height;
+  });
+}
+
+function playOscillator() {
+  osc.start();
+  playing = true;
+}
+
+function mouseReleased() {
+  osc.amp(0, 0.5);
+  playing = false;
+}
+
+function keyPressed() {
+  if (keyCode === 32) {  // 32 is the key code for the space bar
+    resetCanvas();
+    return false;  // Prevent any default behavior
+  }
+}
+
+function resetCanvas() {
+  // Reset circles to new random positions
+  circles.forEach(circle => {
+    circle.x = random(width);
+    circle.y = random(height);
+    circle.size = random(20, 60);
+    circle.offsetX = 0;
+    circle.offsetY = 0;
+  });
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}</script>
+  </body>
+</html>

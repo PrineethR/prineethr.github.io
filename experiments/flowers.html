@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dataflowers</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+        <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .text-section {
+            min-height: 50vh;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        canvas {
+            margin: 0 auto;
+        }
+          a {
+    color: #87CEEB;  /* Light blue, matching your background */
+    text-decoration: underline;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 1;
+    color: white;
+}
+    </style>
+</head>
+<body>
+    <div class="text-section">
+        <h1>data flowers</h1>
+        <p>the intention for this was to create a generative piece that explores the intersection of randomness, data and natural forms. each flower stem displays data values, creating a unique mathematical garden where numbers and data visualization can just make sense to people. the next explorations would be to represent more tangible data using the flowers - on my mind is the literacy rates in India, represented region-wise</p>
+        <p>click anywhere to generate a new arrangement of flowers. each stem carries its own set of probabilities, while the petals follow oddly naturalistic patterns with subtle variations in their forms and arrangements.</p>
+    </div>
+
+  <body>
+    <main>
+    </main>
+    <script>
+    function setup() {
+  createCanvas(800, 800);
+  noLoop();
+  generateFlowers();
+}
+
+function draw() {
+  // Empty but required for p5.js
+}
+
+let flowers = [];
+
+function mousePressed() {
+  generateFlowers();
+  return false;
+}
+
+function generateFlowers() {
+  clear();
+  background(0);
+  flowers = [];
+  
+  // Create flowers at varying heights
+  let positions = [];
+  for (let i = 0; i < 5; i++) {
+    let x = random(width * 0.42, width * 0.9);
+    let maxHeight = map(abs(x - width/2), 0, width/2, height * 0.6, height * 0.8);
+    positions.push({x: x, y: height, maxHeight: maxHeight});
+  }
+  
+  // Sort positions for better composition
+  positions.sort((a, b) => a.x - b.x);
+  
+  positions.forEach(pos => {
+    flowers.push(new Flower(pos.x, pos.y, random(0.7, 1.3), pos.maxHeight));
+  });
+  
+  drawFlowers();
+}
+
+function drawFlowers() {
+  flowers.forEach(flower => flower.draw());
+}
+
+class Flower {
+  constructor(x, y, scale, maxHeight) {
+    this.x = x;
+    this.y = y;
+    this.scale = scale;
+    this.segments = [];
+    this.hasPetals = random() > 0.2;
+    this.maxHeight = maxHeight;
+    
+    let currentY = y;
+    let currentX = x;
+    let segmentLength = 30 * scale;
+    
+    while (currentY > maxHeight) {
+      let angle = noise(currentX * 0.01, currentY * 0.01) * PI * 0.25 - PI * 0.125;
+      let nextX = currentX + sin(angle) * segmentLength;
+      let nextY = currentY - segmentLength;
+      
+      this.segments.push({
+        x1: currentX,
+        y1: currentY,
+        x2: nextX,
+        y2: nextY,
+        value: random().toFixed(2)
+      });
+      
+      currentX = nextX;
+      currentY = nextY;
+    }
+    
+    this.topX = currentX;
+    this.topY = currentY;
+  }
+  
+  draw() {
+    stroke(255);
+    strokeWeight(2);
+    
+    this.segments.forEach(segment => {
+      line(segment.x1, segment.y1, segment.x2, segment.y2);
+      
+      push();
+      noStroke();
+      fill(255);
+      textSize(10 * this.scale);
+      textAlign(LEFT, CENTER);
+      let midX = (segment.x1 + segment.x2) / 2;
+      let midY = (segment.y1 + segment.y2) / 2;
+      text(segment.value, midX + 5, midY);
+      pop();
+    });
+    
+    if (this.hasPetals) {
+      this.drawPetals();
+    }
+  }
+  
+  createPetalShape(length, width) {
+    let points = [];
+    let noiseOffset = random(1000);
+    let steps = 15;
+    
+    // Create more complex, organic shape
+    for (let i = 0; i <= steps; i++) {
+      let t = i / steps;
+      let angle = t * PI;
+      
+      // Base shape
+      let r = sin(t * PI) * width;
+      
+      // Add organic variation
+      r *= map(noise(t * 3 + noiseOffset), 0, 1, 0.7, 1.3);
+      
+      // Add more dramatic tapering at the ends
+      r *= map(abs(t - 0.5), 0, 0.5, 1, 0.2);
+      
+      let x = cos(angle) * r;
+      let y = sin(angle) * r * length;
+      
+      points.push([x, y]);
+    }
+    
+    return points;
+  }
+  
+  drawPetals() {
+    push();
+    translate(this.topX, this.topY);
+    
+    // Draw base layer of petals
+    let petalCount = floor(random(2, 12));
+    for (let layer = 0; layer < 2; layer++) {
+      for (let i = 0; i < petalCount; i++) {
+        let angle = (TWO_PI * i / petalCount) + random(-0.2, 0.2) + layer * 0.3;
+        push();
+        rotate(angle);
+        translate(random(-5, 5) * this.scale, random(-5, 5) * this.scale);
+        
+        let petalLength = random(30, 50) * this.scale;
+        let petalWidth = random(10, 20) * this.scale;
+        let points = this.createPetalShape(petalLength/2, petalWidth/2);
+        
+        // Create shading effect
+        for (let shade = 0; shade < 2; shade++) {
+          let alpha = shade === 0 ? 255 : 200;
+          fill(255, alpha);
+          noStroke();
+          
+          beginShape();
+          points.forEach(p => {
+            let x = p[0] + (shade === 0 ? 0 : random(-2, 2));
+            let y = p[1] + (shade === 0 ? 0 : random(-2, 2));
+            vertex(x, y);
+          });
+          endShape(CLOSE);
+        }
+        
+        pop();
+      }
+    }
+    
+    pop();
+  }
+}</script>
+  </body>
+</html>

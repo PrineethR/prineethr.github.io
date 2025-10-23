@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>handsynth</title>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
+    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .text-section {
+            padding: 4rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .sketch-section {
+            padding: 2rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #111;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        #sketch1-container, #sketch2-container, #sketch3-container {
+            position: relative;
+            width: 640px;
+            height: 480px;
+        }
+        .sketch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+        .sketch-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+      a {
+    color: #87CEEB;  /* Light blue, matching your background */
+    text-decoration: underline;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 1;
+    color: white;
+}
+    </style>
+</head>
+<body>
+    <div class="text-section">
+        <h1>handsynth gallery</h1>
+        <p>the following are a set of simple explrations to create synths that could be controlled with your hands. click each sketch to activate it and allow camera access.</p>
+    </div>
+
+    <div class="sketch-section">
+        <div id="sketch1-container">
+            <div class="sketch-overlay" id="overlay1">Click to activate exploration 1</div>
+        </div>
+    </div>
+
+    <div class="text-section">
+        <h2>exploration 1</h2>
+        <p>use both hands! :)</p>
+    </div>
+
+    <div class="sketch-section">
+        <div id="sketch2-container">
+            <div class="sketch-overlay" id="overlay2">Click to activate sketch</div>
+        </div>
+    </div>
+
+    <div class="text-section">
+        <h2>exploration 2</h2>
+        <p>use both of your hands! :)</p>
+    </div>
+
+    <div class="sketch-section">
+        <div id="sketch3-container">
+            <div class="sketch-overlay" id="overlay3">Click to activate sketch</div>
+        </div>
+    </div>
+
+    <div class="text-section">
+        <h2>exploration 3</h2>
+        <p>use both hands! :)</p>
+    </div>
+
+    <script>
+    // Namespace for each sketch
+    let sketches = {
+        sketch1: null,
+        sketch2: null,
+        sketch3: null
+    };
+
+    // Function to create new sketch instance
+    function createSketch(containerId, sketchFunction) {
+        return new p5(sketchFunction, containerId);
+    }
+
+    // Click handlers for overlays
+    document.querySelectorAll('.sketch-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function() {
+            this.classList.add('hidden');
+            const sketchNum = this.id.replace('overlay', '');
+            initializeSketch(sketchNum);
+        });
+    });
+
+    function initializeSketch(num) {
+        // Initialize the appropriate sketch based on number
+        switch(num) {
+            case '1':
+                // First sketch (Flow Field)
+                if (!sketches.sketch1) {
+                    sketches.sketch1 = createSketch('sketch1-container', flowFieldSketch);
+                }
+                break;
+            case '2':
+                // Second sketch (Hand Theremin)
+                if (!sketches.sketch2) {
+                    sketches.sketch2 = createSketch('sketch2-container', thereminSketch);
+                }
+                break;
+            case '3':
+                // Third sketch (3D Cube)
+                if (!sketches.sketch3) {
+                    sketches.sketch3 = createSketch('sketch3-container', cubeSketch);
+                }
+                break;
+        }
+    }
+
+    // Define each sketch as a function that takes p5 instance
+    function flowFieldSketch(p) {
+        let handPose;
+        let video;
+        let hands = [];
+        let circles = [];
+        let reverb, filter, oscillators = [];
+        let notes = [220, 277.18, 329.63, 440];
+        let patternRotation = 0;
+        let patternScale = 1;
+        let lastRotationAngle = 0;
+        let baseRadius = 100;
+        const CHAOS_DURATION = 3000;
+
+        p.preload = function() {
+            handPose = ml5.handPose();
+        }
+
+        p.setup = function() {
+            let canvas = p.createCanvas(640, 480);
+            video = p.createCapture(p.VIDEO);
+            video.size(640, 480);
+            video.hide();
+            
+            handPose.detectStart(video, gotHands);
+            setupAudio();
+            initializeCircles();
+        }
+
+        function setupAudio() {
+            reverb = new p5.Reverb();
+            filter = new p5.LowPass();
+            
+            notes.forEach(freq => {
+                let osc = new p5.Oscillator('sine');
+                osc.freq(freq);
+                osc.amp(0);
+                osc.start();
+                osc.disconnect();
+                osc.connect(filter);
+                filter.connect(reverb);
+                reverb.process(osc, 3, 2);
+                filter.set(800, 5);
+                oscillators.push(osc);
+            });
+        }
+
+        function initializeCircles() {
+            circles = [];
+            for (let i = 0; i < 12; i++) {
+                let angle = i * p.TWO_PI/12;
+                circles.push({
+                    baseAngle: angle,
+                    x: p.width/2 + p.cos(angle) * baseRadius,
+                    y: p.height/2 + p.sin(angle) * baseRadius,
+                    size: 20,
+                    chaos: 0,
+                    chaosStartTime: 0,
+                    beingPinched: false,
+                    originalX: p.width/2 + p.cos(angle) * baseRadius,
+                    originalY: p.height/2 + p.sin(angle) * baseRadius,
+                    soundIndex: i % oscillators.length
+                });
+            }
+        }
+
+        p.draw = function() {
+            p.push();
+            p.tint(255, 200);
+            p.image(video, 0, 0, p.width, p.height);
+            p.pop();
+            
+            p.background(255, 50);
+            
+            if (hands.length >= 2) {
+                let rightHand = hands.find(hand => hand.handedness === 'Right');
+                let leftHand = hands.find(hand => hand.handedness === 'Left');
+                
+                if (rightHand) processRightHand(rightHand);
+                if (leftHand) processLeftHand(leftHand);
+            } else if (hands.length === 1) {
+                let hand = hands[0];
+                if (hand.handedness === 'Right') processRightHand(hand);
+                if (hand.handedness === 'Left') processLeftHand(hand);
+            }
+            
+            updateAndDrawPattern();
+            hands.forEach(hand => drawHandDebug(hand));
+        }
+
+        function updateAndDrawPattern() {
+            let currentTime = p.millis();
+            
+            // Update circle positions based on rotation and scale
+            circles.forEach(circle => {
+                // Update chaos decay
+                if (circle.chaos > 0 && currentTime - circle.chaosStartTime > CHAOS_DURATION) {
+                    circle.chaos = p.max(0, circle.chaos - 0.05);
+                }
+                
+                // Calculate position with rotation and scale
+                let angle = circle.baseAngle + patternRotation;
+                let radius = baseRadius * patternScale;
+                
+                circle.originalX = p.width/2 + p.cos(angle) * radius;
+                circle.originalY = p.height/2 + p.sin(angle) * radius;
+                
+                if (!circle.beingPinched) {
+                    let chaos = circle.chaos;
+                    circle.x = circle.originalX + p.random(-chaos * 20, chaos * 20);
+                    circle.y = circle.originalY + p.random(-chaos * 20, chaos * 20);
+                    
+                    // Update sound
+                    let osc = oscillators[circle.soundIndex];
+                    let amp = p.map(chaos, 0, 1, 0, 0.1);
+                    osc.amp(amp, 0.1);
+                }
+            });
+            
+            drawCirclePattern();
+        }
+
+        function drawCirclePattern() {
+            // Draw connections
+            p.push();
+            p.stroke(0, 100);
+            for (let i = 0; i < circles.length; i++) {
+                let next = circles[(i + 1) % circles.length];
+                if (p.random(1) > circles[i].chaos) {
+                    p.line(circles[i].x, circles[i].y, next.x, next.y);
+                }
+            }
+            p.pop();
+            
+            // Draw circles
+            circles.forEach(circle => {
+                let alpha = p.map(circle.chaos, 0, 1, 255, 100);
+                if (circle.beingPinched) {
+                    p.fill(255, 0, 0, alpha);
+                } else {
+                    p.fill(0, alpha);
+                }
+                p.noStroke();
+                circle.size = 20 * patternScale;
+                p.ellipse(circle.x, circle.y, circle.size);
+            });
+        }
+
+        function processLeftHand(hand) {
+            let thumb = hand.keypoints[4];
+            let index = hand.keypoints[8];
+            
+            // Calculate rotation angle from hand orientation
+            let currentAngle = p.atan2(index.y - thumb.y, index.x - thumb.x);
+            
+            // Calculate the change in rotation
+            let rotationDelta = currentAngle - lastRotationAngle;
+            
+            // Update pattern rotation and scale based on hand position
+            patternRotation += rotationDelta;
+            
+            // Update scale based on distance between thumb and index
+            let handSpan = p.dist(thumb.x, thumb.y, index.x, index.y);
+            patternScale = p.map(handSpan, 30, 150, 0.5, 2, true);
+            
+            lastRotationAngle = currentAngle;
+            
+            // Visualize the rotation control
+            p.push();
+            p.stroke(0, 255, 0);
+            p.noFill();
+            p.circle((thumb.x + index.x)/2, (thumb.y + index.y)/2, 30);
+            p.line(thumb.x, thumb.y, index.x, index.y);
+            p.pop();
+        }
+
+        function drawHandDebug(hand) {
+            hand.keypoints.forEach(keypoint => {
+                p.fill(0, 255, 0, 100);
+                p.noStroke();
+                p.circle(keypoint.x, keypoint.y, 5);
+            });
+            
+            let thumb = hand.keypoints[4];
+            let index = hand.keypoints[8];
+            p.fill(255, 255, 0);
+            p.circle(thumb.x, thumb.y, 10);
+            p.circle(index.x, index.y, 10);
+        }
+
+        function processPinch(circle, index) {
+            circle.beingPinched = true;
+            if (circle.chaos < 0.5) {
+                circle.chaos = 1;
+                circle.chaosStartTime = p.millis();
+                
+                let osc = oscillators[circle.soundIndex];
+                osc.amp(0.1, 0.05);
+                
+                // Spread chaos to neighbors
+                let prevIndex = (index - 1 + circles.length) % circles.length;
+                let nextIndex = (index + 1) % circles.length;
+                circles[prevIndex].chaos = 0.7;
+                circles[prevIndex].chaosStartTime = p.millis();
+                circles[nextIndex].chaos = 0.7;
+                circles[nextIndex].chaosStartTime = p.millis();
+            }
+        }
+
+        function processRightHand(hand) {
+            let thumb = hand.keypoints[4];
+            let index = hand.keypoints[8];
+            
+            let pinchX = (thumb.x + index.x) / 2;
+            let pinchY = (thumb.y + index.y) / 2;
+            let pinchDistance = p.dist(thumb.x, thumb.y, index.x, index.y);
+            
+            circles.forEach((circle, i) => {
+                let d = p.dist(pinchX, pinchY, circle.x, circle.y);
+                if (d < 30 && pinchDistance < 50) {
+                    processPinch(circle, i);
+                } else {
+                    circle.beingPinched = false;
+                }
+            });
+        }
+
+        // Add the rest of your first sketch functions here...
+
+        function gotHands(results) {
+            hands = results;
+        }
+
+        p.keyPressed = function() {
+            if (p.key === 'r' || p.key === 'R') {
+                initializeCircles();
+                patternRotation = 0;
+                patternScale = 1;
+            }
+        }
+    }
+
+    // Second sketch (Will add after confirming first works)
+    function thereminSketch(p) {
+        let handPose;
+        let video;
+        let hands = [];
+        let oscillators = [];
+        let reverb;
+        const baseNotes = [440, 495, 556, 660]; // A4, B4, C#5, E5
+        let currentOctave = 0;
+        let lastOctaveAngle = 0;
+
+        const THUMB_TIP = 4;
+        const INDEX_TIP = 8;
+        const MIDDLE_TIP = 12;
+        const RING_TIP = 16;
+        const PINKY_TIP = 20;
+
+        p.preload = function() {
+            handPose = ml5.handPose();
+        }
+
+        p.setup = function() {
+            let canvas = p.createCanvas(640, 480);
+            video = p.createCapture(p.VIDEO);
+            video.size(640, 480);
+            video.hide();
+            
+            handPose.detectStart(video, gotHands);
+            setupAudio();
+        }
+
+        function setupAudio() {
+            reverb = new p5.Reverb();
+            
+            baseNotes.forEach((freq, i) => {
+                let osc = new p5.Oscillator('sine');
+                osc.freq(freq);
+                osc.amp(0);
+                osc.start();
+                osc.disconnect();
+                osc.connect(reverb);
+                reverb.process(osc, 2, 1.5);
+                oscillators.push(osc);
+            });
+        }
+
+        p.draw = function() {
+            p.push();
+            p.tint(255, 200);
+            p.image(video, 0, 0, p.width, p.height);
+            p.pop();
+            
+            p.background(255, 50);
+            
+            if (hands.length > 0) {
+                hands.forEach(hand => {
+                    if (hand.handedness === 'Right') {
+                        processPlayingHand(hand);
+                    } else {
+                        processOctaveHand(hand);
+                    }
+                    drawHandDebug(hand);
+                });
+            }
+            
+            drawOctaveIndicator();
+        }
+
+        function processPlayingHand(hand) {
+            let thumb = hand.keypoints[THUMB_TIP];
+            let fingers = [
+                { point: hand.keypoints[INDEX_TIP], osc: oscillators[0] },
+                { point: hand.keypoints[MIDDLE_TIP], osc: oscillators[1] },
+                { point: hand.keypoints[RING_TIP], osc: oscillators[2] },
+                { point: hand.keypoints[PINKY_TIP], osc: oscillators[3] }
+            ];
+            
+            fingers.forEach((finger, i) => {
+                let pinchDistance = p.dist(thumb.x, thumb.y, finger.point.x, finger.point.y);
+                let baseFreq = baseNotes[i];
+                let freq = baseFreq * p.pow(2, currentOctave);
+                
+                finger.osc.freq(freq);
+                
+                if (pinchDistance < 40) {
+                    finger.osc.amp(0.1, 0.1);
+                    
+                    p.push();
+                    p.stroke(255, 100, 100);
+                    p.strokeWeight(2);
+                    p.line(thumb.x, thumb.y, finger.point.x, finger.point.y);
+                    p.fill(255, 100, 100);
+                    p.circle((thumb.x + finger.point.x)/2, (thumb.y + finger.point.y)/2, 20);
+                    p.pop();
+                } else {
+                    finger.osc.amp(0, 0.1);
+                }
+            });
+        }
+
+        function processOctaveHand(hand) {
+            let thumb = hand.keypoints[THUMB_TIP];
+            let index = hand.keypoints[INDEX_TIP];
+            
+            let currentAngle = p.atan2(index.y - thumb.y, index.x - thumb.x);
+            currentOctave = p.map(currentAngle, -p.PI, p.PI, -2, 2);
+            currentOctave = p.constrain(currentOctave, -2, 2);
+            
+            p.push();
+            p.stroke(100, 255, 100);
+            p.strokeWeight(2);
+            p.line(thumb.x, thumb.y, index.x, index.y);
+            p.fill(100, 255, 100);
+            p.circle((thumb.x + index.x)/2, (thumb.y + index.y)/2, 20);
+            p.pop();
+            
+            lastOctaveAngle = currentAngle;
+        }
+
+        function drawOctaveIndicator() {
+            p.push();
+            p.fill(0);
+            p.noStroke();
+            p.textSize(24);
+            p.textAlign(p.LEFT, p.TOP);
+            p.text(`Octave: ${currentOctave.toFixed(1)}`, 20, 20);
+            p.pop();
+        }
+
+        function drawHandDebug(hand) {
+            hand.keypoints.forEach(point => {
+                p.fill(0, 255, 0, 100);
+                p.noStroke();
+                p.circle(point.x, point.y, 5);
+            });
+        }
+
+        function gotHands(results) {
+            hands = results;
+        }
+
+        p.mousePressed = function() {
+            p.userStartAudio();
+        }
+    }
+
+    function cubeSketch(p) {
+        let handPose;
+        let video;
+        let hands = [];
+        let oscillators = [];
+        let reverb;
+        let cubeRotation = {x: 0, y: 0, z: 0};
+        let cubeSize = 100;
+        let cubeColor;
+        const baseNotes = [440, 495, 556, 660];
+        let currentOctave = 0;
+
+        const THUMB_TIP = 4;
+        const INDEX_TIP = 8;
+        const MIDDLE_TIP = 12;
+        const RING_TIP = 16;
+        const PINKY_TIP = 20;
+
+        p.preload = function() {
+            handPose = ml5.handPose();
+        }
+
+        p.setup = function() {
+            let canvas = p.createCanvas(640, 480, p.WEBGL);
+            video = p.createCapture(p.VIDEO);
+            video.size(640, 480);
+            video.hide();
+            
+            handPose.detectStart(video, gotHands);
+            setupAudio();
+            cubeColor = p.color(255, 255, 255);
+        }
+
+        function setupAudio() {
+            reverb = new p5.Reverb();
+            for (let i = 0; i < baseNotes.length; i++) {
+                let osc = new p5.Oscillator('sine');
+                osc.amp(0);
+                osc.start();
+                osc.disconnect();
+                osc.connect(reverb);
+                oscillators.push(osc);
+            }
+            reverb.process(oscillators[0], 2, 1.5);
+        }
+
+        p.draw = function() {
+            p.background(0, 100);
+            
+            // Draw webcam
+            p.push();
+            p.translate(-p.width/2, -p.height/2, -300);
+            p.imageMode(p.CENTER);
+            p.scale(-1, 1);
+            p.tint(255, 200);
+            p.image(video, -p.width/2, p.height/2, p.width, p.height);
+            p.pop();
+            
+            // Draw cube
+            p.push();
+            p.rotateX(cubeRotation.x);
+            p.rotateY(cubeRotation.y);
+            p.rotateZ(cubeRotation.z);
+            p.ambientLight(60);
+            p.pointLight(255, 255, 255, 0, 0, 300);
+            p.ambientMaterial(cubeColor);
+            p.box(cubeSize);
+            p.pop();
+            
+            // Draw hand tracking visualization
+            p.push();
+            p.translate(-p.width/2, -p.height/2, 0);
+            if (hands.length > 0) {
+                hands.forEach(hand => {
+                    // Draw all keypoints
+                    hand.keypoints.forEach((point, index) => {
+                        p.fill(0, 255, 0, 100);
+                        p.noStroke();
+                        p.circle(point.x, point.y, 5);
+                        
+                        // Draw index numbers
+                        p.fill(255);
+                        p.noStroke();
+                        p.textSize(12);
+                        p.textAlign(p.CENTER, p.CENTER);
+                        p.text(index, point.x, point.y - 10);
+                    });
+
+                    // Highlight thumb and index finger
+                    let thumb = hand.keypoints[THUMB_TIP];
+                    let index = hand.keypoints[INDEX_TIP];
+                    p.fill(255, 255, 0);
+                    p.circle(thumb.x, thumb.y, 10);
+                    p.circle(index.x, index.y, 10);
+
+                    if (hand.handedness === 'Right') {
+                        processPlayingHand(hand);
+                    } else {
+                        processCubeControl(hand);
+                    }
+                });
+            }
+            p.pop();
+            
+            // Gentle cube rotation
+            cubeRotation.y += 0.01;
+        }
+
+        function processPlayingHand(hand) {
+            let thumb = hand.keypoints[THUMB_TIP];
+            let fingers = [
+                { point: hand.keypoints[INDEX_TIP], osc: oscillators[0] },
+                { point: hand.keypoints[MIDDLE_TIP], osc: oscillators[1] },
+                { point: hand.keypoints[RING_TIP], osc: oscillators[2] },
+                { point: hand.keypoints[PINKY_TIP], osc: oscillators[3] }
+            ];
+            
+            let activeNotes = 0;
+            
+            fingers.forEach((finger, i) => {
+                let pinchDistance = p.dist(thumb.x, thumb.y, finger.point.x, finger.point.y);
+                let freq = baseNotes[i] * p.pow(2, currentOctave);
+                finger.osc.freq(freq);
+                
+                if (pinchDistance < 40) {
+                    finger.osc.amp(0.1, 0.1);
+                    activeNotes++;
+                    
+                    let noteHue = p.map(i, 0, 3, 0, 255);
+                    cubeColor = p.color(noteHue, 200, 255);
+                } else {
+                    finger.osc.amp(0, 0.1);
+                }
+            });
+            
+            cubeSize = 100 + (activeNotes * 20);
+        }
+
+        function processCubeControl(hand) {
+            let thumb = hand.keypoints[THUMB_TIP];
+            let index = hand.keypoints[INDEX_TIP];
+            
+            let handCenterX = (thumb.x + index.x) / 2;
+            let handCenterY = (thumb.y + index.y) / 2;
+            
+            cubeRotation.x = p.map(handCenterY, 0, p.height, -p.PI, p.PI);
+            cubeRotation.y = p.map(handCenterX, 0, p.width, -p.PI, p.PI);
+        }
+
+        function gotHands(results) {
+            hands = results;
+        }
+
+        p.mousePressed = function() {
+            p.userStartAudio();
+        }
+    }
+    </script>
+</body>
+</html>

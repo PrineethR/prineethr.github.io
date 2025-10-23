@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <main>
+    </main>
+    <script>
+    let strokes = [];
+let currentStroke = [];
+let isDrawing = false;
+let animationStarted = false;
+let t = 0;
+let duration = 120;
+
+// Final A shape pointers
+const letterA = {
+  pointers: [
+    // Left diagonal
+    [{x: -40, y: 80}, {x: 0, y: -80}],
+    // Right diagonal
+    [{x: 0, y: -80}, {x: 40, y: 80}],
+    // Cross bar
+    [{x: -25, y: 20}, {x: 25, y: 20}]
+  ]
+};
+
+function setup() {
+  createCanvas(400, 400);
+  strokeWeight(3);
+  stroke(255);
+  background(0);
+  
+  // Create start button
+  const startBtn = createButton('Transform to A');
+  startBtn.position(10, height + 10);
+  startBtn.mousePressed(startAnimation);
+  
+  // Create reset button
+  const resetBtn = createButton('Reset');
+  resetBtn.position(110, height + 10);
+  resetBtn.mousePressed(resetSketch);
+}
+
+function draw() {
+  if (!animationStarted) {
+    // Drawing mode
+    if (isDrawing) {
+      let pointer = {
+        x: mouseX - width/2,
+        y: mouseY - height/2
+      };
+      currentStroke.push(pointer);
+      
+      // Draw the current stroke
+      stroke(255);
+      noFill();
+      beginShape();
+      for (let p of currentStroke) {
+        vertex(p.x + width/2, p.y + height/2);
+      }
+      endShape();
+    }
+  } else {
+    // Animation mode
+    background(0);
+    translate(width/2, height/2);
+    
+    let progress = min(t / duration, 1);
+    let eased = easingCubic(progress);
+    
+    // Draw morphing strokes
+    noFill();
+    stroke(255);
+    
+    for (let i = 0; i < strokes.length; i++) {
+      let targetpointers = letterA.pointers[i % letterA.pointers.length];
+      drawMorphingStroke(strokes[i], targetpointers, eased);
+    }
+    
+    if (t < duration) {
+      t++;
+    }
+  }
+}
+
+function drawMorphingStroke(originalStroke, targetpointers, progress) {
+  beginShape();
+  for (let i = 0; i < originalStroke.length; i++) {
+    let t = i / (originalStroke.length - 1);
+    let targetX = lerp(targetpointers[0].x, targetpointers[1].x, t);
+    let targetY = lerp(targetpointers[0].y, targetpointers[1].y, t);
+    
+    let x = lerp(originalStroke[i].x, targetX, progress);
+    let y = lerp(originalStroke[i].y, targetY, progress);
+    
+    vertex(x, y);
+  }
+  endShape();
+}
+
+function mousePressed() {
+  if (!animationStarted) {
+    isDrawing = true;
+    currentStroke = [];
+    let pointer = {
+      x: mouseX - width/2,
+      y: mouseY - height/2
+    };
+    currentStroke.push(pointer);
+  }
+}
+
+function mouseReleased() {
+  if (!animationStarted && isDrawing) {
+    isDrawing = false;
+    if (currentStroke.length > 1) {
+      strokes.push([...currentStroke]);
+    }
+  }
+}
+
+function mouseDragged() {
+  if (!animationStarted) {
+    let pointer = {
+      x: mouseX - width/2,
+      y: mouseY - height/2
+    };
+    currentStroke.push(pointer);
+  }
+}
+
+function startAnimation() {
+  if (strokes.length > 0) {
+    animationStarted = true;
+    t = 0;
+  }
+}
+
+function resetSketch() {
+  background(0);
+  strokes = [];
+  currentStroke = [];
+  isDrawing = false;
+  animationStarted = false;
+  t = 0;
+}
+
+function easingCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+    
+    </script>
+  </body>
+</html>

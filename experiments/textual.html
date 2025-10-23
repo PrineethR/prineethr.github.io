@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>(con)textual</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <meta charset="utf-8" />
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f0f0;
+      }
+
+      main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      canvas {
+        display: block;
+      }
+
+      #side-text {
+        position: fixed;
+        right: 40px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: Garamond;
+        font-size: 16px;
+        color: #000;
+        width: 200px;
+        text-align: right;
+        line-height: 1.5;
+      }
+      a {
+    color: #87CEEB;  /* Light blue, matching your background */
+    text-decoration: underline;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 1;
+    color: white;
+}
+    </style>
+  </head>
+  <body>
+    <main></main>
+    <div id="side-text"> where does our information go?<br>actually.. does it even matter?<br>more context - 'r'</div>
+    <script>
+let phrases = [
+  
+  "bits fade like memories",
+  "404 culture not found",
+  "cached thoughts expire soon",
+  "buffering consciousness",
+  "digital artifacts remain",
+  "ghost in the machine learning",
+  "trending until forgotten",
+  "viral memories decay",
+  "delete your search history",
+  "this story will disappear",
+  "temporary content permanent impact",
+  "your attention is monetized",
+  "time renders all obsolete",
+  "update required to continue",
+  "yesterday's future today",
+  "nostalgia for the present",
+  "archives of the ephemeral",
+  "remember to forget",
+  "algorithms dream in binary, but we don't",
+  "quantum states of being",
+  "closed source consciousness",
+  "artificial memories authentic emotions",
+  "processing reality please wait",
+  "desperate for human error",
+  "exist between ones zeros",
+  "cloud storage for the soul",
+  "pixel by pixel we fade",
+  "buffer overflow of dreams",
+  "endless scroll to nowhere",
+  "your cache has expired"
+];
+
+let currentText;
+let particles = [];
+let lastUpdateTime = 0;
+let updateInterval = 25; // 500ms = 2fps
+
+function setup() {
+  createCanvas(windowWidth * 0.95, windowHeight * 0.7);
+  frameRate(60);
+  textFont("Garamond");
+  textSize(20);
+  textAlign(CENTER, TOP);
+  currentText = random(phrases);
+  generateParticles();
+}
+
+function generateParticles() {
+  particles = [];
+  let y = 20;
+  let spacing = 15;
+  let rows = 40;
+
+  for (let row = 0; row < rows; row++) {
+    let x = 20;
+    let chars = currentText.split("");
+
+    for (let char of chars) {
+      let degradeStart = height * 0.5; // Adjusted to start degrading halfway
+      let degradeEnd = height * 0.8;
+      let degradeFactor = map(y, degradeStart, degradeEnd, 0, 1);
+
+      // Add slight randomness to degradation factor
+      degradeFactor *= random(0.8, 1.2);
+
+      let randomOffset = {
+        x: randomGaussian(0, degradeFactor * 30),
+        y: randomGaussian(0, degradeFactor * 10),
+      };
+
+      if (random() > degradeFactor * 1.2) {
+        particles.push({
+          char: char,
+          x: x + randomOffset.x,
+          y: y + randomOffset.y,
+          originalX: x,
+          originalY: y,
+          visible: true,
+          opacity: map(y, 0, height, 1, 0.3) * random(0.8, 1),
+        });
+      }
+
+      // Random character noise in degraded areas
+      if (degradeFactor > 0.5 && random() < 0.15) {
+        let randomChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split(
+          ""
+        );
+        particles.push({
+          char: random(randomChars),
+          x: x + randomOffset.x * 2,
+          y: y + randomOffset.y * 2,
+          originalX: x,
+          originalY: y,
+          visible: true,
+          opacity: 0.5 * random(0.6, 1),
+        });
+      }
+
+      x += textWidth(char);
+    }
+    y += spacing;
+  }
+}
+
+function draw() {
+  // Check if it's time for an update
+  let currentTime = millis();
+  if (currentTime - lastUpdateTime > updateInterval) {
+    generateParticles();
+    lastUpdateTime = currentTime;
+  }
+
+  background(255);
+
+  // Draw all particles
+  for (let p of particles) {
+    if (p.visible) {
+      push();
+      fill(0, p.opacity * 255);
+      text(p.char, p.x, p.y);
+      pop();
+    }
+  }
+}
+
+function keyPressed() {
+  if (key === "r") {
+    // Select a new random phrase
+    currentText = random(phrases);
+    // Force an immediate update
+    generateParticles();
+    lastUpdateTime = millis();
+  }
+}
+
+// Optional: Click to toggle animation
+let isAnimating = true;
+function mousePressed() {
+  isAnimating = !isAnimating;
+  if (isAnimating) {
+    loop();
+  } else {
+    noLoop();
+  }
+}
+</script>
+  </body>
+</html>

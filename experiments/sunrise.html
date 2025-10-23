@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>sleepy sun</title>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .text-section {
+            min-height: 50vh;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        main {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            min-height: 50vh;
+        }
+        canvas {
+            margin: 0 auto;
+        }
+      a {
+    color: #87CEEB;  /* Light blue, matching your background */
+    text-decoration: underline;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 1;
+    color: white;
+}
+    </style>
+</head>
+<body>
+    <div class="text-section">
+        <h1>sleeping digitally</h1>
+      <p> this was a quick exploration to simulate sunrise and sunset - to enable better sleeping patterns, and to make sleeping and waking rituals more interactive and easier. who knows, maybe this could be projected on a ceiling.. ah who am i kidding, that's not a very good idea, is it?</p>
+    </div>
+    <main>
+    </main>
+    <script>
+        let skyBreath;      // The rhythm of the sky
+        let sunAscent;      // The sun's journey upward
+        let morningHues;    // Our palette of dawn colors
+        
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            skyBreath = 0;
+            sunAscent = height;
+            morningHues = [
+                color(25, 25, 112),    // Night blue
+                color(255, 183, 77),   // Sunrise orange
+                color(255, 228, 180)   // Morning light
+            ];
+        }
+
+        function draw() {
+            // Let the sky breathe!
+            skyBreath = map(sin(frameCount * 0.02), -1, 1, 0, 1);
+            
+            // Paint the awakening sky
+            let skyColor = lerpColor(
+                morningHues[0],
+                morningHues[1],
+                skyBreath
+            );
+            background(skyColor);
+            
+            // Draw the ascending sun
+            noStroke();
+            fill(255, 255, 200);
+            
+            // Sun rises with easing
+            sunAscent = lerp(sunAscent, height/2, 0.005);
+            
+            // The sun is a growing circle of light!
+            let sunSize = map(sunAscent, height, height/2, 50, 150);
+            circle(width/2, sunAscent, sunSize);
+            
+            // Cast rays of morning light
+            drawSunrays(width/2, sunAscent, sunSize);
+        }
+
+        function drawSunrays(x, y, size) {
+            push();
+            translate(x, y);
+            
+            // Each ray is a breath of light - an awakening, maybe
+            for(let i = 0; i < 12; i++) {
+                rotate(TWO_PI/12);
+                let rayLength = size * (1 + sin(frameCount * 0.05 + i) * 0.5);
+                stroke(255, 255, 200, 100);
+                line(0, -size/2, 0, -rayLength);
+            }
+            pop();
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight/2);
+        }
+    </script>
+</body>
+</html>

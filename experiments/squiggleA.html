@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>exploring tamilification</title>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .text-section {
+            min-height: 30vh;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        main {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding: 20px;
+        }
+        .sketch-container {
+            position: relative;
+            width: 400px;
+            height: 450px;
+        }
+        .button-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+        }
+        button {
+            padding: 8px 16px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #444;
+        }
+      a {
+    color: #87CEEB;  /* Light blue, matching your background */
+    text-decoration: underline;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 1;
+    color: white;
+}
+    </style>
+</head>
+<body>
+    <div class="text-section">
+        <h1>tamilification</h1>
+        <p>this was an exploration to understand the westernizing of tamil culture - linguistically</p>
+        <p>for me, tamil has a free flowing script - nice curves and wonderful letterization. i wanted to explore and communicate a part of how the english alphabet and tamil are almost morphing into one another in usage, meaning and application; slowly but surely</p>
+        <p>
+          try drawing அ which is 'Ah' in Tamil
+      </p>  
+  </div>
+    
+    <main>
+        <div class="sketch-container" id="sketch-container"></div>
+    </main>
+
+    <script>
+        let strokes = [];
+        let currentStroke = [];
+        let isDrawing = false;
+        let animationStarted = false;
+        let t = 0;
+        let duration = 120;
+
+        const letterA = {
+            pointers: [
+                [{x: -40, y: 80}, {x: 0, y: -80}],
+                [{x: 0, y: -80}, {x: 40, y: 80}],
+                [{x: -25, y: 20}, {x: 25, y: 20}]
+            ]
+        };
+
+        function setup() {
+            const canvas = createCanvas(400, 400);
+            canvas.parent('sketch-container');
+            strokeWeight(3);
+            stroke(255);
+            background(0);
+            
+            const buttonContainer = createElement('div');
+            buttonContainer.class('button-container');
+            buttonContainer.parent('sketch-container');
+            
+            const startBtn = createButton('Transform to A');
+            startBtn.parent(buttonContainer);
+            startBtn.mousePressed(startAnimation);
+            
+            const resetBtn = createButton('Reset');
+            resetBtn.parent(buttonContainer);
+            resetBtn.mousePressed(resetSketch);
+        }
+
+        function draw() {
+            if (!animationStarted) {
+                if (isDrawing) {
+                    let pointer = {
+                        x: mouseX - width/2,
+                        y: mouseY - height/2
+                    };
+                    currentStroke.push(pointer);
+                    
+                    stroke(255);
+                    noFill();
+                    beginShape();
+                    for (let p of currentStroke) {
+                        vertex(p.x + width/2, p.y + height/2);
+                    }
+                    endShape();
+                }
+            } else {
+                background(0);
+                translate(width/2, height/2);
+                
+                let progress = min(t / duration, 1);
+                let eased = easingCubic(progress);
+                
+                noFill();
+                stroke(255);
+                
+                for (let i = 0; i < strokes.length; i++) {
+                    let targetpointers = letterA.pointers[i % letterA.pointers.length];
+                    drawMorphingStroke(strokes[i], targetpointers, eased);
+                }
+                
+                if (t < duration) {
+                    t++;
+                }
+            }
+        }
+
+        function drawMorphingStroke(originalStroke, targetpointers, progress) {
+            beginShape();
+            for (let i = 0; i < originalStroke.length; i++) {
+                let t = i / (originalStroke.length - 1);
+                let targetX = lerp(targetpointers[0].x, targetpointers[1].x, t);
+                let targetY = lerp(targetpointers[0].y, targetpointers[1].y, t);
+                
+                let x = lerp(originalStroke[i].x, targetX, progress);
+                let y = lerp(originalStroke[i].y, targetY, progress);
+                
+                vertex(x, y);
+            }
+            endShape();
+        }
+
+        function mousePressed() {
+            if (!animationStarted && mouseY < height) {
+                isDrawing = true;
+                currentStroke = [];
+                let pointer = {
+                    x: mouseX - width/2,
+                    y: mouseY - height/2
+                };
+                currentStroke.push(pointer);
+            }
+        }
+
+        function mouseReleased() {
+            if (!animationStarted && isDrawing) {
+                isDrawing = false;
+                if (currentStroke.length > 1) {
+                    strokes.push([...currentStroke]);
+                }
+            }
+        }
+
+        function mouseDragged() {
+            if (!animationStarted && mouseY < height) {
+                let pointer = {
+                    x: mouseX - width/2,
+                    y: mouseY - height/2
+                };
+                currentStroke.push(pointer);
+            }
+        }
+
+        function startAnimation() {
+            if (strokes.length > 0) {
+                animationStarted = true;
+                t = 0;
+            }
+        }
+
+        function resetSketch() {
+            background(0);
+            strokes = [];
+            currentStroke = [];
+            isDrawing = false;
+            animationStarted = false;
+            t = 0;
+        }
+
+        function easingCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+    </script>
+</body>
+</html>

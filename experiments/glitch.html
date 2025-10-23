@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>gl*tch</title>
+        <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .text-section {
+            min-height: 50vh;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        main {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding: 2rem 0;
+        }
+        canvas {
+            margin: 0 auto;
+        }
+      a {
+    color: #87CEEB;  /* Light blue, matching your background */
+    text-decoration: underline;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 1;
+    color: white;
+}
+    </style>
+</head>
+<body>
+    <div class="text-section">
+      <h1>gl*tch</h1>
+        <p> a completely generic set of moving images that appear to be glitching out</p>
+      <p> G: Toggle Auto Glitch
+R: Adjust RGB Shift
+S: Adjust Scan Lines
+1/2: Decrease/Increase Intensity </p>
+    </div>
+    <main>
+<script id="vertex-shader" type="x-shader/x-vertex">
+precision mediump float;
+attribute vec3 aPosition;
+attribute vec2 aTexCoord;
+varying vec2 vTexCoord;
+void main() {
+    vTexCoord = aTexCoord;
+    vec4 positionVec4 = vec4(aPosition, 1.0);
+    positionVec4.xy = positionVec4.xy * 2.0 - 1.0;
+    gl_Position = positionVec4;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+uniform vec2 u_resolution;
+uniform float u_time;
+uniform sampler2D tex0;
+uniform float u_intensity;
+uniform float u_rgbshift;
+uniform float u_scanline;
+
+float random(vec2 st) {
+    return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+}
+
+vec2 screenTear(vec2 uv, float intensity) {
+    float tear = floor(uv.y * 20.0);
+    float rand = random(vec2(tear, floor(u_time * 2.0)));
+    float threshold = 0.95 - (intensity * 0.3);
+    if (rand > threshold) {
+        uv.x += intensity * 0.2 * random(vec2(tear, u_time));
+    }
+    return uv;
+}
+
+void main() {
+    vec2 uv = gl_FragCoord.xy/u_resolution.xy;
+    uv = screenTear(uv, u_intensity);
+    
+    float rgbSplit = u_rgbshift * sin(u_time * 2.0);
+    vec2 rgbOffset = vec2(rgbSplit * sin(u_time), rgbSplit * cos(u_time));
+    
+    vec4 colorR = texture2D(tex0, vec2(uv.x + rgbOffset.x, uv.y));
+    vec4 colorG = texture2D(tex0, uv);
+    vec4 colorB = texture2D(tex0, vec2(uv.x - rgbOffset.x, uv.y));
+    
+    float scanline = sin(uv.y * 800.0 + u_time * 10.0) * u_scanline;
+    
+    gl_FragColor = vec4(
+        colorR.r + scanline,
+        colorG.g + scanline,
+        colorB.b + scanline,
+        1.0
+    );
+}
+</script>
+
+<script>
+let shapes = [];
+let shaderProgram;
+let canvas;
+let graphics;
+
+// Control variables
+let glitchIntensity = 0.5;
+let rgbShiftIntensity = 0.02;
+let scanlineIntensity = 0.1;
+let autoGlitch = true;
+let displayControls = true;
+
+// Constants
+const INITIAL_SHAPES = 5;
+const COLORS = ['#00A4E4', '#FF4B00', '#FFFFFF', '#000000'];
+
+class GlitchShape {
+    constructor() {
+        this.reset();
+        this.glitchInterval = random(200, 800);
+        this.lastGlitch = 0;
+        this.moveMode = floor(random(4));
+        this.trails = [];
+        this.lastTrailTime = 0;
+        this.trailInterval = 100;
+        this.glitchOffset = 0;
+        this.targetX = random(width);
+        this.targetY = random(height);
+    }
+
+    reset() {
+        this.x = random(width);
+        this.y = random(height);
+        this.w = random(50, 200);
+        this.h = random(50, 200);
+        this.originalW = this.w;
+        this.originalH = this.h;
+        this.color = random(COLORS);
+        this.rotation = random(TWO_PI);
+        this.offsetX = 0;
+        this.offsetY = 0;
+    }
+
+    updateMovement() {
+        switch(this.moveMode) {
+            case 0:
+                if (random() < 0.02) {
+                    this.targetX = random(width);
+                    this.targetY = random(height);
+                }
+                let dx = this.targetX - this.x;
+                let dy = this.targetY - this.y;
+                this.x += dx * 0.03;
+                this.y += dy * 0.03;
+                break;
+            case 1:
+                this.x += cos(frameCount * 0.05) * 2;
+                this.y += sin(frameCount * 0.1) * 1.5;
+                break;
+            case 2:
+                let radius = 100;
+                this.x = width/2 + cos(frameCount * 0.02) * radius + this.glitchOffset;
+                this.y = height/2 + sin(frameCount * 0.02) * radius;
+                break;
+            case 3:
+                if (frameCount % 30 === 0) {
+                    this.x += random(-50, 50);
+                    this.y += random(-50, 50);
+                }
+                break;
+        }
+        this.x = constrain(this.x, 0, width);
+        this.y = constrain(this.y, 0, height);
+    }
+
+    glitch() {
+        if (millis() - this.lastGlitch > this.glitchInterval) {
+            this.offsetX = random(-30, 30);
+            this.offsetY = random(-30, 30);
+            this.rotation += random(-PI/4, PI/4);
+            this.w = this.originalW * random(0.8, 1.2);
+            this.h = this.originalH * random(0.8, 1.2);
+            
+            if (random() < 0.3) {
+                this.color = random(COLORS);
+            }
+            
+            if (random() < 0.1) {
+                this.moveMode = floor(random(4));
+                this.glitchOffset = random(-100, 100);
+            }
+            
+            this.lastGlitch = millis();
+            
+            if (random() < 0.3) {
+                this.createGlitchDuplicate();
+            }
+        }
+    }
+
+    createGlitchDuplicate() {
+        let duplicate = new Trail(
+            this.x + random(-20, 20),
+            this.y + random(-20, 20),
+            this.w * random(0.9, 1.1),
+            this.h * random(0.9, 1.1),
+            this.color,
+            this.rotation + random(-0.2, 0.2)
+        );
+        this.trails.push(duplicate);
+    }
+
+    update() {
+        this.updateMovement();
+        if (millis() - this.lastTrailTime > this.trailInterval) {
+            this.trails.push(new Trail(
+                this.x + this.offsetX,
+                this.y + this.offsetY,
+                this.w,
+                this.h,
+                this.color,
+                this.rotation
+            ));
+            this.lastTrailTime = millis();
+        }
+    }
+
+    draw(g) {
+        this.trails.forEach(trail => trail.draw(g));
+
+        g.push();
+        g.translate(this.x + this.offsetX, this.y + this.offsetY);
+        g.rotate(this.rotation);
+        
+        g.fill(this.color);
+        g.stroke(0);
+        g.strokeWeight(2);
+        g.rect(-this.w/2, -this.h/2, this.w, this.h);
+        
+        if (random() < 0.2) {
+            g.stroke(255);
+            g.strokeWeight(random(1, 3));
+            for (let i = 0; i < 8; i++) {
+                let lineY = random(-this.h/2, this.h/2);
+                let lineX = random(-this.w/2, this.w/2);
+                let lineLength = random(10, this.w);
+                
+                if (random() < 0.5) {
+                    g.line(lineX, lineY, lineX + lineLength, lineY);
+                } else {
+                    g.line(lineX, lineY, lineX, lineY + lineLength);
+                }
+            }
+        }
+        g.pop();
+    }
+}
+
+class Trail {
+    constructor(x, y, w, h, color, rotation) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.color = color;
+        this.rotation = rotation;
+    }
+
+    draw(g) {
+        g.push();
+        g.translate(this.x, this.y);
+        g.rotate(this.rotation);
+        g.fill(this.color);
+        g.stroke(0);
+        g.strokeWeight(2);
+        g.rect(-this.w/2, -this.h/2, this.w, this.h);
+        g.pop();
+    }
+}
+
+function setup() {
+    canvas = createCanvas(windowWidth, windowHeight, WEBGL);
+    noStroke();
+    
+    let vertShader = document.getElementById('vertex-shader').text;
+    let fragShader = document.getElementById('fragment-shader').text;
+    shaderProgram = createShader(vertShader, fragShader);
+    
+    graphics = createGraphics(width, height);
+    graphics.rectMode(CENTER);
+    
+    for (let i = 0; i < INITIAL_SHAPES; i++) {
+        shapes.push(new GlitchShape());
+    }
+}
+
+function draw() {
+    graphics.background(0);
+    
+    if (autoGlitch) {
+        glitchIntensity = map(sin(frameCount * 0.01), -1, 1, 0.2, 0.8);
+    }
+    
+    shapes.forEach(shape => {
+        shape.update();
+        shape.glitch();
+        shape.draw(graphics);
+    });
+    
+    if (shaderProgram) {
+        shader(shaderProgram);
+        shaderProgram.setUniform('u_resolution', [width, height]);
+        shaderProgram.setUniform('u_time', millis() / 1000.0);
+        shaderProgram.setUniform('tex0', graphics);
+        shaderProgram.setUniform('u_intensity', glitchIntensity);
+        shaderProgram.setUniform('u_rgbshift', rgbShiftIntensity);
+        shaderProgram.setUniform('u_scanline', scanlineIntensity);
+        rect(-width/2, -height/2, width, height);
+    } else {
+        image(graphics, -width/2, -height/2, width, height);
+    }
+    
+    if (displayControls) {
+        displayControlsInfo();
+    }
+}
+
+function displayControlsInfo() {
+    graphics.push();
+    graphics.fill(255);
+    graphics.noStroke();
+    graphics.textSize(14);
+    graphics.textAlign(LEFT, TOP);
+    graphics.text(
+        'Controls:\n' +
+        'G: Toggle Auto Glitch\n' +
+        'R: Adjust RGB Shift\n' +
+        'S: Adjust Scan Lines\n' +
+        '1/2: Decrease/Increase Intensity\n' +
+        'H: Toggle This Help',
+        20, 20
+    );
+    graphics.text(
+        `Current Settings:\n` +
+        `Glitch: ${(glitchIntensity * 100).toFixed(0)}%\n` +
+        `RGB Shift: ${(rgbShiftIntensity * 100).toFixed(0)}%\n` +
+        `Scan Lines: ${(scanlineIntensity * 100).toFixed(0)}%\n` +
+        `Auto Glitch: ${autoGlitch ? 'ON' : 'OFF'}`,
+        20, 120
+    );
+    graphics.pop();
+}
+
+function keyPressed() {
+    switch(key.toLowerCase()) {
+        case 'g':
+            autoGlitch = !autoGlitch;
+            break;
+        case 'r':
+            rgbShiftIntensity = (rgbShiftIntensity + 0.01) % 0.1;
+            break;
+        case 's':
+            scanlineIntensity = (scanlineIntensity + 0.1) % 0.5;
+            break;
+        case 'h':
+            displayControls = !displayControls;
+            break;
+        case '1':
+            glitchIntensity = max(0, glitchIntensity - 0.1);
+            break;
+        case '2':
+            glitchIntensity = min(1, glitchIntensity + 0.1);
+            break;
+    }
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    graphics = createGraphics(width, height);
+    graphics.rectMode(CENTER);
+}
+</script>
+  </main>
+</body>
+</html>

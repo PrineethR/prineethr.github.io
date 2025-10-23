@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>exploring tamil</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #textInput {
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 4px;
+        }
+
+        #animateBtn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #444;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        #animateBtn:hover {
+            background: #555;
+        }
+      a {
+    color: #87CEEB;  /* Light blue, matching your background */
+    text-decoration: underline;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 1;
+    color: white;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="text" id="textInput" placeholder="Type something...">
+        <button id="animateBtn">Animate</button>
+    </div>
+
+    <!-- Configuration -->
+    <script>
+        // Letter template configurations
+        const letterTemplates = {
+            'A': [[-40, 100, 0, 0], [0, 0, 40, 100], [-20, 50, 20, 50]],
+            'B': [[-40, 100, -40, 0], [-40, 0, 20, 0], [20, 0, 40, 20], [40, 20, 20, 50], [-40, 50, 20, 50], [20, 50, 40, 70], [40, 70, 20, 100], [20, 100, -40, 100]],
+            'C': [[40, 20, 20, 0], [20, 0, -20, 0], [-20, 0, -40, 20], [-40, 20, -40, 80], [-40, 80, -20, 100], [-20, 100, 20, 100], [20, 100, 40, 80]],
+            'D': [[-40, 0, -40, 100], [-40, 0, 0, 0], [0, 0, 40, 40], [40, 40, 40, 60], [40, 60, 0, 100], [0, 100, -40, 100]],
+            'E': [[-40, 0, -40, 100], [-40, 0, 40, 0], [-40, 50, 20, 50], [-40, 100, 40, 100]],
+            'F': [[-40, 0, -40, 100], [-40, 0, 40, 0], [-40, 50, 20, 50]],
+            'G': [[40, 20, 20, 0], [20, 0, -20, 0], [-20, 0, -40, 20], [-40, 20, -40, 80], [-40, 80, -20, 100], [-20, 100, 20, 100], [20, 100, 40, 80], [40, 80, 40, 50], [40, 50, 0, 50]],
+            'H': [[-40, 0, -40, 100], [40, 0, 40, 100], [-40, 50, 40, 50]],
+            'I': [[0, 0, 0, 100], [-20, 0, 20, 0], [-20, 100, 20, 100]],
+            'J': [[40, 0, 40, 80], [40, 80, 20, 100], [20, 100, -20, 100], [-20, 100, -40, 80]],
+            'K': [[-40, 0, -40, 100], [-40, 50, 40, 0], [-40, 50, 40, 100]],
+            'L': [[-40, 0, -40, 100], [-40, 100, 40, 100]],
+            'M': [[-40, 100, -40, 0], [-40, 0, 0, 50], [0, 50, 40, 0], [40, 0, 40, 100]],
+            'N': [[-40, 100, -40, 0], [-40, 0, 40, 100], [40, 100, 40, 0]],
+            'O': [[20, 0, -20, 0], [-20, 0, -40, 20], [-40, 20, -40, 80], [-40, 80, -20, 100], [-20, 100, 20, 100], [20, 100, 40, 80], [40, 80, 40, 20], [40, 20, 20, 0]],
+            'P': [[-40, 100, -40, 0], [-40, 0, 20, 0], [20, 0, 40, 20], [40, 20, 40, 30], [40, 30, 20, 50], [20, 50, -40, 50]],
+            'Q': [[20, 0, -20, 0], [-20, 0, -40, 20], [-40, 20, -40, 80], [-40, 80, -20, 100], [-20, 100, 20, 100], [20, 100, 40, 80], [40, 80, 40, 20], [40, 20, 20, 0], [0, 60, 40, 100]],
+            'R': [[-40, 100, -40, 0], [-40, 0, 20, 0], [20, 0, 40, 20], [40, 20, 40, 30], [40, 30, 20, 50], [20, 50, -40, 50], [-20, 50, 40, 100]],
+            'S': [[40, 20, 20, 0], [20, 0, -20, 0], [-20, 0, -40, 20], [-40, 20, -20, 50], [-20, 50, 20, 50], [20, 50, 40, 80], [40, 80, 20, 100], [20, 100, -20, 100], [-20, 100, -40, 80]],
+            'T': [[-40, 0, 40, 0], [0, 0, 0, 100]],
+            'U': [[-40, 0, -40, 80], [-40, 80, -20, 100], [-20, 100, 20, 100], [20, 100, 40, 80], [40, 80, 40, 0]],
+            'V': [[-40, 0, 0, 100], [0, 100, 40, 0]],
+            'W': [[-40, 0, -20, 100], [-20, 100, 0, 30], [0, 30, 20, 100], [20, 100, 40, 0]],
+            'X': [[-40, 0, 40, 100], [40, 0, -40, 100]],
+            'Y': [[-40, 0, 0, 50], [40, 0, 0, 50], [0, 50, 0, 100]],
+            'Z': [[-40, 0, 40, 0], [40, 0, -40, 100], [-40, 100, 40, 100]]
+        };
+    </script>
+
+    <!-- Utility Functions -->
+    <script>
+        function easeInOutCubic(x) {
+            return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+        }
+
+        function calculateTextDimensions(text, letterSpacing) {
+            const chars = text.split(' ');
+            return chars.map(word => word.length * letterSpacing);
+        }
+
+        function splitIntoLines(text, maxWidth, letterSpacing) {
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = [];
+            let currentWidth = 0;
+
+            words.forEach(word => {
+                const wordWidth = word.length * letterSpacing;
+                
+                if (currentWidth + wordWidth <= maxWidth) {
+                    currentLine.push(word);
+                    currentWidth += wordWidth + letterSpacing; // Add space between words
+                } else {
+                    lines.push(currentLine.join(' '));
+                    currentLine = [word];
+                    currentWidth = wordWidth;
+                }
+            });
+
+            if (currentLine.length > 0) {
+                lines.push(currentLine.join(' '));
+            }
+
+            return lines;
+        }
+
+        function generateCurvedPoints(startX, startY, endX, endY) {
+            const points = [];
+            const numPoints = floor(random(3, 6));
+            
+            points.push({x: startX, y: startY});
+            
+            for (let i = 1; i < numPoints - 1; i++) {
+                const t = i / (numPoints - 1);
+                const baseX = lerp(startX, endX, t);
+                const baseY = lerp(startY, endY, t);
+                
+                points.push({
+                    x: baseX + random(-50, 50),
+                    y: baseY + random(-50, 50)
+                });
+            }
+            
+            points.push({x: endX, y: endY});
+            
+            return points;
+        }
+    </script>
+
+    <!-- Core Animation Logic -->
+    <script>
+        let currentText = '';
+let squiggles = [];
+let animationProgress = 0;
+const ANIMATION_DURATION = 120;
+const TRANSITION_DURATION = 90;
+
+function generateCurvedPoints(startX, startY, endX, endY) {
+    const points = [];
+    const numPoints = floor(random(3, 6));
+    
+    // Add start point
+    points.push({x: startX, y: startY});
+    
+    // Generate middle control points
+    for (let i = 1; i < numPoints - 1; i++) {
+        const t = i / (numPoints - 1);
+        const baseX = lerp(startX, endX, t);
+        const baseY = lerp(startY, endY, t);
+        
+        points.push({
+            x: baseX + random(-50, 50),
+            y: baseY + random(-50, 50)
+        });
+    }
+    
+    // Add end point
+    points.push({x: endX, y: endY});
+    
+    return points;
+}
+
+function setup() {
+    createCanvas(windowWidth * 0.95, windowHeight * 0.7);
+    colorMode(HSB);
+    background(0);
+    
+    document.getElementById('textInput').addEventListener('input', (e) => {
+        currentText = e.target.value.toUpperCase();
+        startAnimation();
+    });
+    
+    document.getElementById('animateBtn').addEventListener('click', startAnimation);
+}
+
+function startAnimation() {
+    squiggles = generateSquiggles(currentText);
+    animationProgress = 0;
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth * 0.95, windowHeight * 0.7);
+    if (currentText) {
+        startAnimation();
+    }
+}
+
+function draw() {
+    background(0);
+    
+    if (squiggles.length > 0) {
+        if (animationProgress < ANIMATION_DURATION + TRANSITION_DURATION) {
+            animationProgress++;
+        }
+        
+        stroke(255);
+        strokeWeight(2);
+        noFill();
+        
+        for (let squiggle of squiggles) {
+            let initialProgress = constrain(
+                (animationProgress - squiggle.delay) / ANIMATION_DURATION,
+                0, 1
+            );
+            initialProgress = easeInOutCubic(initialProgress);
+            
+            let transitionProgress = constrain(
+                (animationProgress - ANIMATION_DURATION - squiggle.delay) / TRANSITION_DURATION,
+                0, 1
+            );
+            transitionProgress = easeInOutCubic(transitionProgress);
+            
+            const time = frameCount * 0.015;
+            
+            for (let line of squiggle.lines) {
+                // Interpolate points for the curved path
+                const currentPoints = line.curvePoints.map((point, idx) => {
+                    const targetX = lerp(line.targetStart.x, line.targetEnd.x, idx / (line.curvePoints.length - 1));
+                    const targetY = lerp(line.targetStart.y, line.targetEnd.y, idx / (line.curvePoints.length - 1));
+                    
+                    let x = lerp(point.x, targetX, initialProgress);
+                    let y = lerp(point.y, targetY, initialProgress);
+                    
+                    if (transitionProgress > 0) {
+                        const breatheScale = map(sin(time), -1, 1, 0.98, 1.02);
+                        const floatOffset = sin(time + squiggle.delay * 0.5) * 2;
+                        const waveOffset = cos(time * 0.5 + x * 0.01) * 1.5;
+                        
+                        x *= breatheScale;
+                        y += floatOffset + waveOffset * (1 - initialProgress);
+                        
+                        const hue = map(sin(time + x * 0.01), -1, 1, 220, 240);
+                        const brightness = map(transitionProgress, 0, 1, 255, 200);
+                        stroke(hue, 255, brightness);
+                    }
+                    
+                    return {x, y};
+                });
+                
+                // Draw the curved line
+                beginShape();
+                curveVertex(currentPoints[0].x, currentPoints[0].y);
+                for (let point of currentPoints) {
+                    curveVertex(point.x, point.y);
+                }
+                curveVertex(currentPoints[currentPoints.length - 1].x, currentPoints[currentPoints.length - 1].y);
+                endShape();
+            }
+        }
+    }
+}
+
+function generateSquiggles(text) {
+    const result = [];
+    const baseLetterSpacing = 80;
+    const lineSpacing = 120;
+    const availableWidth = width * 0.8;
+    const lines = splitIntoLines(text, availableWidth, baseLetterSpacing);
+    const totalHeight = lines.length * lineSpacing;
+    const startY = (height - totalHeight) / 2 + lineSpacing/2;
+
+    lines.forEach((line, lineIndex) => {
+        const lineWidth = line.length * baseLetterSpacing;
+        const startX = (width - lineWidth) / 2;
+        const baseY = startY + (lineIndex * lineSpacing);
+
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            if (!letterTemplates[char]) continue;
+
+            const baseX = startX + (i * baseLetterSpacing);
+            const template = letterTemplates[char];
+
+            const startingPoints = template.map(segment => {
+                const targetStartX = baseX + segment[0];
+                const targetStartY = baseY + segment[1];
+                const targetEndX = baseX + segment[2];
+                const targetEndY = baseY + segment[3];
+                
+                // Generate random starting points with more spread
+                const startX = baseX + random(-100, 100);
+                const startY = baseY + random(-100, 100);
+                const endX = baseX + random(-100, 100);
+                const endY = baseY + random(-100, 100);
+                
+                return {
+                    curvePoints: generateCurvedPoints(startX, startY, endX, endY),
+                    targetStart: {x: targetStartX, y: targetStartY},
+                    targetEnd: {x: targetEndX, y: targetEndY}
+                };
+            });
+
+            result.push({
+                char,
+                lines: startingPoints,
+                delay: (lineIndex * line.length + i) * 3
+            });
+        }
+    });
+
+    return result;
+}
+      
+  </script>
+  </body>
+</html>

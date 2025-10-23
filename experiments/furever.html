@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>furever</title>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .text-section {
+            min-height: 50vh;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        main {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding: 2rem 0;
+        }
+        canvas {
+            margin: 0 auto;
+        }
+      a {
+    color: #87CEEB;  /* Light blue, matching your background */
+    text-decoration: underline;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 1;
+    color: white;
+}
+    </style>
+</head>
+<body>
+    <div class="text-section">
+      <h1>furever</h1>
+        <p> i worked on this piece as a way of digitally remembering a dear family member for as long as i can. this one is for my late labrador retriever, snoopy. i wanted to really try and RE-feel as my hand moved over his soft furry coat, and noticed how it caused slight undulations as i moved over it multiple times</p>
+      <p> click to interact, press 'r' to reset the canvas and start fresh, for now, refresh the page for a different direction of flow </p>
+    </div>
+    <main>
+        <script>
+            let flowField;
+            let particles = [];
+            const FIELD_SIZE = 50;
+            let noiseScale = 0.005;
+            let particleCount = 5000;
+            let mouseInfluenceRadius = 100;
+            let mouseForceStrength = 0.5;
+            let clicks = [];
+            
+            function setup() {
+                // Make canvas size responsive to viewport height
+                let canvasHeight = min(windowHeight * 0.85, 1000); 
+                let canvasWidth = min(windowWidth * 0.95, 800);    
+                createCanvas(canvasWidth, canvasHeight);
+                background(40);
+                
+                flowField = new Array(FIELD_SIZE * FIELD_SIZE);
+                
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function keyPressed() {
+                if (key === 'r' || key === 'R') {
+                    // Clear the canvas
+                    background(40);
+                    // Reset all particles
+                    particles = [];
+                    for (let i = 0; i < particleCount; i++) {
+                        particles.push(new Particle());
+                    }
+                    // Clear all clicks
+                    clicks = [];
+                }
+            }
+
+            function mousePressed() {
+                // Add new click with a life timer
+                clicks.push({
+                    x: mouseX,
+                    y: mouseY,
+                    life: 255  // Will fade out over time
+                });
+            }
+
+            function draw() {
+                // Update and remove faded clicks
+                clicks = clicks.filter(click => {
+                    click.life -= 2;
+                    return click.life > 0;
+                });
+
+                particles.forEach(particle => {
+                    // Apply both flow field and mouse influence
+                    particle.follow(flowField);
+                    
+                    // Apply force from all active clicks
+                    clicks.forEach(click => {
+                        particle.applyMouseForce(click);
+                    });
+                    
+                    particle.update();
+                    particle.show();
+                });
+            }
+
+            class Particle {
+                constructor() {
+                    this.pos = createVector(random(width), random(height));
+                    this.vel = createVector(0, 0);
+                    this.acc = createVector(0, 0);
+                    this.maxSpeed = 1;
+                    this.lifespan = random(100, 200);
+                    this.age = 0;
+                    this.strokeWeight = random(0.2, 0.8);
+                }
+
+                applyMouseForce(click) {
+                    let d = dist(this.pos.x, this.pos.y, click.x, click.y);
+                    if (d < mouseInfluenceRadius) {
+                        let force = createVector(click.x - this.pos.x, click.y - this.pos.y);
+                        force.normalize();
+                        force.mult(mouseForceStrength * (click.life / 255));
+                        this.applyForce(force);
+                    }
+                }
+
+                update() {
+                    this.vel.add(this.acc);
+                    this.vel.limit(this.maxSpeed);
+                    this.pos.add(this.vel);
+                    this.acc.mult(0);
+                    this.age++;
+
+                    if (this.age >= this.lifespan || this.isOffCanvas()) {
+                        this.reset();
+                    }
+                }
+
+                follow(flowfield) {
+                    let x = floor(this.pos.x / (width / FIELD_SIZE));
+                    let y = floor(this.pos.y / (height / FIELD_SIZE));
+                    let index = x + y * FIELD_SIZE;
+                    let angle = noise(x * noiseScale, y * noiseScale, frameCount * 0.0001) * TWO_PI;
+                    let force = p5.Vector.fromAngle(angle);
+                    this.applyForce(force);
+                }
+
+                applyForce(force) {
+                    this.acc.add(force);
+                }
+
+                show() {
+                    let speed = this.vel.mag();
+                    let alpha = map(speed, 0, this.maxSpeed, 5, 15);
+                    stroke(255, alpha);
+                    strokeWeight(this.strokeWeight);
+                    point(this.pos.x, this.pos.y);
+                }
+
+                reset() {
+                    this.pos = createVector(random(width), random(height));
+                    this.vel = createVector(0, 0);
+                    this.acc = createVector(0, 0);
+                    this.age = 0;
+                }
+
+                isOffCanvas() {
+                    return (
+                        this.pos.x < 0 || 
+                        this.pos.x > width || 
+                        this.pos.y < 0 || 
+                        this.pos.y > height
+                    );
+                }
+            }
+        </script>
+    </main>
+</body>
+</html>

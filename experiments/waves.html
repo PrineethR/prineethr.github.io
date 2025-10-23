@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>w(e)ave generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/CCapture.js/1.0.7/CCapture.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webm-writer/0.2.0/webm-writer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/download/1.4.8/download.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: #1a1a1a;
+        color: white;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .text-section {
+        min-height: 50vh;
+        padding: 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        opacity: 0.9;
+      }
+
+      main {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+
+      canvas {
+        margin: 0 auto;
+      }
+
+      /* Control panel styling */
+      .control-panel {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(26, 26, 26, 0.85);
+        padding: 20px;
+        border-radius: 4px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        font-size: 0.9rem;
+        backdrop-filter: blur(5px);
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .control-container {
+        margin: 12px 0;
+        opacity: 0.9;
+      }
+
+      .control-label {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+      }
+
+      .control-value {
+        font-size: 0.8rem;
+        opacity: 0.7;
+        margin-left: 8px;
+      }
+
+      select,
+      input[type="range"] {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        border-radius: 2px;
+        color: white;
+        width: 200px;
+      }
+
+      select {
+        padding: 4px;
+        margin-top: 4px;
+        font-size: 0.9rem;
+      }
+
+      input[type="range"] {
+        height: 2px;
+        -webkit-appearance: none;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        background: white;
+        cursor: pointer;
+      }
+      /* Add this to your existing styles */
+      select {
+        padding: 8px;
+        margin-top: 4px;
+        font-size: 0.9rem;
+        width: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        border-radius: 4px;
+        color: white;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        cursor: pointer;
+        outline: none;
+      }
+
+      select:focus {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      /* Style for dropdown options */
+      select option {
+        background-color: #1a1a1a;
+        color: white;
+        padding: 8px;
+      }
+
+      /* Add a custom arrow */
+      .select-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+
+      .select-wrapper::after {
+        content: "▼";
+        font-size: 0.8em;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        opacity: 0.7;
+      }
+      a {
+    color: #87CEEB;  /* Light blue, matching your background */
+    text-decoration: underline;
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 1;
+    color: white;
+}
+    </style>
+  </head>
+  <body>
+    <div class="text-section">
+      <h1>w(e)ave generator</h1>
+      <p>
+        this project is inspired by the strong weaving culture and tradition in India. i spent some time at weavers' places in rural Karnataka, and went down a spiral of trying to understand how bio-psycho-social the entire space of craftspersonship is. it's wonderfully rich, and its reach is now moving towards the rest of the world
+      </p>
+      <p>
+        curiously enough, i started from functions and patterns that i could find at home - when you select square wave function you'll find that exact same pattern on my mothers' <a href ="https://en.wikipedia.org/wiki/Sari">sarees</a>. and then many more wave functions just made sense to explore! <p>
+      i think of this as an exploration into the dialogue between traditional craftspeople and the possibilities of weaving-related crafts in the future, all with the different possibilities for patterns
+      </p>
+      </p>
+    </div>
+
+    <script>
+      let segmentField = [];
+      let noiseOffset = 0;
+      let waveSelect;
+
+      const waveFunctions = {
+        "Simple Sine": (x, y, t) => sin(x * controls.waveFreq + t),
+        "Double Sine": (x, y, t) =>
+          sin(x * controls.waveFreq + t) * sin(y * 0.02 + t * 0.5),
+        Ripple: (x, y, t) => {
+          let dx = x - width / 2;
+          let dy = y - height / 2;
+          let distance = sqrt(dx * dx + dy * dy);
+          return sin(distance * 0.03 + t);
+        },
+        Helix: (x, y, t) =>
+          sin(x * controls.waveFreq + t) + cos(y * 0.02 + t * 0.5),
+        "Square Wave": (x, y, t) =>
+          sin(x * controls.waveFreq + t) > 0 ? 1 : -1,
+        Chaos: (x, y, t) => {
+          let n = noise(x * 0.05, y * 0.05, t);
+          return sin(x * controls.waveFreq + t * n);
+        },
+        DNA: (x, y, t) => {
+          let phase = y * 0.02;
+          return (
+            sin(x * controls.waveFreq + t) * cos(phase) +
+            cos(x * controls.waveFreq + t) * sin(phase)
+          );
+        },
+        Quantum: (x, y, t) => {
+          let n = noise(x * 0.01, t);
+          return (
+            sin(x * controls.waveFreq + t) *
+            exp(-pow(y - height / 2, 2) / 10000)
+          );
+        },
+        "Galaxy Spiral": (x, y, t) => {
+          let angle = atan2(y - height / 2, x - width / 2);
+          let distance = dist(x, y, width / 2, height / 2);
+          return sin(distance * 0.02 + angle * 2 + t);
+        },
+        Interference: (x, y, t) => {
+          let wave1 = sin(x * controls.waveFreq + t);
+          let wave2 = sin(x * controls.waveFreq * 1.5 + t * 2);
+          return (wave1 + wave2) / 2;
+        },
+        "Mandelbrot Waves": (x, y, t) => {
+          let cx = map(x, 0, width, -2, 1);
+          let cy = map(y, 0, height, -1, 1);
+          let maxIter = 20;
+          let zx = 0;
+          let zy = 0;
+          let i = 0;
+          while (i < maxIter && zx * zx + zy * zy < 4) {
+            let xtemp = zx * zx - zy * zy + cx;
+            zy = 2 * zx * zy + cy;
+            zx = xtemp;
+            i++;
+          }
+          return sin(i * 0.5 + t);
+        },
+        Harmonics: (x, y, t) => {
+          return (
+            sin(x * controls.waveFreq + t) +
+            0.5 * sin(2 * x * controls.waveFreq + t) +
+            0.25 * sin(3 * x * controls.waveFreq + t)
+          );
+        },
+        Moiré: (x, y, t) => {
+          let pattern1 = sin(x * controls.waveFreq + t);
+          let pattern2 = sin((x + y) * controls.waveFreq + t);
+          return pattern1 * pattern2;
+        },
+      };
+
+      let controls = {
+        xSpacing: 12,
+        ySpacing: 4,
+        segmentLength: 3,
+        waveFreq: 0.02,
+        waveAmplitude: 20,
+        noiseSpeed: 0.2,
+        noiseInfluence: 10,
+        yOffsetStrength: 0.1,
+        fadeStrength: 0.5,
+        displaceValue: 1,
+        colorHue: 0,
+        colorSaturation: 100,
+        colorBrightness: 100,
+        colorSpread: 30,
+      };
+
+      let sliders = {};
+      let prevXSpacing, prevYSpacing;
+
+      function createControlSlider(name, min, max, defaultValue, step = 0.001) {
+        let container = createDiv();
+        container.class("control-container");
+
+        let label = createSpan(name);
+        label.class("control-label");
+        label.parent(container);
+
+        let slider = createSlider(min, max, defaultValue, step);
+        slider.parent(container);
+
+        let valueDisplay = createSpan(defaultValue);
+        valueDisplay.class("control-value");
+        valueDisplay.parent(container);
+
+        container.parent(select(".control-panel"));
+
+        sliders[name] = {
+          slider: slider,
+          display: valueDisplay,
+        };
+      }
+
+      function shaderColor(x, y, displacement, noiseValue) {
+        colorMode(HSB);
+        let hue =
+          (controls.colorHue +
+            map(
+              displacement,
+              -controls.waveAmplitude,
+              controls.waveAmplitude,
+              -controls.colorSpread,
+              controls.colorSpread
+            ) +
+            360) %
+          360;
+        let saturation = controls.colorSaturation;
+        let brightness =
+          controls.colorBrightness * map(noiseValue, 0, 1, 0.5, 1);
+
+        stroke(hue, saturation, brightness);
+      }
+
+      function setup() {
+        createCanvas(windowWidth, windowHeight);
+        background(0);
+        colorMode(HSB);
+
+        // Create control panel container
+        let controlPanel = createDiv();
+        controlPanel.class("control-panel");
+
+        // Create wave function selector with new styling
+        let selectContainer = createDiv();
+        selectContainer.class("control-container");
+
+        let selectLabel = createSpan("Wave Function");
+        selectLabel.class("control-label");
+        selectLabel.parent(selectContainer);
+
+        waveSelect = createSelect();
+        waveSelect.parent(selectContainer);
+        Object.keys(waveFunctions).forEach((name) => {
+          waveSelect.option(name);
+        });
+
+        selectContainer.parent(controlPanel);
+
+        // Create all sliders
+        createControlSlider("xSpacing", 4, 20, controls.xSpacing, 1);
+        createControlSlider("ySpacing", 1, 20, controls.ySpacing, 1);
+        createControlSlider("segmentLength", 1, 10, controls.segmentLength, 1);
+        createControlSlider("waveFreq", 0.001, 0.1, controls.waveFreq);
+        createControlSlider("waveAmplitude", 0, 50, controls.waveAmplitude, 1);
+        createControlSlider("noiseSpeed", 0, 5, controls.noiseSpeed);
+        createControlSlider(
+          "noiseInfluence",
+          0,
+          30,
+          controls.noiseInfluence,
+          1
+        );
+        createControlSlider(
+          "yOffsetStrength",
+          0,
+          0.5,
+          controls.yOffsetStrength
+        );
+        createControlSlider("fadeStrength", 0, 1, controls.fadeStrength);
+        createControlSlider("displaceValue", 1, 10, controls.displaceValue);
+        createControlSlider("colorHue", 0, 360, controls.colorHue, 1);
+        createControlSlider(
+          "colorSaturation",
+          0,
+          100,
+          controls.colorSaturation,
+          1
+        );
+        createControlSlider(
+          "colorBrightness",
+          0,
+          100,
+          controls.colorBrightness,
+          1
+        );
+        createControlSlider("colorSpread", 0, 100, controls.colorSpread, 1);
+
+        prevXSpacing = controls.xSpacing;
+        prevYSpacing = controls.ySpacing;
+
+        initializeField();
+      }
+
+      function initializeField() {
+        segmentField = [];
+        let currentXSpacing = sliders.xSpacing.slider.value();
+        let currentYSpacing = sliders.ySpacing.slider.value();
+
+        for (let x = 0; x < width; x += currentXSpacing) {
+          let segmentColumn = [];
+          for (let y = 0; y < height; y += currentYSpacing) {
+            segmentColumn.push({
+              x: x,
+              y: y,
+              length: controls.segmentLength,
+              originalX: x,
+            });
+          }
+          segmentField.push(segmentColumn);
+        }
+
+        prevXSpacing = currentXSpacing;
+        prevYSpacing = currentYSpacing;
+      }
+
+      function draw() {
+        for (let name in sliders) {
+          controls[name] = sliders[name].slider.value();
+          sliders[name].display.html(controls[name].toFixed(3));
+        }
+
+        if (
+          controls.xSpacing !== prevXSpacing ||
+          controls.ySpacing !== prevYSpacing
+        ) {
+          initializeField();
+        }
+
+        background(0);
+        strokeWeight(1);
+
+        noiseOffset += controls.noiseSpeed;
+
+        let selectedWaveFunction = waveFunctions[waveSelect.value()];
+
+        for (let col = 0; col < segmentField.length; col++) {
+          for (let row = 0; row < segmentField[col].length; row++) {
+            let segment = segmentField[col][row];
+
+            segment.length = controls.segmentLength;
+
+            let displacement =
+              selectedWaveFunction(segment.originalX, segment.y, noiseOffset) *
+              controls.waveAmplitude *
+              controls.displaceValue;
+
+            displacement *= map(segment.y, 0, height, 1, controls.fadeStrength);
+
+            let noiseValue = noise(col * 0.1, row * 0.1, noiseOffset);
+            displacement += noiseValue * controls.noiseInfluence;
+
+            segment.x = segment.originalX + displacement;
+
+            shaderColor(segment.x, segment.y, displacement, noiseValue);
+            line(segment.x, segment.y, segment.x, segment.y + segment.length);
+          }
+        }
+      }
+
+      function keyPressed() {
+        if (key == "o") {
+          saveGif("Trial.gif", 2);
+        }
+      }
+
+      function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+        initializeField();
+      }
+    </script>
+  </body>
+</html>

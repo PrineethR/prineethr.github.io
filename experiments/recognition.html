@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>recognizing</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <main>
+    </main>
+    <script>
+    let strokes = [];
+let currentStroke = [];
+let isDrawing = false;
+let recognizedText = '';
+let isProcessing = false;
+let isAnimating = false;
+let animationProgress = 0;
+const ANIMATION_DURATION = 60; // frames
+
+// Letter template positions
+const letterTemplates = {
+  'A': [
+    [-40, 100, 0, 0],    // Left diagonal
+    [0, 0, 40, 100],     // Right diagonal
+    [-20, 50, 20, 50],   // Cross bar
+  ],
+  'B': [
+    [-40, 100, -40, 0],  // Vertical stem
+    [-40, 0, 20, 0],     // Top horizontal
+    [20, 0, 40, 20],     // Top curve
+    [40, 20, 20, 50],    // Top curve bottom
+    [-40, 50, 20, 50],   // Middle horizontal
+    [20, 50, 40, 70],    // Bottom curve top
+    [40, 70, 20, 100],   // Bottom curve bottom
+    [20, 100, -40, 100], // Bottom horizontal
+  ],
+  'C': [
+    [40, 20, 20, 0],     // Top curve
+    [20, 0, -20, 0],     // Top horizontal
+    [-20, 0, -40, 20],   // Left top curve
+    [-40, 20, -40, 80],  // Left vertical
+    [-40, 80, -20, 100], // Left bottom curve
+    [-20, 100, 20, 100], // Bottom horizontal
+    [20, 100, 40, 80],   // Bottom curve
+  ],
+  'D': [
+    [-40, 0, -40, 100],  // Left vertical
+    [-40, 0, 0, 0],      // Top horizontal
+    [0, 0, 40, 40],      // Top curve
+    [40, 40, 40, 60],    // Right vertical
+    [40, 60, 0, 100],    // Bottom curve
+    [0, 100, -40, 100],  // Bottom horizontal
+  ],
+  'E': [
+    [-40, 0, -40, 100],  // Vertical stem
+    [-40, 0, 40, 0],     // Top horizontal
+    [-40, 50, 20, 50],   // Middle horizontal
+    [-40, 100, 40, 100], // Bottom horizontal
+  ],
+  'F': [
+    [-40, 0, -40, 100],  // Vertical stem
+    [-40, 0, 40, 0],     // Top horizontal
+    [-40, 50, 20, 50],   // Middle horizontal
+  ],
+  'G': [
+    [40, 20, 20, 0],     // Top curve
+    [20, 0, -20, 0],     // Top horizontal
+    [-20, 0, -40, 20],   // Left top curve
+    [-40, 20, -40, 80],  // Left vertical
+    [-40, 80, -20, 100], // Left bottom curve
+    [-20, 100, 20, 100], // Bottom horizontal
+    [20, 100, 40, 80],   // Right bottom curve
+    [40, 80, 40, 50],    // Right vertical
+    [40, 50, 0, 50],     // Middle horizontal
+  ],
+  'H': [
+    [-40, 0, -40, 100],  // Left vertical
+    [40, 0, 40, 100],    // Right vertical
+    [-40, 50, 40, 50],   // Middle horizontal
+  ],
+  'I': [
+    [0, 0, 0, 100],      // Vertical stem
+    [-20, 0, 20, 0],     // Top horizontal
+    [-20, 100, 20, 100], // Bottom horizontal
+  ],
+  'J': [
+    [40, 0, 40, 80],     // Right vertical
+    [40, 80, 20, 100],   // Bottom curve
+    [20, 100, -20, 100], // Bottom horizontal
+    [-20, 100, -40, 80], // Left curve
+  ],
+  'K': [
+    [-40, 0, -40, 100],  // Vertical stem
+    [-40, 50, 40, 0],    // Upper diagonal
+    [-40, 50, 40, 100],  // Lower diagonal
+  ],
+  'L': [
+    [-40, 0, -40, 100],  // Vertical stem
+    [-40, 100, 40, 100], // Bottom horizontal
+  ],
+  'M': [
+    [-40, 100, -40, 0],  // Left vertical
+    [-40, 0, 0, 50],     // Left diagonal
+    [0, 50, 40, 0],      // Right diagonal
+    [40, 0, 40, 100],    // Right vertical
+  ],
+  'N': [
+    [-40, 100, -40, 0],  // Left vertical
+    [-40, 0, 40, 100],   // Diagonal
+    [40, 100, 40, 0],    // Right vertical
+  ],
+  'O': [
+    [20, 0, -20, 0],     // Top horizontal
+    [-20, 0, -40, 20],   // Left top curve
+    [-40, 20, -40, 80],  // Left vertical
+    [-40, 80, -20, 100], // Left bottom curve
+    [-20, 100, 20, 100], // Bottom horizontal
+    [20, 100, 40, 80],   // Right bottom curve
+    [40, 80, 40, 20],    // Right vertical
+    [40, 20, 20, 0],     // Right top curve
+  ],
+  'P': [
+    [-40, 100, -40, 0],  // Vertical stem
+    [-40, 0, 20, 0],     // Top horizontal
+    [20, 0, 40, 20],     // Top curve
+    [40, 20, 40, 30],    // Right vertical
+    [40, 30, 20, 50],    // Bottom curve
+    [20, 50, -40, 50],   // Bottom horizontal
+  ],
+  'Q': [
+    [20, 0, -20, 0],     // Top horizontal
+    [-20, 0, -40, 20],   // Left top curve
+    [-40, 20, -40, 80],  // Left vertical
+    [-40, 80, -20, 100], // Left bottom curve
+    [-20, 100, 20, 100], // Bottom horizontal
+    [20, 100, 40, 80],   // Right bottom curve
+    [40, 80, 40, 20],    // Right vertical
+    [40, 20, 20, 0],     // Right top curve
+    [0, 60, 40, 100],    // Diagonal tail
+  ],
+  'R': [
+    [-40, 100, -40, 0],  // Vertical stem
+    [-40, 0, 20, 0],     // Top horizontal
+    [20, 0, 40, 20],     // Top curve
+    [40, 20, 40, 30],    // Right vertical
+    [40, 30, 20, 50],    // Bottom curve
+    [20, 50, -40, 50],   // Bottom horizontal
+    [-20, 50, 40, 100],  // Diagonal leg
+  ],
+  'S': [
+    [40, 20, 20, 0],     // Top curve
+    [20, 0, -20, 0],     // Top horizontal
+    [-20, 0, -40, 20],   // Left top curve
+    [-40, 20, -20, 50],  // Left curve to middle
+    [-20, 50, 20, 50],   // Middle horizontal
+    [20, 50, 40, 80],    // Right curve from middle
+    [40, 80, 20, 100],   // Right bottom curve
+    [20, 100, -20, 100], // Bottom horizontal
+    [-20, 100, -40, 80], // Bottom curve
+  ],
+  'T': [
+    [-40, 0, 40, 0],     // Top horizontal
+    [0, 0, 0, 100],      // Vertical stem
+  ],
+  'U': [
+    [-40, 0, -40, 80],   // Left vertical
+    [-40, 80, -20, 100], // Left curve
+    [-20, 100, 20, 100], // Bottom horizontal
+    [20, 100, 40, 80],   // Right curve
+    [40, 80, 40, 0],     // Right vertical
+  ],
+  'V': [
+    [-40, 0, 0, 100],    // Left diagonal
+    [0, 100, 40, 0],     // Right diagonal
+  ],
+  'W': [
+    [-40, 0, -20, 100],  // Left outer diagonal
+    [-20, 100, 0, 30],   // Left inner diagonal
+    [0, 30, 20, 100],    // Right inner diagonal
+    [20, 100, 40, 0],    // Right outer diagonal
+  ],
+  'X': [
+    [-40, 0, 40, 100],   // Forward diagonal
+    [40, 0, -40, 100],   // Backward diagonal
+  ],
+  'Y': [
+    [-40, 0, 0, 50],     // Left diagonal
+    [40, 0, 0, 50],      // Right diagonal
+    [0, 50, 0, 100],     // Vertical stem
+  ],
+  'Z': [
+    [-40, 0, 40, 0],     // Top horizontal
+    [40, 0, -40, 100],   // Diagonal
+    [-40, 100, 40, 100], // Bottom horizontal
+  ]
+  // Add more letter templates as needed
+};
+
+async function setup() {
+  createCanvas(800, 400);  // Wider canvas for animation
+  background(0);
+  stroke(255);
+  strokeWeight(3);
+
+  // Initialize Tesseract
+  await loadTesseract();
+  
+  // Create buttons
+  const recognizeBtn = createButton('Recognize Text');
+  recognizeBtn.position(10, height + 10);
+  recognizeBtn.mousePressed(recognizeDrawing);
+  
+  const clearBtn = createButton('Clear');
+  clearBtn.position(110, height + 10);
+  clearBtn.mousePressed(clearCanvas);
+  
+  createP('Status: Ready').id('status');
+}
+
+async function loadTesseract() {
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js';
+  document.head.appendChild(script);
+  
+  await new Promise(resolve => script.onload = resolve);
+  
+  window.worker = await Tesseract.createWorker({
+    logger: message => {
+      if (message.status === 'recognizing text') {
+        document.getElementById('status').innerHTML = 
+          `Status: Recognizing... ${Math.floor(message.progress * 100)}%`;
+      }
+    }
+  });
+  
+  await window.worker.loadLanguage('eng');
+  await window.worker.initialize('eng');
+  await window.worker.setParameters({
+    tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+    tessedit_pageseg_mode: '6',
+    tessedit_ocr_engine_mode: '2',
+    tessjs_create_word_box: '1',
+    tessjs_create_char_box: '1'
+  });
+}
+
+function draw() {
+  if (isDrawing) {
+    // Drawing mode
+    let point = {
+      x: mouseX,
+      y: mouseY
+    };
+    currentStroke.push(point);
+    
+    stroke(255);
+    noFill();
+    beginShape();
+    for (let p of currentStroke) {
+      vertex(p.x, p.y);
+    }
+    endShape();
+  } else if (isAnimating) {
+    // Animation mode
+    background(0);
+    
+    // Draw original sketch on the left
+    push();
+    translate(0, 0);
+    stroke(255);
+    for (let stroke of strokes) {
+      beginShape();
+      for (let p of stroke) {
+        vertex(p.x, p.y);
+      }
+      endShape();
+    }
+    pop();
+    
+    // Draw animated text on the right
+    push();
+    translate(width/2, 0);
+    stroke(255);
+    drawAnimatedText();
+    pop();
+    
+    // Update animation
+    if (animationProgress < ANIMATION_DURATION) {
+      animationProgress++;
+    }
+  }
+}
+
+function drawAnimatedText() {
+  if (!recognizedText) return;
+  
+  const progress = easeInOutCubic(animationProgress / ANIMATION_DURATION);
+  const letterSpacing = 100;  // Increased spacing between letters
+  const startY = height/2;
+  
+  push();
+  translate(150, startY);  // Adjusted starting position for larger text  // Start position for the text
+  
+  for (let i = 0; i < recognizedText.length; i++) {
+    const letter = recognizedText[i].toUpperCase();
+    if (letterTemplates[letter]) {
+      drawAnimatedLetter(letter, progress);
+    }
+    translate(letterSpacing, 0);
+  }
+  pop();
+}
+
+function drawAnimatedLetter(letter, progress) {
+  const template = letterTemplates[letter];
+  const letterScale = 1.2;  // Increased scale for bigger letters
+  
+  push();
+  scale(letterScale, letterScale);
+  for (let [x1, y1, x2, y2] of template) {
+    // Animate from random positions to final positions
+    const startX1 = x1 + random(-50, 50);
+    const startY1 = y1 + random(-50, 50);
+    const startX2 = x2 + random(-50, 50);
+    const startY2 = y2 + random(-50, 50);
+    
+    const currentX1 = lerp(startX1, x1, progress);
+    const currentY1 = lerp(startY1, y1, progress);
+    const currentX2 = lerp(startX2, x2, progress);
+    const currentY2 = lerp(startY2, y2, progress);
+    
+    line(currentX1, currentY1, currentX2, currentY2);
+  }
+  pop();
+}
+
+async function recognizeDrawing() {
+  if (isProcessing) return;
+  isProcessing = true;
+  
+  document.getElementById('status').innerHTML = 'Status: Processing...';
+  
+  try {
+    // Create a temporary canvas for preprocessing
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = canvas.width / 2;  // Only process the left half
+    tempCanvas.height = canvas.height;
+    const tempCtx = tempCanvas.getContext('2d');
+    
+    // Copy original drawing
+    tempCtx.drawImage(canvas, 0, 0);
+    
+    // Preprocess
+    tempCtx.filter = 'blur(1px)';
+    tempCtx.drawImage(tempCanvas, 0, 0);
+    tempCtx.filter = 'contrast(150%)';
+    tempCtx.drawImage(tempCanvas, 0, 0);
+    
+    const imageData = tempCanvas.toDataURL('image/png');
+    
+    // Recognize text
+    const result = await window.worker.recognize(imageData);
+    recognizedText = result.data.text.trim();
+    
+    // Start animation
+    isAnimating = true;
+    animationProgress = 0;
+    
+    document.getElementById('status').innerHTML = 
+      `Status: Animating recognized text: ${recognizedText || '[none found]'}`;
+    
+  } catch (error) {
+    console.error('Recognition error:', error);
+    document.getElementById('status').innerHTML = 'Status: Error during recognition';
+  }
+  
+  isProcessing = false;
+}
+
+function clearCanvas() {
+  background(0);
+  strokes = [];
+  currentStroke = [];
+  recognizedText = '';
+  isAnimating = false;
+  animationProgress = 0;
+  document.getElementById('status').innerHTML = 'Status: Ready';
+}
+
+function mousePressed() {
+  if (mouseX < width/2) {  // Only allow drawing on the left side
+    isDrawing = true;
+    currentStroke = [];
+    let point = {
+      x: mouseX,
+      y: mouseY
+    };
+    currentStroke.push(point);
+  }
+}
+
+function mouseReleased() {
+  if (isDrawing) {
+    isDrawing = false;
+    if (currentStroke.length > 1) {
+      strokes.push([...currentStroke]);
+    }
+  }
+}
+
+function mouseDragged() {
+  if (isDrawing && mouseX < width/2) {
+    let point = {
+      x: mouseX,
+      y: mouseY
+    };
+    currentStroke.push(point);
+  }
+}
+
+function easeInOutCubic(x) {
+  return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+}</script>
+  </body>
+</html>

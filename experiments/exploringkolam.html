@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>exploring kolam</title>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .text-section {
+            min-height: 50vh;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .middle-section {
+            min-height: 30vh;
+            padding: 4rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .sketch-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin: 2rem 0;
+        }
+
+        select {
+            margin: 10px;
+            padding: 8px 16px;
+            background: #007bff;
+            border-radius: 4px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        select option {
+            background: white;
+            color: black;
+        }
+
+        button, input {
+            margin: 10px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        canvas {
+            margin: 0 auto;
+        }
+
+        a {
+            color: #87CEEB;
+            text-decoration: underline;
+            opacity: 0.9;
+            transition: opacity 0.2s ease;
+        }
+
+        a:hover {
+            opacity: 1;
+            color: white;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="text-section">
+        <h1>exploring kolam</h1>
+        <p>perhaps my favourite line of inquiry (and oddly, the least explored) - this is an inital attempt at literally visualizing kolam patterns, and how the experience can be made digital, and its beauty can be appreciated. this is a very rudimentary exploration</p>
+        <p>for me, kolam represents gentleness, welcoming, and organically representing what we feel. press c to clear your pattern</p>
+    </div>
+
+    <div id="grid-sketch" class="sketch-container"></div>
+
+    <div class="text-section">
+        <h2>language-ifying the kolam</h2>
+        <p>looking by aarati akkapeddi's <a href="https://kolam.codes/about.html">work</a> on kolam, i found the intersection between english and kolam even more fascinating as well - how a foreign language can be connected to my heritage more meaningfully, albeit taking a different line of inquiry</p>
+        <p>the resultant exploration is a constantly evolving <a href="https://en.wikipedia.org/wiki/Spinning_wheel#Charkha">charkha</a> pattern that attempts to bridge cross-cultural traditional practices with technology</p>
+    </div>
+
+    <div id="kolam-sketch" class="sketch-container"></div>
+
+    <script>
+    // Updated Grid Pattern Sketch
+    const gridSketch = (p) => {
+        let dots = [];
+        let gridSize = 3;
+        let spacing;
+        let offset;
+        let lastSelectedDot = null;
+        let connectionMode = 'bezier';
+        let animationPhase = 0;
+        let connectionHistory = [];
+        let maxHistory = 10;
+
+        p.setup = () => {
+            let canvas = p.createCanvas(400, 400);
+            spacing = p.width / 5;
+            offset = spacing;
+            createUIControls();
+            generateDots();
+        };
+
+        function createUIControls() {
+            let controls = p.createDiv('');
+            controls.parent('grid-sketch');
+            controls.class('controls');
+            
+            let toggleButton = p.createButton('Toggle Grid Size');
+            toggleButton.parent(controls);
+            toggleButton.mousePressed(() => {
+                gridSize = gridSize === 3 ? 4 : 3;
+                generateDots();
+            });
+
+            let modeSelect = p.createSelect();
+            modeSelect.parent(controls);
+            modeSelect.option('Bezier Curves');
+            modeSelect.option('Sine Waves');
+            modeSelect.option('Spiral Pattern');
+            modeSelect.changed(() => {
+                switch(modeSelect.value()) {
+                    case 'Bezier Curves': connectionMode = 'bezier'; break;
+                    case 'Sine Waves': connectionMode = 'sine'; break;
+                    case 'Spiral Pattern': connectionMode = 'spiral'; break;
+                }
+            });
+
+            let undoButton = p.createButton('Undo');
+            undoButton.parent(controls);
+            undoButton.mousePressed(undoLastConnection);
+        }
+
+        function generateDots() {
+            dots = [];
+            offset = gridSize === 3 ? spacing : spacing * 0.8;
+            
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    dots.push({
+                        x: offset + j * spacing,
+                        y: offset + i * spacing,
+                        connections: [],
+                        isSelected: false,
+                        isHovered: false,
+                        angle: 0
+                    });
+                }
+            }
+            lastSelectedDot = null;
+            connectionHistory = [];
+        }
+
+        function drawConnectionPattern(dot1, dot2) {
+            switch(connectionMode) {
+                case 'bezier':
+                    drawBezierConnection(dot1, dot2);
+                    break;
+                case 'sine':
+                    drawSineConnection(dot1, dot2);
+                    break;
+                case 'spiral':
+                    drawSpiralConnection(dot1, dot2);
+                    break;
+            }
+        }
+
+        function drawBezierConnection(dot1, dot2) {
+            let dx = dot2.x - dot1.x;
+            let dy = dot2.y - dot1.y;
+            let distance = p.sqrt(dx * dx + dy * dy);
+            
+            let curveIntensity = p.map(distance, 0, p.width, 0.2, 0.8) * distance;
+            let angle = p.atan2(dy, dx);
+            let wobble = p.sin(animationPhase) * 10;
+            
+            let control1X = p.lerp(dot1.x, dot2.x, 0.33) + p.cos(angle + p.PI/2) * (curveIntensity + wobble);
+            let control1Y = p.lerp(dot1.y, dot2.y, 0.33) + p.sin(angle + p.PI/2) * (curveIntensity + wobble);
+            let control2X = p.lerp(dot1.x, dot2.x, 0.66) + p.cos(angle - p.PI/2) * (curveIntensity - wobble);
+            let control2Y = p.lerp(dot1.y, dot2.y, 0.66) + p.sin(angle - p.PI/2) * (curveIntensity - wobble);
+            
+            p.beginShape();
+            p.vertex(dot1.x, dot1.y);
+            p.bezierVertex(control1X, control1Y, control2X, control2Y, dot2.x, dot2.y);
+            p.endShape();
+        }
+
+        function drawSineConnection(dot1, dot2) {
+            let points = 50;
+            let distance = p.dist(dot1.x, dot1.y, dot2.x, dot2.y);
+            let waves = p.map(distance, 0, p.width, 2, 6);
+            
+            p.beginShape();
+            for (let i = 0; i <= points; i++) {
+                let t = i / points;
+                let x = p.lerp(dot1.x, dot2.x, t);
+                let y = p.lerp(dot1.y, dot2.y, t);
+                
+                let dx = dot2.x - dot1.x;
+                let dy = dot2.y - dot1.y;
+                let angle = p.atan2(dy, dx);
+                
+                let amplitude = p.map(distance, 0, p.width, 10, 30) * p.sin(animationPhase);
+                let offset = p.sin(t * p.PI * waves + animationPhase) * amplitude;
+                
+                x += p.cos(angle + p.PI/2) * offset;
+                y += p.sin(angle + p.PI/2) * offset;
+                
+                p.vertex(x, y);
+            }
+            p.endShape();
+        }
+
+        function drawSpiralConnection(dot1, dot2) {
+            let distance = p.dist(dot1.x, dot1.y, dot2.x, dot2.y);
+            let points = p.floor(p.map(distance, 0, p.width, 30, 60));
+            let spirals = p.floor(p.map(distance, 0, p.width, 2, 5));
+            
+            p.beginShape();
+            for (let i = 0; i <= points; i++) {
+                let t = i / points;
+                let spiralRadius = p.sin(t * p.PI) * p.map(distance, 0, p.width, 15, 40) * (1 + p.sin(animationPhase) * 0.2);
+                let spiralPhase = t * p.TWO_PI * spirals + animationPhase;
+                
+                let verticalOffset = p.sin(t * p.PI * 4) * 10;
+                
+                let x = p.lerp(dot1.x, dot2.x, t) + p.cos(spiralPhase) * spiralRadius;
+                let y = p.lerp(dot1.y, dot2.y, t) + p.sin(spiralPhase) * spiralRadius + verticalOffset;
+                
+                p.vertex(x, y);
+            }
+            p.endShape();
+        }
+
+        // [Rest of the helper functions remain the same as in your code]
+        function updateHoverState() {
+            for (let dot of dots) {
+                dot.isHovered = false;
+            }
+            if (mouseInCanvas()) {
+                let closestDot = findClosestDot(p.mouseX, p.mouseY);
+                if (closestDot && p.dist(p.mouseX, p.mouseY, closestDot.x, closestDot.y) < 20) {
+                    closestDot.isHovered = true;
+                }
+            }
+        }
+
+        function mouseInCanvas() {
+            return p.mouseX >= 0 && p.mouseX <= p.width && p.mouseY >= 0 && p.mouseY <= p.height;
+        }
+
+        function findClosestDot(x, y) {
+            let closestDot = null;
+            let minDist = Infinity;
+            
+            for (let dot of dots) {
+                let d = p.dist(x, y, dot.x, dot.y);
+                if (d < 20 && d < minDist) {
+                    minDist = d;
+                    closestDot = dot;
+                }
+            }
+            return closestDot;
+        }
+
+        function isValidConnection(dot1, dot2) {
+            return dot1 !== dot2;
+        }
+
+        function undoLastConnection() {
+            if (connectionHistory.length > 0) {
+                let lastConnection = connectionHistory.pop();
+                let dot1 = lastConnection[0];
+                let dot2 = lastConnection[1];
+                
+                dot1.connections = dot1.connections.filter(d => d !== dot2);
+                dot2.connections = dot2.connections.filter(d => d !== dot1);
+            }
+        }
+
+        p.draw = () => {
+            p.background(80);
+            animationPhase += 0.02;
+            
+            updateHoverState();
+            
+            // Draw connections
+            p.stroke(255);
+            p.strokeWeight(3);
+            p.noFill();
+            
+            for (let dot of dots) {
+                if (dot.connections.length > 0) {
+                    for (let connectedDot of dot.connections) {
+                        drawConnectionPattern(dot, connectedDot);
+                    }
+                }
+            }
+            
+            // Draw dots
+            for (let dot of dots) {
+                if (dot.isSelected || dot.isHovered) {
+                    p.fill(200, 200, 255, 150);
+                    p.noStroke();
+                    p.circle(dot.x, dot.y, 20);
+                }
+                
+                p.fill(dot === lastSelectedDot ? p.color(255, 255, 0) : 255);
+                p.noStroke();
+                p.circle(dot.x, dot.y, 10);
+            }
+            
+            // Draw helper line
+            if (lastSelectedDot && mouseInCanvas()) {
+                let closestDot = findClosestDot(p.mouseX, p.mouseY);
+                if (closestDot && isValidConnection(lastSelectedDot, closestDot)) {
+                    p.stroke(255, 255, 255, 100);
+                    p.strokeWeight(2);
+                    p.line(lastSelectedDot.x, lastSelectedDot.y, p.mouseX, p.mouseY);
+                }
+            }
+        };
+
+        p.mousePressed = () => {
+            if (!mouseInCanvas()) return;
+            
+            let closestDot = findClosestDot(p.mouseX, p.mouseY);
+            if (closestDot) {
+                if (!lastSelectedDot) {
+                    lastSelectedDot = closestDot;
+                    closestDot.isSelected = true;
+                } else {
+                    if (isValidConnection(lastSelectedDot, closestDot)) {
+                        if (!lastSelectedDot.connections.includes(closestDot)) {
+                            lastSelectedDot.connections.push(closestDot);
+                            closestDot.connections.push(lastSelectedDot);
+                            connectionHistory.push([lastSelectedDot, closestDot]);
+                            if (connectionHistory.length > maxHistory) {
+                                connectionHistory.shift();
+                            }
+                        }
+                    }
+                    lastSelectedDot.isSelected = false;
+                    lastSelectedDot = null;
+                }
+            }
+        };
+
+        p.keyPressed = () => {
+            if (p.key === 'c' || p.key === 'C') {
+                for (let dot of dots) {
+                    dot.connections = [];
+                    dot.isSelected = false;
+                }
+                lastSelectedDot = null;
+                connectionHistory = [];
+            }
+        };
+    };
+
+    // Kolam Generator Sketch [Previous code remains the same]
+    const kolamSketch = (p) => {
+        let word = "kolam";
+        let points = [];
+        let radius;
+        let textInput;
+        const MAX_NODES = 30;
+        let transitionSpeed = 0.1;
+
+        p.setup = () => {
+            let canvas = p.createCanvas(600, 600);
+            radius = p.min(p.width, p.height) * 0.35;
+            p.background(80);
+            
+            textInput = p.createInput('kolam');
+            textInput.parent('kolam-sketch');
+            textInput.input(handleTextInput);
+            
+            generateInitialPattern();
+        };
+
+        function handleTextInput() {
+            updatePattern(textInput.value().toLowerCase());
+        }
+
+        function generateInitialPattern() {
+            let initialWord = word.substring(0, MAX_NODES);
+            let angleStep = p.TWO_PI / MAX_NODES;
+            
+            for (let i = 0; i < initialWord.length; i++) {
+                let angle = i * angleStep - p.PI/2;
+                let x = p.width/2 + p.cos(angle) * radius;
+                let y = p.height/2 + p.sin(angle) * radius;
+                
+                points.push({
+                    x: x,
+                    y: y,
+                    targetX: x,
+                    targetY: y,
+                    letter: initialWord[i],
+                    connections: [],
+                    age: i
+                });
+            }
+            updateConnections();
+        }
+
+        function updatePattern(newWord) {
+            if (newWord === word) return;
+            
+            let oldWord = word;
+            word = newWord;
+            
+            if (word.length > oldWord.length) {
+                let newLetter = word[word.length - 1];
+                addNewPoint(newLetter);
+            }
+            
+            recalculatePositions();
+            updateConnections();
+        }
+
+        function addNewPoint(letter) {
+            if (points.length >= MAX_NODES) {
+                points.shift();
+            }
+            
+            let angle = p.random(p.TWO_PI);
+            let x = p.width/2 + p.cos(angle) * radius;
+            let y = p.height/2 + p.sin(angle) * radius;
+            
+            points.push({
+                x: x,
+                y: y,
+                targetX: x,
+                targetY: y,
+                letter: letter,
+                connections: [],
+                age: points.length
+            });
+        }
+
+        function recalculatePositions() {
+            let angleStep = p.TWO_PI / points.length;
+            
+            points.forEach((point, i) => {
+                let angle = i * angleStep - p.PI/2;
+                point.targetX = p.width/2 + p.cos(angle) * radius;
+                point.targetY = p.height/2 + p.sin(angle) * radius;
+            });
+        }
+
+        function updateConnections() {
+            points.forEach(point => point.connections = []);
+            
+            for (let i = 0; i < points.length; i++) {
+                let current = points[i];
+                
+                for (let j = i + 1; j < points.length; j++) {
+                    let next = points[j];
+                    
+                    if (shouldConnect(current.letter, next.letter)) {
+                        current.connections.push(j);
+                    }
+                }
+            }
+        }
+
+        function shouldConnect(letter1, letter2) {
+            if (letter1 === letter2) return true;
+            
+            let code1 = letter1.charCodeAt(0);
+            let code2 = letter2.charCodeAt(0);
+            if (Math.abs(code1 - code2) === 1) return true;
+            
+            let vowels = 'aeiou';
+            let isVowel1 = vowels.includes(letter1);
+            let isVowel2 = vowels.includes(letter2);
+            if (isVowel1 && isVowel2) return true;
+            
+            return false;
+        }
+
+        p.draw = () => {
+            p.background(80);
+            
+            points.forEach(point => {
+                point.x = p.lerp(point.x, point.targetX, transitionSpeed);
+                point.y = p.lerp(point.y, point.targetY, transitionSpeed);
+            });
+            
+            p.stroke(255);
+            p.strokeWeight(2);
+            p.noFill();
+            
+            points.forEach((point, i) => {
+                point.connections.forEach(connectionIndex => {
+                    let connected = points[connectionIndex];
+                    let midX = (point.x + connected.x) / 2;
+                    let midY = (point.y + connected.y) / 2;
+                    
+                    let centerPull = 0.2;
+                    let ctrlX = midX + (p.width/2 - midX) * centerPull;
+                    let ctrlY = midY + (p.height/2 - midY) * centerPull;
+                    
+                    p.beginShape();
+                    p.vertex(point.x, point.y);
+                    p.quadraticVertex(ctrlX, ctrlY, connected.x, connected.y);
+                    p.endShape();
+                });
+            });
+            
+            p.fill(255);
+            p.noStroke();
+            points.forEach(point => {
+                p.circle(point.x, point.y, 12);
+            });
+            
+            p.circle(p.width/2, p.height/2, 12);
+        };
+    };
+
+    // Initialize both sketches
+    new p5(gridSketch, 'grid-sketch');
+    new p5(kolamSketch, 'kolam-sketch');
+    </script>
+</body>
+</html>
