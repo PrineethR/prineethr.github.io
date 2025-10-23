@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'anyone': "Prineeth designs interactions at the convergence of humans, play, tech and design.",
         'recruiters': "An interaction designer with 6+ years of experience in multimodal experiences, education, strategy, research and tech through more-than-human-centered design methodologies.",
         'designers': "I'm continuously exploring phenomena while questioning how we might dissolve artificial boundaries between users and interfaces.",
-        'whenyoustumbleuponagoldmine': "Dude! You're a self-proclaimed social phenomena observer and confused designer (currently) exploring the intersections of computation, culture, and human expression. Stick to this story for a few months."
+        'whenyoustumbleuponagoldmine': "Uh, you're a self-proclaimed social phenomena observer and confused designer (currently) exploring the intersections of computation, culture, and human expression. Stick to this narrative for a few months."
     };
     
     // Add click event listeners to top navigation items
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
    const imageSpawner = document.getElementById('image-spawner');
     
    if (imageSpawner) {
-       // Image paths with preloading for better performance
+       
        const imagePaths = [
            'images/me/me1.jpg',
            'images/me/me2.jpg',
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
            'images/me/me8.jpg'
        ];
        
-       // Preload images to improve performance
+       // Preload images
        const preloadedImages = [];
        imagePaths.forEach(src => {
            const img = new Image();
@@ -184,10 +184,10 @@ document.addEventListener('DOMContentLoaded', function() {
            preloadedImages.push(img);
        });
        
-       // Track if mouse is inside the container
+       
        let isMouseInside = false;
        
-       // Event listeners for mouse entering and leaving the container
+       
        imageSpawner.addEventListener('mouseenter', function() {
            isMouseInside = true;
        });
