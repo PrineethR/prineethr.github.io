@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'anyone': "Prineeth designs interactions at the convergence of humans, play, tech and design.",
         'recruiters': "An interaction designer with 6+ years of experience in multimodal experiences, education, strategy, research and tech through more-than-human-centered design methodologies.",
         'designers': "I'm continuously exploring phenomena while questioning how we might dissolve artificial boundaries between users and interfaces.",
-        'whenyoustumbleuponagoldmine': "It seems that Prineeth is a self-proclaimed social phenomena observer and confused designer (currently) exploring the intersections of computation, culture, and human expression."
+        'whenyoustumbleuponagoldmine': "Dude! You're a self-proclaimed social phenomena observer and confused designer (currently) exploring the intersections of computation, culture, and human expression. Stick to this story for a few months."
     };
     
     // Add click event listeners to top navigation items
